@@ -26,10 +26,12 @@ from .queueitem import QueueItem
 from .controls import Controls
 import os.path
 
-@Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
+
+@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/window.ui")
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     """Main window"""
-    __gtype_name__ = 'NextcloudmusicWindow'
+
+    __gtype_name__ = "NextcloudmusicWindow"
 
     # Widgets
     musiclist = Gtk.Template.Child("list")
@@ -44,12 +46,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     _queue = None
 
     def __init__(self, **kwargs):
-        """ Standard constructor for the window, initialize things, and get the settings"""
+        """Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
-        self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
+        self._settings = Gio.Settings.new("net.rosebirch.nextcloudmusic")
         self._queue = Gio.ListStore()
         self._media = Gtk.MediaFile.new()
-
 
     def set_client(self, client):
         """Connections created to link everything.
@@ -77,31 +78,29 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
 
-    @GObject.Property(
-        type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
+    @GObject.Property(type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
     def settings(self):
         return self._settings
 
-
-############################
-# Collection view (hidden) #
-############################
-
+    ############################
+    # Collection view (hidden) #
+    ############################
 
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
         This view is hidden by default as it is completely unfinished.
         This was before I realised how the model+view works in grid/list views.
-        This ideally should be completely replaced with a song view using model+view style"""
+        This ideally should be completely replaced with a song view using model+view style
+        """
         collection = result.propagate_value().value
         added = 0
         for artist in collection:
-            artist_string = artist['name']
-            for album in artist['albums']:
-                album_string = album['name']
-                for song in album['tracks']:
-                    song_string = song['title']
-                    song_id = list(song['files'].values())[0]
+            artist_string = artist["name"]
+            for album in artist["albums"]:
+                album_string = album["name"]
+                for song in album["tracks"]:
+                    song_string = song["title"]
+                    song_id = list(song["files"].values())[0]
                     self.add_song(artist_string, album_string, song_string, song_id)
                     added += 1
                     if added >= 10:
@@ -113,7 +112,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         This is not visible and should really be completely be reworked.
         As I didn't know about the right connection, went with activate-link 🤦"""
         testlabel = Gtk.Label()
-        testlabel.set_markup(f"<a href=\"{song_id}\"><b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}</a>")
+        testlabel.set_markup(
+            f'<a href="{song_id}"><b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}</a>'
+        )
         testlabel.connect("activate-link", self.song_clicked)
         self.musiclist.insert(testlabel, 0)
 
@@ -123,30 +124,31 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # FIXME do some async call here - currently locks up during song download
         song_file = self._client.get_song(song_id)
 
-
-##############
-# Album view #
-##############
-
+    ##############
+    # Album view #
+    ##############
 
     def _setup_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
         """Creates UI elements for album view"""
         list_item.props.child = AlbumTile()
 
     def _bind_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
         """Populates the UI elements for album view.
-        Recalled if widget is updated, hence multiple branches depending on current stage"""
+        Recalled if widget is updated, hence multiple branches depending on current stage
+        """
         album_list_item = list_item.props.item
         album_widget = list_item.props.child
         album_widget.set_album(album_list_item)
         if os.path.exists(self._client.get_cover(album_list_item)):
             album_widget.set_cover(self._client.get_cover(album_list_item))
         else:
-            self._client.download_cover_async(album_list_item.album_id, album_list_item.cover_url, album_widget)
+            self._client.download_cover_async(
+                album_list_item.album_id, album_list_item.cover_url, album_widget
+            )
 
     def album_clicked(self, event, album_id):
         """Connected to activate signal from AlbumTile.
@@ -157,41 +159,39 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_details = self._client.album_details(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details['tracks'], key=lambda item: item['number'])
+        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
-        song_id = list(sorted_tracks[0]['files'].values())[0]
-        song_name = sorted_tracks[0]['title']
+        song_id = list(sorted_tracks[0]["files"].values())[0]
+        song_name = sorted_tracks[0]["title"]
         song_file = self._client.get_song(song_id)
         print(f"Got a file: {song_file} with id {song_id}")
         self.play_song(song_file, song_name)
         self._queue.remove_all()
         for song in sorted_tracks:
-            queued_song_id = list(song['files'].values())[0]
-            song_item = QueueItem(song['title'], queued_song_id)
+            queued_song_id = list(song["files"].values())[0]
+            song_item = QueueItem(song["title"], queued_song_id)
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
 
-
-##############
-# Queue View #
-##############
-
+    ##############
+    # Queue View #
+    ##############
 
     def _setup_queue_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
         """Generate UI element"""
         list_item.props.child = Gtk.Label()
 
-
     def _bind_queue_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
         """Populate UI element.
-        As we don't have a specialised widget, we just make the now playing the bold one."""
+        As we don't have a specialised widget, we just make the now playing the bold one.
+        """
         queue_list_item = list_item.props.item
         queue_list_widget = list_item.props.child
         queue_list_item.set_widget(queue_list_widget)
@@ -199,7 +199,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
         else:
             queue_list_widget.set_text(queue_list_item.get_title())
-
 
     def queue_clicked(self, event, queue_id):
         """When (double) clicked on the queue item, play it!"""
@@ -213,11 +212,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         song.set_now_playing(True)
         self.play_song(song_file, song.get_title())
 
-
-################
-# Shared usage #
-################
-
+    ################
+    # Shared usage #
+    ################
 
     def play_song(self, song_file, song_title):
         """Called from many places, even outside this class.
@@ -233,7 +230,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         # Trick the UI to redraw, no redraw call works
         # I am clearly doing something wrong here!
-        fake_item = QueueItem('FAKE', 0)
+        fake_item = QueueItem("FAKE", 0)
         self._queue.insert(0, fake_item)
         self._queue.remove(0)
-
