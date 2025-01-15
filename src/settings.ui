@@ -8,34 +8,18 @@
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="true">Server Settings</property>
             <child>
-              <object class="AdwComboRow" id="_server_row">
+              <object class="AdwEntryRow" id="_server_row">
                 <property name="title" translatable="true">Server URL</property>
-                <property name="subtitle" translatable="true">URL to the server, e.g. "https://example.com/nextcloud"</property>
-                <property name="model">
-                  <object class="GtkEditableLabel">
-                    <property name="editing">true</property>
-                  </object>
-                </property>
               </object>
             </child>
             <child>
-              <object class="AdwComboRow" id="_user_row">
+              <object class="AdwEntryRow" id="_user_row">
                 <property name="title" translatable="true">User</property>
-                <property name="model">
-                  <object class="GtkEntry">
-                  </object>
-                </property>
               </object>
             </child>
             <child>
-              <object class="AdwComboRow" id="_token_row">
+              <object class="AdwEntryRow" id="_token_row">
                 <property name="title" translatable="true">Token</property>
-                <property name="subtitle" translatable="true">Token in Nextcloud. Note this is not the same token as given for Ampache and Subsonic, but a more general token.</property>
-                <property name="model">
-                  <object class="GtkEditableLabel">
-                    <property name="editing">true</property>
-                  </object>
-                </property>
               </object>
             </child>
           </object>
