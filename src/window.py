@@ -174,7 +174,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self._queue.append(song_item)
 
     def queue_clicked(self, event, queue_id):
-        print("clickerooni on the ol queue")
+        song = self._queue[queue_id]
+        print(f"Clicked on song {song.get_title()} from queue")
+        song_file = self._client.get_song(song.get_song_id())
+        for _song in self._queue:
+            _song.set_now_playing(False)
+        song.set_now_playing(True)
+        self.play_song(song_file, song.get_title())
 
     def play_song(self, song_file, song_title):
         # I can't seem to reuse the same object, so make another
