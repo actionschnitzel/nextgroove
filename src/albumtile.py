@@ -28,6 +28,7 @@ class AlbumTile(Gtk.Box):
         self._album = None
         self._cover_image.set_size_request(128, 128)
 
+
     @GObject.Property(
         type=AlbumListItem, flags=GObject.ParamFlags.READWRITE, default=None
     )

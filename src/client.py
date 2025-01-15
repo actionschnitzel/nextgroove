@@ -54,30 +54,8 @@ class NextcloudMusicClient(GObject.Object):
                 for album in artist["albums"]:
                     if album["name"] == album_list_item.album:
                         return album
-        print("UH OH couldn't find album?")
+        print("ERROR client.album_detils could not find an album")
         return None
-
-    def validate(self):
-        # FIXME remove this call, this is just testing the function prior to getting the async shit in place
-        self.update_collection()
-        try:
-            response = self._collection()
-            if response.status_code == 200:
-                return True
-            else:
-                return False
-        except:
-            # TODO better error handling and user messaging
-            return False
-
-    def validate_async(self, callback):
-        task = Gio.Task.new(self, None, callback, None)
-        task.set_return_on_cancel(False)
-        task.run_in_thread(self.validate_sync)
-
-    def validate_sync(self, task, source_object, task_data, cancellable):
-        valid = self.validate()
-        task.return_value(valid)
 
     def update_collection(self):
         try:
@@ -94,8 +72,7 @@ class NextcloudMusicClient(GObject.Object):
             return None
 
     def update_albums(self):
-        # FIXME remove previous ones - cannot see how to clear them
-        # we only call once for now so not an issue
+        # TODO in the event this needs to be called again, remove_all() on liststore
         for artist in self.collection:
             artist_string = artist["name"]
             for album in artist["albums"]:
@@ -111,7 +88,7 @@ class NextcloudMusicClient(GObject.Object):
                 )
                 self.albums_before_sorting.append(album_item)
 
-        print(f"Done and we have {len(self.albums_before_sorting)}")
+        print(f"Retrieved albums and we have {len(self.albums_before_sorting)} albums")
         for album in sorted(
             self.albums_before_sorting,
             key=cmp_to_key(
@@ -121,13 +98,11 @@ class NextcloudMusicClient(GObject.Object):
             reverse=True,
         ):
             self.albums.append(album)
-        print(f"Done and we have {len(self.albums)}")
+        print(f"Sorted albums and we have {len(self.albums)} albums")
+        self.albums_before_sorting = None
 
     def latest_song_id_in_album(self, album_list_item):
-        """Expects input like:
-        {'name': 'Take Me To The Clouds Above', 'year': None, 'cover': '/index.php/apps/music/api/cover/9b480ae81749f84107582bcf42ac1d42', 'id': 26, 'diskCount': 1, 'tracks': [
-          {'title': 'Take Me To The Clouds Above', 'number': None, 'disk': 1, 'artistId': 17, 'length': 168, 'files': {'audio/mpeg': 108774}, 'id': 216}
-        ]}
+        """Take the AlbumListItem object, retreives details,
         tracks can contain multiple, but find the largest id within there
         """
         album_object = self.album_details(album_list_item)
@@ -144,9 +119,7 @@ class NextcloudMusicClient(GObject.Object):
         return latest_id
 
     def download_cover(self, album_id, cover_url):
-        # print(f"cover at {cover_url}")
         cover_url_full = f"{self._server}{cover_url}"
-        # print(f"full url {cover_url_full}")
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print("Could not download cover at url code {response.status_code}")
@@ -161,7 +134,6 @@ class NextcloudMusicClient(GObject.Object):
             cover_file.write(response.content)
 
     def download_cover_async(self, album_id, cover_url, widget):
-        """no callback needed"""
         task = Gio.Task.new(widget, None, self.cover_downloaded, None)
         task.set_return_on_cancel(False)
         task.set_task_data(album_id)
