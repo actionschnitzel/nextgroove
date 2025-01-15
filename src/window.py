@@ -326,7 +326,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         queue_list_item = list_item.props.item
         queue_list_widget = list_item.props.child
-        queue_list_item.set_widget(queue_list_widget)
         if queue_list_item.is_now_playing():
             queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
         else:

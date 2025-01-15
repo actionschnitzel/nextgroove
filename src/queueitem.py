@@ -25,7 +25,6 @@ class QueueItem(GObject.Object):
     title = None
     song_id = None
     now_playing = None
-    _widget = None
     album_id = None
     artist_id = None
 
@@ -44,9 +43,6 @@ class QueueItem(GObject.Object):
 
     def is_now_playing(self):
         return self.now_playing
-
-    def set_widget(self, widget):
-        self._widget = widget
 
     def set_now_playing(self, now_playing):
         self.now_playing = now_playing
