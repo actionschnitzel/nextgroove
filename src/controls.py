@@ -147,7 +147,7 @@ class Controls(Gtk.ActionBar):
         self._window.play_song(song_file, song_queue_item.get_title())
 
     def set_now_playing(self, song):
-        self.now_playing_label.set_text(f"{escape(song)}")
+        self.now_playing_label.set_text(song)
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def song_ended(self, foo, bar):
