@@ -97,6 +97,7 @@
                         </child>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection" id="selection">
+                            <property name="mode">3</property>
                           </object>
                         </child>
                       </object>

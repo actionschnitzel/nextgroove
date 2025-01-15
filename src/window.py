@@ -93,8 +93,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     ############################
 
 
-    def collection_clicked(self, event, thing, another_thing):
-        print(f"clicked collection {event} and {thing} and {another_thing}")
+    def collection_clicked(self, treeview, row, column):
+        artist_name, album_name, song_title, queue_item = self._songs[row]
+        song_file = self._client.get_song(queue_item.get_song_id())
+        print(f"Got a file: {song_file} with id {queue_item.get_song_id()}")
+        self.play_song(song_file, song_title)
+        self._queue.remove_all()
+        queue_item.set_now_playing(True)
+        self._queue.append(queue_item)
 
 
     def update_collection(self, source_object, result, user_data):
