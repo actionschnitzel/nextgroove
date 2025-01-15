@@ -147,9 +147,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         print(f"Got a file: {song_file}")
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
-        print(album_details['tracks'][0])
         self._queue.remove_all()
-        self._queue.append(QueueItem(album_details['tracks'][0]['title']))
+        for song in album_details['tracks']:
+            # FIXME need to add more shit into the QueueItem so it can actually be played after
+            self._queue.append(QueueItem(song['title']))
 
     def queue_clicked(self, event, queue_id):
         print("clickerooni on the ol queue")

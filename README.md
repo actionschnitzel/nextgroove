@@ -9,16 +9,17 @@ many, many, flaws that need to be fixed!
 
  - [ ] Scrolling on the songs
  - [x] clicking a song and play the song
- - [ ] ordering
+ - [x] ordering (albums)
  - [ ] making the collection view not look like arse (tabular?)
  - [ ] tab view at top level, to switch between views:
    - [ ] Album view
    - [ ] All song view (i.e. current one)
    - [ ] Playlists
    - [ ] Podcasts
-- [ ] Some sidebar to show the queue
-- [ ] oh yeah a queuing system in general
+- [x] Some sidebar to show the queue (kinda - just did a tab)
+- [ ] oh yeah a queuing system in general (added to a queue, but doesn't work yet)
 - [ ] media player controls
+- [ ] mpris
  
 
 # CBATODO (yet)
