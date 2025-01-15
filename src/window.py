@@ -127,18 +127,25 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         This ideally should be completely replaced with a song view using model+view style
         """
         collection = result.propagate_value().value
-        for artist in collection:
+        for artist in sorted(collection, key=self.get_artist_name):
             artist_string = artist["name"]
             artist_id = artist["id"]
-            for album in artist["albums"]:
+            for album in sorted(artist["albums"], key=self.get_artist_name):
                 album_string = album["name"]
                 album_id = album["id"]
-                for song in album["tracks"]:
+                for song in sorted(album["tracks"], key=self.get_track_number):
                     song_string = song["title"]
                     song_id = list(song["files"].values())[0]
                     song_item = QueueItem(song_string, song_id, album_id, artist_id)
                     self._songs.append(song_item)
                     #self.add_song(artist_string, album_string, song_string, song_id)
+
+    def get_artist_name(self, thing):
+        return thing['name']
+    def get_track_number(self, thing):
+        disk = thing.get('disk', 1)
+        number = thing.get('number', 1)
+        return f"{disk}_{number}"
 
 
     ##############
