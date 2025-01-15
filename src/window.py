@@ -26,7 +26,6 @@ from html import escape
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'NextcloudmusicWindow'
 
-    label = Gtk.Template.Child()
     musiclist = Gtk.Template.Child("list")
     _settings = None
     _client = None
