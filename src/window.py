@@ -142,13 +142,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album = self._client.albums[album_id]
         print(f"is your album {album.album}")
         album_details = self._client.album_details(album)
-        song_id = list(album_details['tracks'][0]['files'].values())[0]
+
+        sorted_tracks = sorted(album_details['tracks'], key=lambda item: item['number'])
+
+        song_id = list(sorted_tracks[0]['files'].values())[0]
         song_file = self._client.get_song(song_id)
         print(f"Got a file: {song_file}")
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
         self._queue.remove_all()
-        for song in album_details['tracks']:
+        for song in sorted_tracks:
             # FIXME need to add more shit into the QueueItem so it can actually be played after
             self._queue.append(QueueItem(song['title']))
 

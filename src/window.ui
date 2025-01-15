@@ -81,6 +81,11 @@
             <property name="stack">stack</property>
           </object>
         </child>
+        <child type="bottom">
+          <object class="GtkLabel" id="labelfornoreason">
+            <!-- property name="text">test</property-->
+          </object>
+        </child>
       </object>
     </property>
   </template>
