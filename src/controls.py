@@ -140,6 +140,7 @@ class Controls(Gtk.ActionBar):
 
         if not song_queue_item:
             print("Reached end of queue, not playing new song.")
+            self.play_pause_button.set_icon_name("media-playback-start-symbolic")
             return
 
         current_song_queue_item.set_now_playing(False)
