@@ -99,8 +99,6 @@ class NextcloudMusicClient(GObject.Object):
                 self.albums.append(album_item)
                 if album['cover']:
                     self._album_urls_by_id[album['id']] = album['cover']
-                    keys = self._album_urls_by_id.keys()
-                    print(f"Current keys in albums: {keys}")
                     self.download_cover_async(album['id'], album['cover'])
                 #print(album)
             # FIXME remove but I'm lazy, let's fix for one first

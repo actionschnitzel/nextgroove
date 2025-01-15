@@ -25,9 +25,7 @@ class AlbumTile(Gtk.Box):
     def __init__(self) -> None:
         """Initialise AlbumTile"""
         super().__init__()
-
         self._album = None
-
 
     @GObject.Property(
         type=AlbumListItem, flags=GObject.ParamFlags.READWRITE, default=None)
@@ -41,3 +39,4 @@ class AlbumTile(Gtk.Box):
 
     def set_cover(self, cover_file):
         self._cover_image.set_from_file(cover_file)
+        self._cover_image.set_icon_size(Gtk.IconSize.LARGE)
