@@ -28,57 +28,32 @@ import os.path
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):
+    """Main window"""
     __gtype_name__ = 'NextcloudmusicWindow'
 
+    # Widgets
     musiclist = Gtk.Template.Child("list")
     album_view = Gtk.Template.Child("albumview")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
+
+    # Data objects
     _settings = None
     _client = None
     _media = None
     _queue = None
 
     def __init__(self, **kwargs):
+        """ Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
         self._queue = Gio.ListStore()
-        self._media = Gtk.MediaFile.new_for_filename("/tmp/doesnotexist")
+        self._media = Gtk.MediaFile.new()
 
-
-    def _setup_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
-        list_item.props.child = AlbumTile()
-
-    def _bind_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
-        album_list_item = list_item.props.item
-        album_widget = list_item.props.child
-        album_widget.set_album(album_list_item)
-        if os.path.exists(self._client.get_cover(album_list_item)):
-            album_widget.set_cover(self._client.get_cover(album_list_item))
-        else:
-            self._client.download_cover_async(album_list_item.album_id, album_list_item.cover_url, album_widget)
-
-    def _setup_queue_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
-        list_item.props.child = Gtk.Label()
-
-    def _bind_queue_list_item(
-            self, factory: Gtk.SignalListItemFactory,
-            list_item: Gtk.ListItem) -> None:
-        queue_list_item = list_item.props.item
-        queue_list_widget = list_item.props.child
-        queue_list_item.set_widget(queue_list_widget)
-        if queue_list_item.is_now_playing():
-            queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
-        else:
-            queue_list_widget.set_text(queue_list_item.get_title())
 
     def set_client(self, client):
+        """Connections created to link everything.
+        Touches album view, queue view, media controls"""
         self._client = client
         print("Setting client")
         # We like Albums
@@ -107,23 +82,23 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def settings(self):
         return self._settings
 
-    def update_if_valid(self, source_object, result, user_data):
-        connected = result.propagate_value().value
-        if connected:
-            print("Connected")
-            self.label.set_text("Connection complete")
-        else:
-            print("Failed")
-            self.label.set_text("Connection failed")
+
+############################
+# Collection view (hidden) #
+############################
+
 
     def update_collection(self, source_object, result, user_data):
+        """Updates the collection view.
+        This view is hidden by default as it is completely unfinished.
+        This was before I realised how the model+view works in grid/list views.
+        This ideally should be completely replaced with a song view using model+view style"""
         collection = result.propagate_value().value
         added = 0
         for artist in collection:
             artist_string = artist['name']
             for album in artist['albums']:
                 album_string = album['name']
-                #self.add_album(artist, album)
                 for song in album['tracks']:
                     song_string = song['title']
                     song_id = list(song['files'].values())[0]
@@ -133,32 +108,59 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                         break
             break
 
-    def add_album(self, artist, album):
-        model = self.album_view.get_model()
-        if not model:
-            list_item_factory = Gtk.SignalListItemFactory()
-            print("model doesn't exist yet")
-
     def add_song(self, artist, album, song, song_id):
+        """Adding a child widget of the unused collections page
+        This is not visible and should really be completely be reworked.
+        As I didn't know about the right connection, went with activate-link 🤦"""
         testlabel = Gtk.Label()
         testlabel.set_markup(f"<a href=\"{song_id}\"><b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}</a>")
         testlabel.connect("activate-link", self.song_clicked)
         self.musiclist.insert(testlabel, 0)
 
     def song_clicked(self, event, song_id):
+        """Called from collection view, which is hidden, so this is unused really"""
         print(f"song pressed {event}, and song ID {song_id}")
-        # FIXME do some async goodness here, but need to know if this bit works or I'm outta here
+        # FIXME do some async call here - currently locks up during song download
         song_file = self._client.get_song(song_id)
-        print(f"Got a file: {song_file}")
-        self.play_song(song_files, song_name="...")
+
+
+##############
+# Album view #
+##############
+
+
+    def _setup_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        """Creates UI elements for album view"""
+        list_item.props.child = AlbumTile()
+
+    def _bind_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        """Populates the UI elements for album view.
+        Recalled if widget is updated, hence multiple branches depending on current stage"""
+        album_list_item = list_item.props.item
+        album_widget = list_item.props.child
+        album_widget.set_album(album_list_item)
+        if os.path.exists(self._client.get_cover(album_list_item)):
+            album_widget.set_cover(self._client.get_cover(album_list_item))
+        else:
+            self._client.download_cover_async(album_list_item.album_id, album_list_item.cover_url, album_widget)
 
     def album_clicked(self, event, album_id):
+        """Connected to activate signal from AlbumTile.
+        A single click currently activates this and will attempt to play that album
+        """
         album = self._client.albums[album_id]
-        print(f"is your album {album.album}")
+        print(f"Clicked album '{album.album}'")
         album_details = self._client.album_details(album)
 
+        # Tracks are not ordered in the json output
         sorted_tracks = sorted(album_details['tracks'], key=lambda item: item['number'])
 
+        # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
+        # we need that file ID, which makes this look quite ugly
         song_id = list(sorted_tracks[0]['files'].values())[0]
         song_name = sorted_tracks[0]['title']
         song_file = self._client.get_song(song_id)
@@ -166,23 +168,62 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.play_song(song_file, song_name)
         self._queue.remove_all()
         for song in sorted_tracks:
-            # FIXME need to add more shit into the QueueItem so it can actually be played after
             queued_song_id = list(song['files'].values())[0]
             song_item = QueueItem(song['title'], queued_song_id)
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
 
+
+##############
+# Queue View #
+##############
+
+
+    def _setup_queue_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        """Generate UI element"""
+        list_item.props.child = Gtk.Label()
+
+
+    def _bind_queue_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        """Populate UI element.
+        As we don't have a specialised widget, we just make the now playing the bold one."""
+        queue_list_item = list_item.props.item
+        queue_list_widget = list_item.props.child
+        queue_list_item.set_widget(queue_list_widget)
+        if queue_list_item.is_now_playing():
+            queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
+        else:
+            queue_list_widget.set_text(queue_list_item.get_title())
+
+
     def queue_clicked(self, event, queue_id):
+        """When (double) clicked on the queue item, play it!"""
         song = self._queue[queue_id]
         print(f"Clicked on song {song.get_title()} from queue")
         song_file = self._client.get_song(song.get_song_id())
+        # Set other( or all until next section) songs in queue to not playing
         for _song in self._queue:
             _song.set_now_playing(False)
+        # Set current song to playing to show in bold
         song.set_now_playing(True)
         self.play_song(song_file, song.get_title())
 
+
+################
+# Shared usage #
+################
+
+
     def play_song(self, song_file, song_title):
+        """Called from many places, even outside this class.
+        song_file must already be downloaded so we can load it with mediafile.
+        Then it needs to update any controls that need to know of current media etc
+        Also has a hack to update the queue to force a redraw"""
         # I can't seem to reuse the same object, so make another
         # and then connect the damn signals again
         self._media = Gtk.MediaFile.new_for_filename(song_file)
