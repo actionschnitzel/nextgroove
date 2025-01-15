@@ -64,8 +64,8 @@ class NextcloudmusicApplication(Adw.Application):
             s.get_string("user"),
             s.get_string("token")
         )
-        callback = self._window.update_if_valid
-        self._client.validate_async(callback)
+        callback = self._window.update_collection
+        self._client.collection_async(callback)
 
 
     def on_about_action(self, *args):

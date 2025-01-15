@@ -20,12 +20,14 @@
 from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gio, GObject
+from html import escape
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'NextcloudmusicWindow'
 
     label = Gtk.Template.Child()
+    musiclist = Gtk.Template.Child("list")
     _settings = None
 
     def __init__(self, **kwargs):
@@ -40,7 +42,30 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def update_if_valid(self, source_object, result, user_data):
         connected = result.propagate_value().value
         if connected:
+            print("Connected")
             self.label.set_text("Connection complete")
         else:
+            print("Failed")
             self.label.set_text("Connection failed")
+        testlabel = Gtk.Label()
+        testlabel.set_markup("<b>Artist</b> <i>Album</i> song")
+        self.musiclist.insert(testlabel, 0)
+
+    def update_collection(self, source_object, result, user_data):
+        collection = result.propagate_value().value
+        for artist in collection:
+            artist_string = artist['name']
+            for album in artist['albums']:
+                album_string = album['name']
+                for song in album['tracks']:
+                    song_string = song['title']
+                    self.add_song(artist_string, album_string, song_string)
+            break
+
+
+    def add_song(self, artist, album, song):
+        testlabel = Gtk.Label()
+        testlabel.set_markup(f"<b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}")
+        self.musiclist.insert(testlabel, 0)
+
 
