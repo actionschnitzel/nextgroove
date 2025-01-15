@@ -37,6 +37,7 @@ class NextcloudMusicClient(GObject.Object):
     _album_urls_by_id = None
     artist_name_by_id = None
     album_name_by_id = None
+    song_title_last_callback = None
 
     def __init__(self, server, user, token):
         super().__init__()
@@ -199,3 +200,16 @@ class NextcloudMusicClient(GObject.Object):
         with open(song_location, "wb") as song_file:
             song_file.write(response.content)
         return os.path.abspath(song_location)
+
+    def get_song_async(self, song_id, song_title, callback):
+        print("Starting async song download call")
+        self.song_title_last_callback = song_title
+        task = Gio.Task.new(self, None, callback, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(song_id)
+        task.run_in_thread(self.get_song_sync)
+
+    def get_song_sync(self, task, source_object, task_data, cancellable):
+        song_id = task.get_task_data()
+        song_file = self.get_song(song_id)
+        task.return_value(song_file)

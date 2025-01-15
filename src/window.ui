@@ -69,12 +69,12 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="collection_append_queue">
                             <property name="label">Add to queue</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="collection_insert_queue">
                             <property name="label">Add to queue (play next)</property>
                           </object>
                         </child>
