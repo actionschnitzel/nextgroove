@@ -40,6 +40,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
+    playlist_view = Gtk.Template.Child("playlistview")
 
     collection_play = Gtk.Template.Child("collection_play")
     collection_append_queue = Gtk.Template.Child("collection_append_queue")
@@ -92,6 +93,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.collection_append_queue.connect("clicked", self.collection_append_queue_clicked)
         self.collection_insert_queue.connect("clicked", self.collection_insert_queue_clicked)
 
+        # Playlist page
+        playlist_item_factory = Gtk.SignalListItemFactory()
+        playlist_item_factory.connect("setup", self._setup_playlist_list_item)
+        playlist_item_factory.connect("bind", self._bind_playlist_list_item)
+        self.playlist_view.props.factory = playlist_item_factory
+        playlist_selection_model = Gtk.MultiSelection.new(client.playlists)
+        self.playlist_view.props.model = playlist_selection_model
+        self.playlist_view.connect("activate", self.playlist_clicked)
+
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
 
@@ -113,7 +123,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         self._queue.remove_all()
         first_song = self._songs[selection[0]]
-        print(f"first song is {first_song}")
         first_song[3].set_now_playing(True)
         for row in selection:
             artist, album, song, queue_item = self._songs[row]
@@ -170,10 +179,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
-        This view is hidden by default as it is completely unfinished.
-        This was before I realised how the model+view works in grid/list views.
-        This ideally should be completely replaced with a song view using model+view style
         """
+        self._songs.clear()
         collection = result.propagate_value().value
         for artist in sorted(collection, key=self.get_artist_name):
             artist_string = artist["name"]
@@ -216,8 +223,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_widget = list_item.props.child
         album_widget.set_album(album_list_item)
         album_list_item.set_widget(album_widget)
-        if os.path.exists(self._client.get_cover(album_list_item)):
-            album_widget.set_cover(self._client.get_cover(album_list_item))
+        cover = self._client.get_cover(album_list_item)
+        if cover and os.path.exists(cover):
+            album_widget.set_cover(cover)
         else:
             self._client.download_cover_async(
                 album_list_item.album_id, album_list_item.cover_url, album_widget
@@ -360,6 +368,51 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         song.set_now_playing(True)
 
         self._client.get_song_async(song.get_song_id(), song.get_title(), self.song_file_returned)
+
+
+    #################
+    # Playlist view #
+    #################
+
+    def _setup_playlist_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        """Creates UI elements for album view"""
+        list_item.props.child = Gtk.Label()  # TODO make a ui element
+
+    def _bind_playlist_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        """Populates the UI elements for album view.
+        Recalled if widget is updated, hence multiple branches depending on current stage
+        """
+        playlist_list_item = list_item.props.item
+        playlist_widget = list_item.props.child
+        playlist_widget.set_label(playlist_list_item.playlist_name)
+
+    def playlist_clicked(self, event, playlist_id):
+        playlist = self._client.playlists[playlist_id]
+        playlist_name = playlist.playlist_name
+        print(f"Clicked playlist {playlist_name}")
+        track_ids = playlist.track_ids
+
+        self._queue.remove_all()
+
+        if len(track_ids)==0:
+            print("empty playlist")
+            return
+
+        for track in track_ids:
+            queue_item = self._client.get_track_from_id(track)
+            self._queue.append(queue_item)
+
+        first_song = self._queue[0]
+        first_song.set_now_playing(True)
+        self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
+
+    def update_playlists(self, event, foo, bar):
+        pass
+
 
     ################
     # Shared usage #

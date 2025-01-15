@@ -33,6 +33,7 @@ nextcloudmusic_sources = [
   'client.py',
   'controls.py',
   'main.py',
+  'playlist.py',
   'queueitem.py',
   'window.py',
   'settings.py'

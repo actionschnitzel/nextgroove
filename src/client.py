@@ -24,6 +24,8 @@ from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio, GLib
 from .albumlistitem import AlbumListItem
 from functools import cmp_to_key
+from .playlist import PlaylistItem
+from .queueitem import QueueItem
 
 
 class NextcloudMusicClient(GObject.Object):
@@ -38,6 +40,7 @@ class NextcloudMusicClient(GObject.Object):
     artist_name_by_id = None
     album_name_by_id = None
     song_title_last_callback = None
+    playlists = None
 
     def __init__(self, server, user, token):
         super().__init__()
@@ -49,17 +52,37 @@ class NextcloudMusicClient(GObject.Object):
         self._album_urls_by_id = {}
         self.artist_name_by_id = {}
         self.album_name_by_id = {}
+        self.playlists = Gio.ListStore()
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
 
+    def _playlists(self):
+        return requests.get(f"{self._base_url}/playlists", auth=self._auth)
+
     def album_details(self, album_list_item):
+        if not self.collection:
+            # TODO find why this happens
+            print("COLLECTION is None")
+            return
         for artist in self.collection:
             if artist["name"] == album_list_item.artist:
                 for album in artist["albums"]:
                     if album["name"] == album_list_item.album:
                         return album
         print("ERROR client.album_details could not find an album")
+        return None
+
+    def get_track_from_id(self, track_id):
+        for artist in self.collection:
+            for album in artist['albums']:
+                for song in album['tracks']:
+                    if song['id'] == track_id:
+                        # We have a match
+                        song_id = list(song['files'].values())[0]
+                        queue_item = QueueItem(song['title'], song_id, album['id'], artist['id'])
+                        return queue_item
+        print(f"get_track_from_id: Could not find track_id {track_id}")
         return None
 
     def get_artist_id_for_album_list_item(self, album_list_item):
@@ -70,6 +93,13 @@ class NextcloudMusicClient(GObject.Object):
         return None
 
     def update_collection(self):
+        # Clear existing collections
+        self.albums.remove_all()
+        self.albums_before_sorting.remove_all()
+        self._album_urls_by_id = {}
+        self.artist_name_by_id = {}
+        self.album_name_by_id = {}
+        self.playlists.remove_all()
         try:
             response = self._collection()
             if response.status_code != 200:
@@ -84,8 +114,6 @@ class NextcloudMusicClient(GObject.Object):
             return None
 
     def update_albums(self):
-        # TODO in the event this needs to be called again, remove_all() on liststore
-        # And same goes for lookups like artist_name_by_id
         for artist in self.collection:
             artist_string = artist["name"]
             artist_id = artist["id"]
@@ -167,6 +195,9 @@ class NextcloudMusicClient(GObject.Object):
 
     def get_cover(self, album_list_item):
         album_details = self.album_details(album_list_item)
+        if not album_details:
+            # FIXME if album_details doesn't return, why is that
+            return "🤷"  # Well that's not a path
         album_id = album_details["id"]
         return f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}"
 
@@ -183,6 +214,42 @@ class NextcloudMusicClient(GObject.Object):
     def collection_sync(self, task, source_object, task_data, cancellable):
         collection = self.update_collection()
         task.return_value(collection)
+
+    def playlist_async(self, callback):
+        print("Starting async call for playlists")
+        task = Gio.Task.new(self, None, callback, None)
+        task.set_return_on_cancel(False)
+        task.run_in_thread(self.playlist_sync)
+
+    def playlist_sync(self, task, source_object, task_data, cancellable):
+        playlists = self.update_playlists()
+        task.return_value(playlists)
+
+    def update_playlists(self):
+        try:
+            response = self._playlists()
+            if response.status_code != 200:
+                print(f"return code was {response.status_code}")
+                return None
+            playlists = json.loads(response.text)
+            self.parse_playlist_json(playlists)
+            return self.playlists
+        except requests.exceptions.RequestException as e:
+            # TODO better error handling and user messaging
+            print(f"Exception in updating collection {e}")
+            return None
+
+    def parse_playlist_json(self, playlist_json):
+        for playlist in playlist_json:
+            playlist_name = playlist['name']
+            playlist_id = playlist['id']
+            updated = playlist['updated']
+            created = playlist['created']
+            cover = playlist['cover']
+            track_ids = playlist['trackIds']
+            item = PlaylistItem(playlist_name, track_ids, playlist_id, cover, created, updated)
+            self.playlists.append(item)
+
 
     def get_song(self, song_id):
         # TODO check if already exists and use a cache dir
