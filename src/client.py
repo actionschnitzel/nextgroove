@@ -23,6 +23,7 @@ import os
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio
 from .albumlistitem import AlbumListItem
+from functools import cmp_to_key
 
 class NextcloudMusicClient(GObject.Object):
 
@@ -30,6 +31,7 @@ class NextcloudMusicClient(GObject.Object):
     _base_url = None
     collection = None
     albums = None
+    albums_before_sorting = None
     _server = None
     _album_urls_by_id = None
 
@@ -38,6 +40,7 @@ class NextcloudMusicClient(GObject.Object):
         self._base_url = f"{server}/index.php/apps/music/api"
         self._auth = HTTPBasicAuth(user, token)
         self.albums = Gio.ListStore()
+        self.albums_before_sorting = Gio.ListStore()
         self._server = server
         self._album_urls_by_id = {}
 
@@ -91,18 +94,45 @@ class NextcloudMusicClient(GObject.Object):
 
     def update_albums(self):
         # FIXME remove previous ones - cannot see how to clear them
+        # we only call once for now so not an issue
         for artist in self.collection:
             artist_string = artist['name']
             for album in artist['albums']:
                 album_string = album['name']
                 album_item = AlbumListItem(artist_string, album_string)
-                self.albums.append(album_item)
+                self.albums_before_sorting.append(album_item)
                 if album['cover']:
                     self._album_urls_by_id[album['id']] = album['cover']
                     self.download_cover_async(album['id'], album['cover'])
-                #print(album)
+                print(f"----------{album}")
             # FIXME remove but I'm lazy, let's fix for one first
             #break
+
+        print(f"Done and we have {len(self.albums_before_sorting)}")
+        for album in sorted(self.albums_before_sorting, key=cmp_to_key(lambda album1, album2: self.latest_song_id_in_album(album1) - self.latest_song_id_in_album(album2)), reverse=True):
+            self.albums.append(album)
+        print(f"Done and we have {len(self.albums)}")
+
+
+    def latest_song_id_in_album(self, album_list_item):
+        """Expects input like:
+           {'name': 'Take Me To The Clouds Above', 'year': None, 'cover': '/index.php/apps/music/api/cover/9b480ae81749f84107582bcf42ac1d42', 'id': 26, 'diskCount': 1, 'tracks': [
+             {'title': 'Take Me To The Clouds Above', 'number': None, 'disk': 1, 'artistId': 17, 'length': 168, 'files': {'audio/mpeg': 108774}, 'id': 216}
+           ]}
+           tracks can contain multiple, but find the largest id within there
+        """
+        album_object = self.album_details(album_list_item)
+        latest_id = None
+        for track in album_object['tracks']:
+            # Edge case for it not being set yet
+            if not latest_id:
+                latest_id = track['id']
+                continue
+
+            if track['id'] > latest_id:
+                latest_id = track['id']
+
+        return latest_id
 
 
     def download_cover(self, album_id, cover_url):
