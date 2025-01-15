@@ -77,7 +77,8 @@ class Controls(Gtk.ActionBar):
         self._queue = queue
         self._window = window
 
-        if self._media.get_duration() > 0:
+        if self._media.get_playing():
+            print(f"apparently get_playing is {self._media.get_playing()}")
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def on_play_pause_button_pressed(self, event):
@@ -85,18 +86,23 @@ class Controls(Gtk.ActionBar):
             print("Not playing yet, ignoring play/pause")
             return
         print(
-            f"play pressed and apparently is it playing already {self._media.get_playing()} and duration is {self._media.get_timestamp()}"
+            f"play/pause pressed"
         )
         if self._media.get_playing():
-            print("PAUSE")
+            print("Pausing")
             self._media.pause()
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
-        else:
-            print("PLAY")
+        elif self._media.get_duration() > 0:
+            print("Play")
             self._media.play()
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
+        else:
+            print("Likely no media loaded yet, no action from play/pause")
 
     def on_previous_button_pressed(self, event):
+        if len(self._queue) == 0:
+            print("Queue empty, ignoring previous button")
+            return
         print("Previous button pressed")
         last_song = None
         current_song = None
@@ -117,6 +123,9 @@ class Controls(Gtk.ActionBar):
             self._window.play_song(song_file, last_song.get_title())
 
     def on_next_button_pressed(self, event):
+        if len(self._queue) == 0:
+            print("Queue empty, ignoring next button")
+            return
         next_song = False
         song_queue_item = None
         current_song_queue_item = None
