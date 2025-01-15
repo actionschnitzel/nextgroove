@@ -19,14 +19,16 @@
 
 import requests
 from requests.auth import HTTPBasicAuth
+from gi.repository import GObject, Gio
 
 
-class NextcloudMusicClient:
+class NextcloudMusicClient(GObject.Object):
 
     _auth = None
     _base_url = None
 
     def __init__(self, server, user, token):
+        super().__init__()
         self._base_url = f"{server}/index.php/apps/music/api"
         self._auth = HTTPBasicAuth(user, token)
 
@@ -43,6 +45,17 @@ class NextcloudMusicClient:
         except:
             # TODO better error handling and user messaging
             return False
+
+    def validate_async(self, callback):
+        task = Gio.Task.new(self, None, callback, None)
+        task.set_return_on_cancel(False)
+        task.run_in_thread(self.validate_sync)
+
+    def validate_sync(self, task, source_object, task_data, cancellable):
+        valid = self.validate()
+        task.return_value(valid)
+
+
 
 
 

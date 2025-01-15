@@ -22,7 +22,7 @@
         </child>
         <property name="content">
           <object class="GtkLabel" id="label">
-            <property name="label" translatable="yes">Set server details in preferences</property>
+            <property name="label" translatable="yes">Loading</property>
             <style>
               <class name="title-1"/>
             </style>

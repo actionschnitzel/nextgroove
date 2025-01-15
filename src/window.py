@@ -36,3 +36,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
     def settings(self):
         return self._settings
+
+    def update_if_valid(self, source_object, result, user_data):
+        connected = result.propagate_value().value
+        if connected:
+            self.label.set_text("Connection complete")
+        else:
+            self.label.set_text("Connection failed")
+
