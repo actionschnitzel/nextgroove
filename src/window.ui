@@ -47,8 +47,13 @@
                 <property name="name">albums</property>
                 <property name="title">Albums</property>
                 <property name="child">
-                  <object class="AdwStatusPage">
-                    <property name="title">Welcome!</property>
+                  <object class="GtkScrolledWindow" id="_scrolled_window">
+                    <child>
+                      <object class="GtkGridView" id="albumview">
+                        <property name="max-columns">10</property>
+                        <property name="single-click-activate">True</property>
+                      </object>
+                    </child>
                   </object>
                 </property>
               </object>

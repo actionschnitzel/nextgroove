@@ -27,6 +27,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'NextcloudmusicWindow'
 
     musiclist = Gtk.Template.Child("list")
+    album_view = Gtk.Template.Child("albumview")
     _settings = None
     _client = None
     _media = None
@@ -35,8 +36,32 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
 
+
+
+    def _setup_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        list_item.props.child = Gtk.Label()
+
+    def _bind_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        album_list_item = list_item.props.item
+        album_widget = list_item.props.child
+        album_widget.set_text(album_list_item.album)
+        #album_widget.props.album = album_list_item
+
     def set_client(self, client):
         self._client = client
+        print("Setting client")
+        # We like Albums
+        album_item_factory = Gtk.SignalListItemFactory()
+        album_item_factory.connect("setup", self._setup_list_item)
+        album_item_factory.connect("bind", self._bind_list_item)
+        self.album_view.props.factory = album_item_factory
+        selection_model = Gtk.MultiSelection.new(client.albums)
+        self.album_view.props.model = selection_model
+        print("Connected model")
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -58,11 +83,19 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             artist_string = artist['name']
             for album in artist['albums']:
                 album_string = album['name']
+                #self.add_album(artist, album)
                 for song in album['tracks']:
                     song_string = song['title']
                     song_id = list(song['files'].values())[0]
                     self.add_song(artist_string, album_string, song_string, song_id)
             break
+
+    def add_album(self, artist, album):
+        model = self.album_view.get_model()
+        if not model:
+            list_item_factory = Gtk.SignalListItemFactory()
+            print("model doesn't exist yet")
+
 
 
     def add_song(self, artist, album, song, song_id):

@@ -22,18 +22,20 @@ import json
 import os
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio
-
+from .albumlistitem import AlbumListItem
 
 class NextcloudMusicClient(GObject.Object):
 
     _auth = None
     _base_url = None
     collection = None
+    albums = None
 
     def __init__(self, server, user, token):
         super().__init__()
         self._base_url = f"{server}/index.php/apps/music/api"
         self._auth = HTTPBasicAuth(user, token)
+        self.albums = Gio.ListStore()
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
@@ -67,13 +69,26 @@ class NextcloudMusicClient(GObject.Object):
                 print(f"return code was {response.status_code}")
                 return None
             self.collection = json.loads(response.text)
+            self.update_albums()
             return self.collection
         except requests.exceptions.RequestException as e:
             # TODO better error handling and user messaging
             print(f"Exception in updating collection {e}")
             return None
 
+    def update_albums(self):
+        # FIXME remove previous ones - cannot see how to clear them
+        for artist in self.collection:
+            artist_string = artist['name']
+            for album in artist['albums']:
+                album_string = album['name']
+                album_item = AlbumListItem(artist_string, album_string)
+                self.albums.append(album_item)
+            # FIXME remove but I'm lazy, let's fix for one first
+            break
+
     def collection_async(self, callback):
+        print("Starting async call")
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(self.collection_sync)
@@ -83,6 +98,8 @@ class NextcloudMusicClient(GObject.Object):
         task.return_value(collection)
 
     def get_song(self, song_id):
+        # TODO check if already exists and use a cache dir
+        # TODO also add some method to clear cache cos could get big
         print(f"Attempting to call {self._base_url}/file/{song_id}/download")
         response = requests.get(f"{self._base_url}/file/{song_id}/download", auth=self._auth)
         if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
