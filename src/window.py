@@ -21,6 +21,7 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gio, GObject
 from html import escape
+from .albumtile import AlbumTile
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):
@@ -36,20 +37,18 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
 
-
-
     def _setup_list_item(
             self, factory: Gtk.SignalListItemFactory,
             list_item: Gtk.ListItem) -> None:
-        list_item.props.child = Gtk.Label()
+        list_item.props.child = AlbumTile()
 
     def _bind_list_item(
             self, factory: Gtk.SignalListItemFactory,
             list_item: Gtk.ListItem) -> None:
         album_list_item = list_item.props.item
         album_widget = list_item.props.child
-        album_widget.set_text(album_list_item.album)
-        #album_widget.props.album = album_list_item
+        album_widget.set_album(album_list_item)
+        #album_widget.connect("button-press-event", self.album_clicked)
 
     def set_client(self, client):
         self._client = client
@@ -61,7 +60,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_view.props.factory = album_item_factory
         selection_model = Gtk.MultiSelection.new(client.albums)
         self.album_view.props.model = selection_model
-        print("Connected model")
+        self.album_view.connect("activate", self.album_clicked)
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -79,6 +78,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def update_collection(self, source_object, result, user_data):
         collection = result.propagate_value().value
+        added = 0
         for artist in collection:
             artist_string = artist['name']
             for album in artist['albums']:
@@ -88,6 +88,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_string = song['title']
                     song_id = list(song['files'].values())[0]
                     self.add_song(artist_string, album_string, song_string, song_id)
+                    added += 1
+                    if added >= 10:
+                        break
             break
 
     def add_album(self, artist, album):
@@ -111,3 +114,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         print(f"Got a file: {song_file}")
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
+
+    def album_clicked(self, event, album_id):
+        album = self._client.albums[album_id]
+        print(f"is your album {album.album}")
+        album_details = self._client.album_details(album)
+        song_id = list(album_details['tracks'][0]['files'].values())[0]
+        song_file = self._client.get_song(song_id)
+        print(f"Got a file: {song_file}")
+        self._media = Gtk.MediaFile.new_for_filename(song_file)
+        self._media.play()
+
+

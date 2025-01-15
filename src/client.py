@@ -40,6 +40,15 @@ class NextcloudMusicClient(GObject.Object):
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
 
+    def album_details(self, album_list_item):
+        for artist in self.collection:
+            if artist['name'] == album_list_item.artist:
+                for album in artist['albums']:
+                    if album['name'] == album_list_item.album:
+                        return album
+        print("UH OH couldn't find album?")
+        return None
+
     def validate(self):
         # FIXME remove this call, this is just testing the function prior to getting the async shit in place
         self.update_collection()
@@ -84,6 +93,7 @@ class NextcloudMusicClient(GObject.Object):
                 album_string = album['name']
                 album_item = AlbumListItem(artist_string, album_string)
                 self.albums.append(album_item)
+                print(album)
             # FIXME remove but I'm lazy, let's fix for one first
             break
 

@@ -30,20 +30,6 @@
           <object class="AdwViewStack" id="stack">
             <child>
               <object class="AdwViewStackPage">
-                <property name="name">collection</property>
-                <property name="title">Collection</property>
-                <property name="child">
-                  <object class="GtkListBox" id="list">
-                    <property name="selection-mode">none</property>
-                    <style>
-                      <class name="boxed-list"/>
-                    </style>
-                  </object>
-                </property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwViewStackPage">
                 <property name="name">albums</property>
                 <property name="title">Albums</property>
                 <property name="child">
@@ -54,6 +40,20 @@
                         <property name="single-click-activate">True</property>
                       </object>
                     </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">collection</property>
+                <property name="title">Collection</property>
+                <property name="child">
+                  <object class="GtkListBox" id="list">
+                    <property name="selection-mode">none</property>
+                    <style>
+                      <class name="boxed-list"/>
+                    </style>
                   </object>
                 </property>
               </object>

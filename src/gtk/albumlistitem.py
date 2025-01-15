@@ -28,3 +28,4 @@ class AlbumListItem(GObject.Object):
         super().__init__()
         self.artist = artist
         self.album = album
+
