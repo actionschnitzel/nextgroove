@@ -42,6 +42,17 @@
                 </property>
               </object>
             </child>
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">albums</property>
+                <property name="title">Albums</property>
+                <property name="child">
+                  <object class="AdwStatusPage">
+                    <property name="title">Welcome!</property>
+                  </object>
+                </property>
+              </object>
+            </child>
           </object>
         </property>
         <child type="bottom">
