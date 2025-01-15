@@ -35,6 +35,7 @@ class Controls(Gtk.ActionBar):
     previous_button = Gtk.Template.Child("previous")
     next_button = Gtk.Template.Child("next")
     now_playing_label = Gtk.Template.Child("nowplaying")
+    current_album_artist = Gtk.Template.Child("current_album_artist")
 
     # Data refs
     _client = None
@@ -146,8 +147,12 @@ class Controls(Gtk.ActionBar):
         song_file = self._client.get_song(song_queue_item.get_song_id())
         self._window.play_song(song_file, song_queue_item.get_title())
 
-    def set_now_playing(self, song):
-        self.now_playing_label.set_text(song)
+    def set_now_playing(self, queue_item):
+        song_title = queue_item.title
+        artist_title = self._client.artist_name_by_id[queue_item.artist_id]
+        album_title = self._client.album_name_by_id[queue_item.album_id]
+        self.now_playing_label.set_text(song_title)
+        self.current_album_artist.set_markup(f"{artist_title}: <i>{album_title}</i>")
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def song_ended(self, foo, bar):
