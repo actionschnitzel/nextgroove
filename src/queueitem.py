@@ -50,3 +50,9 @@ class QueueItem(GObject.Object):
 
     def set_now_playing(self, now_playing):
         self.now_playing = now_playing
+
+    @GObject.Property(
+        type=str, flags=GObject.ParamFlags.READWRITE, default=None
+    )
+    def song_title(self):
+        return self.title

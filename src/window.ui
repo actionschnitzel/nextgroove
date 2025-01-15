@@ -54,9 +54,51 @@
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window_collection">
                     <child>
-                      <object class="GtkListView" id="collectionview">
-                        <!--property name="max-columns">10</property>
-                        <property name="single-click-activate">True</property-->
+                      <object class="GtkTreeView" id="collectionview">
+                        <!--property name="model">songs</property-->
+                        <child>
+                          <object class="GtkTreeViewColumn" id="artist-column">
+                            <property name="title">Artist</property>
+                            <property name="max-width">250</property>
+                            <property name="resizable">True</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="test-renderer"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="album-column">
+                            <property name="title">Album</property>
+                            <property name="max-width">250</property>
+                            <property name="resizable">True</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="test-renderer2"/>
+                              <attributes>
+                                <attribute name="text">1</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="song-column">
+                            <property name="title">Song</property>
+                            <property name="max-width">250</property>
+                            <property name="resizable">True</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="test-renderer3"/>
+                              <attributes>
+                                <attribute name="text">2</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="selection">
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

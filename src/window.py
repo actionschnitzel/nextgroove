@@ -51,7 +51,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new("net.rosebirch.nextcloudmusic")
         self._queue = Gio.ListStore()
-        self._songs = Gio.ListStore()
+        self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
 
     def set_client(self, client):
@@ -78,13 +78,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.queue_view.connect("activate", self.queue_clicked)
 
         # Collection page
-        collection_item_factory = Gtk.SignalListItemFactory()
-        collection_item_factory.connect("setup", self._setup_collection_list_item)
-        collection_item_factory.connect("bind", self._bind_collection_list_item)
-        self.collection_view.props.factory = collection_item_factory
-        collection_selection_model = Gtk.MultiSelection.new(self._songs)
-        self.collection_view.props.model = collection_selection_model
-        self.collection_view.connect("activate", self.collection_clicked)
+        self.collection_view.props.model = self._songs
+        self.collection_view.connect("row-activated", self.collection_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
@@ -97,27 +92,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     # Collection view (hidden) #
     ############################
 
-    def _setup_collection_list_item(
-        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
-    ) -> None:
-        """Creates UI elements for album view"""
-        list_item.props.child = Gtk.Label()  # TODO replace with a proper widget
 
-    def _bind_collection_list_item(
-        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
-    ) -> None:
-        """Populates the UI elements for album view.
-        Recalled if widget is updated, hence multiple branches depending on current stage
-        """
-        collection_list_item = list_item.props.item
-        widget = list_item.props.child
-        artist = self._client.artist_name_by_id[collection_list_item.artist_id]
-        album = self._client.album_name_by_id[collection_list_item.album_id]
-        song = collection_list_item.get_title()
-        widget.set_markup(f"<b>{escape(artist)}</b> <i>{escape(album)}</i>  {escape(song)}")
-
-    def collection_clicked(self, event, thing):
-        print(f"clicked collection {event} and {thing}")
+    def collection_clicked(self, event, thing, another_thing):
+        print(f"clicked collection {event} and {thing} and {another_thing}")
 
 
     def update_collection(self, source_object, result, user_data):
@@ -137,8 +114,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_string = song["title"]
                     song_id = list(song["files"].values())[0]
                     song_item = QueueItem(song_string, song_id, album_id, artist_id)
-                    self._songs.append(song_item)
+                    self._songs.append([artist_string, album_string, song_string, song_item])
                     #self.add_song(artist_string, album_string, song_string, song_id)
+        print(f"we have {len(self._songs)} songs")
 
     def get_artist_name(self, thing):
         return thing['name']
