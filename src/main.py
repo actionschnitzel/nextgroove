@@ -62,7 +62,9 @@ class NextcloudmusicApplication(Adw.Application):
         self._window = win
         self.update_client_credentials()
 
-    # TODO needs to be called on settings closing
+    def update_client_credentials_callback(self, _):
+        self.update_client_credentials()
+
     def update_client_credentials(self):
         s = self._window.settings
         self._client = NextcloudMusicClient(
@@ -89,6 +91,7 @@ class NextcloudmusicApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         settings = NextcloudmusicSettingsWindow()
+        settings.connect("closed", self.update_client_credentials_callback)
         settings.present(self._window)
 
     def create_action(self, name, callback, shortcuts=None):
