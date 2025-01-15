@@ -7,16 +7,16 @@
     <property name="default-width">800</property>
     <property name="default-height">600</property>
     <property name="content">
-    <object class="AdwToolbarView">
-      <child type="top">
-        <object class="AdwHeaderBar" id="header_bar">
-          <property name="title-widget">
-            <object class="AdwViewSwitcher">
-              <property name="stack">stack</property>
-              <property name="policy">wide</property>
-            </object>
-          </property>
-          <child type="end">
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar">
+            <property name="title-widget">
+              <object class="AdwViewSwitcher">
+                <property name="stack">stack</property>
+                <property name="policy">wide</property>
+              </object>
+            </property>
+            <child type="end">
 -              <object class="GtkMenuButton">
 -                <property name="primary">True</property>
 -                <property name="icon-name">open-menu-symbolic</property>
@@ -24,30 +24,33 @@
 -                <property name="menu-model">primary_menu</property>
 -              </object>
 -            </child>
-        </object>
-      </child>
-      <property name="content">
-        <object class="AdwViewStack" id="stack">
-           <child>
+          </object>
+        </child>
+        <property name="content">
+          <object class="AdwViewStack" id="stack">
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">collection</property>
+                <property name="title">Collection</property>
+                <property name="child">
                   <object class="GtkListBox" id="list">
                     <property name="selection-mode">none</property>
                     <style>
                       <class name="boxed-list"/>
                     </style>
-                    <!-- rows -->
                   </object>
-
-                </child>
-
-        </object>
-      </property>
-      <child type="bottom">
-        <object class="AdwViewSwitcherBar" id="switcher_bar">
-          <property name="stack">stack</property>
-        </object>
-      </child>
-    </object>
-  </property>
+                </property>
+              </object>
+            </child>
+          </object>
+        </property>
+        <child type="bottom">
+          <object class="AdwViewSwitcherBar" id="switcher_bar">
+            <property name="stack">stack</property>
+          </object>
+        </child>
+      </object>
+    </property>
   </template>
   <menu id="primary_menu">
     <section>
