@@ -24,8 +24,24 @@ from gi.repository import Gtk
 class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
     __gtype_name__ = 'NextcloudmusicSettingsWindow'
 
-    #label = Gtk.Template.Child()
+    _server_row = Gtk.Template.Child()
+    _user_row = Gtk.Template.Child()
+    _token_row = Gtk.Template.Child()
+
+    _settings = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
+
+    def present(self, window):
+        self._settings = window.props.settings
+        self._server_row.connect("changed", self._update_server)
+        self._server_row.set_text(self._settings.get_string("server"))
+        super().present(window)
+
+    def _update_server(self, server_row):
+        self._settings.set_string("server", server_row.get_text())
+
+
+
+
