@@ -2,55 +2,70 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="Controls" parent="GtkActionBar">
-    <child>
-      <object class="GtkBox" id="leftside">
+    <child type="start">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="nowplaying">
+            <property name="label"/>
+            <property name="halign">start</property>
+            <property name="hexpand">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="current_album_artist">
+            <property name="label"/>
+            <property name="halign">start</property>
+            <property name="hexpand">True</property>
+          </object>
+        </child>
       </object>
     </child>
+    <child type="center">
+      <object class="GtkBox">
+        <property name="halign">center</property>
         <child>
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
+          <object class="GtkButton" id="previous">
+            <property name="label">prev</property>
+            <property name="icon-name">media-skip-backward-symbolic</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="playpause">
+            <property name="label">play/pause</property>
+            <property name="icon-name">media-playback-start-symbolic</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="next">
+            <property name="label">next</property>
+            <property name="icon-name">media-skip-forward-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="end">
+      <object class="GtkBox">
+        <property name="halign">end</property>
+        <child>
+          <object class="GtkButton" id="volumebutton">
+            <property name="label">vol</property>
+            <property name="icon-name">audio-volume-high-symbolic</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopover" id="volumepopover">
+            <property name="position">left</property>
             <child>
-              <object class="GtkLabel" id="nowplaying">
-                <property name="label"></property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="current_album_artist">
-                <property name="label"></property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
+              <object class="GtkBox">
+                <child>
+                  <object class="GtkScale" id="volumescale">
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
-        <child type="center">
-          <object class="GtkBox">
-            <property name="halign">center</property>
-            <child>
-              <object class="GtkButton" id="previous">
-                <property name="label">prev</property>
-                <property name="icon-name">media-skip-backward-symbolic</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="playpause">
-                <property name="label">play/pause</property>
-                <property name="icon-name">media-playback-start-symbolic</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="next">
-                <property name="label">next</property>
-                <property name="icon-name">media-skip-forward-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-    <child>
-      <object class="GtkBox" id="right">
-        <property name="hexpand">True</property>
       </object>
     </child>
   </template>

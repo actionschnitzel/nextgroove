@@ -36,6 +36,9 @@ class Controls(Gtk.ActionBar):
     next_button = Gtk.Template.Child("next")
     now_playing_label = Gtk.Template.Child("nowplaying")
     current_album_artist = Gtk.Template.Child("current_album_artist")
+    volumebutton = Gtk.Template.Child("volumebutton")
+    volumepopover = Gtk.Template.Child("volumepopover")
+    volumescale = Gtk.Template.Child("volumescale")
 
     # Data refs
     _client = None
@@ -51,6 +54,11 @@ class Controls(Gtk.ActionBar):
     def __init__(self):
         super().__init__()
         self.set_size_request(120, 50)
+        self.volumescale.set_range(0, 100)
+        self.volumescale.set_value(100)
+        self.volumescale.set_increments(5,10)
+        self.volumescale.set_size_request(150, 30)
+        self.volumescale.connect("value-changed", self.volume_changed)
 
     def connections(self, client, media, queue, window):
         # Remove old connections
@@ -72,6 +80,7 @@ class Controls(Gtk.ActionBar):
             "clicked", self.on_previous_button_pressed
         )
         media.connect("notify::ended", self.song_ended)
+        self.volumebutton.connect("clicked", self.volume_clicked)
 
         self._media = media
         self._client = client
@@ -159,3 +168,13 @@ class Controls(Gtk.ActionBar):
     def song_ended(self, foo, bar):
         print("Song ended")
         self.on_next_button_pressed(None)
+
+    def volume_clicked(self, event):
+        self.volumepopover.set_size_request(100, 25)
+        self.volumepopover.popup()
+
+    def volume_changed(self, scale):
+        value = scale.get_value()
+        new_volume = value / 100
+        self._media.set_volume(new_volume)
+        # TODO maybe save that setting and restore on startup
