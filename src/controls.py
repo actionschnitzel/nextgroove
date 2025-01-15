@@ -33,6 +33,32 @@ class Controls(Gtk.ActionBar):
     next_button = Gtk.Template.Child("next")
     now_playing_label = Gtk.Template.Child("nowplaying")
 
+    _client = None
+    _media = None
+
+    play_pause_handler_id = None
+
     def __init__(self):
         super().__init__()
         self.set_size_request(120,50)
+
+    def connections(self, client, media):
+        if self.play_pause_handler_id:
+            print("Disconnecting old handler")
+            self.play_pause_button.disconnect(self.play_pause_handler_id)
+        self.play_pause_handler_id = self.play_pause_button.connect("clicked", self.on_play_pause_button_pressed)
+        print("ConnecteD")
+        self._media = media
+        self._client = client
+
+    def on_play_pause_button_pressed(self, event):
+        if not self._media:
+            print("Not playing yet, ignoring play/pause")
+            return
+        print(f"play pressed and apparently is it playing already {self._media.get_playing()} and duration is {self._media.get_timestamp()}")
+        if self._media.get_playing():
+            print("PAUSE")
+            self._media.pause()
+        else:
+            print("PLAY")
+            self._media.play()
