@@ -31,6 +31,7 @@ nextcloudmusic_sources = [
   'albumtile.py',
   'albumlistitem.py',
   'client.py',
+  'controls.py',
   'main.py',
   'queueitem.py',
   'window.py',

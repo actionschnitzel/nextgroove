@@ -82,7 +82,7 @@
           </object>
         </child>
         <child type="bottom">
-          <object class="GtkLabel" id="labelfornoreason">
+          <object class="Controls" id="controls">
             <!-- property name="text">test</property-->
           </object>
         </child>

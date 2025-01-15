@@ -23,6 +23,7 @@ from gi.repository import Gio, GObject
 from html import escape
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
+from .controls import Controls
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):

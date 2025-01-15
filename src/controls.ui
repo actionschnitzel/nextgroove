@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="Controls" parent="GtkActionBar">
+    <child>
+      <object class="GtkBox" id="leftside">
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="center">
+        <property name="justify">center</property>
+        <property name="wrap">True</property>
+        <property name="ellipsize">middle</property>
+        <property name="max_width_chars">20</property>
+        <property name="lines">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="right">
+        <property name="ellipsize">middle</property>
+        <property name="max_width_chars">20</property>
+      </object>
+    </child>
+  </template>
+</interface>
