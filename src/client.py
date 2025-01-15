@@ -25,6 +25,7 @@ from gi.repository import GObject, Gio, GLib
 from .albumlistitem import AlbumListItem
 from functools import cmp_to_key
 
+
 class NextcloudMusicClient(GObject.Object):
 
     _auth = None
@@ -49,9 +50,9 @@ class NextcloudMusicClient(GObject.Object):
 
     def album_details(self, album_list_item):
         for artist in self.collection:
-            if artist['name'] == album_list_item.artist:
-                for album in artist['albums']:
-                    if album['name'] == album_list_item.album:
+            if artist["name"] == album_list_item.artist:
+                for album in artist["albums"]:
+                    if album["name"] == album_list_item.album:
                         return album
         print("UH OH couldn't find album?")
         return None
@@ -96,51 +97,56 @@ class NextcloudMusicClient(GObject.Object):
         # FIXME remove previous ones - cannot see how to clear them
         # we only call once for now so not an issue
         for artist in self.collection:
-            artist_string = artist['name']
-            for album in artist['albums']:
-                album_string = album['name']
-                album_cover = album['cover']
-                album_id = album['id']
-                if album['cover']:
-                    self._album_urls_by_id[album['id']] = album['cover']
+            artist_string = artist["name"]
+            for album in artist["albums"]:
+                album_string = album["name"]
+                album_cover = album["cover"]
+                album_id = album["id"]
+                if album["cover"]:
+                    self._album_urls_by_id[album["id"]] = album["cover"]
                 else:
-                    self._album_urls_by_id[album['id']] = None
-                album_item = AlbumListItem(artist_string, album_string, album_cover, album_id)
+                    self._album_urls_by_id[album["id"]] = None
+                album_item = AlbumListItem(
+                    artist_string, album_string, album_cover, album_id
+                )
                 self.albums_before_sorting.append(album_item)
 
-
-
         print(f"Done and we have {len(self.albums_before_sorting)}")
-        for album in sorted(self.albums_before_sorting, key=cmp_to_key(lambda album1, album2: self.latest_song_id_in_album(album1) - self.latest_song_id_in_album(album2)), reverse=True):
+        for album in sorted(
+            self.albums_before_sorting,
+            key=cmp_to_key(
+                lambda album1, album2: self.latest_song_id_in_album(album1)
+                - self.latest_song_id_in_album(album2)
+            ),
+            reverse=True,
+        ):
             self.albums.append(album)
         print(f"Done and we have {len(self.albums)}")
 
-
     def latest_song_id_in_album(self, album_list_item):
         """Expects input like:
-           {'name': 'Take Me To The Clouds Above', 'year': None, 'cover': '/index.php/apps/music/api/cover/9b480ae81749f84107582bcf42ac1d42', 'id': 26, 'diskCount': 1, 'tracks': [
-             {'title': 'Take Me To The Clouds Above', 'number': None, 'disk': 1, 'artistId': 17, 'length': 168, 'files': {'audio/mpeg': 108774}, 'id': 216}
-           ]}
-           tracks can contain multiple, but find the largest id within there
+        {'name': 'Take Me To The Clouds Above', 'year': None, 'cover': '/index.php/apps/music/api/cover/9b480ae81749f84107582bcf42ac1d42', 'id': 26, 'diskCount': 1, 'tracks': [
+          {'title': 'Take Me To The Clouds Above', 'number': None, 'disk': 1, 'artistId': 17, 'length': 168, 'files': {'audio/mpeg': 108774}, 'id': 216}
+        ]}
+        tracks can contain multiple, but find the largest id within there
         """
         album_object = self.album_details(album_list_item)
         latest_id = None
-        for track in album_object['tracks']:
+        for track in album_object["tracks"]:
             # Edge case for it not being set yet
             if not latest_id:
-                latest_id = track['id']
+                latest_id = track["id"]
                 continue
 
-            if track['id'] > latest_id:
-                latest_id = track['id']
+            if track["id"] > latest_id:
+                latest_id = track["id"]
 
         return latest_id
 
-
     def download_cover(self, album_id, cover_url):
-        #print(f"cover at {cover_url}")
+        # print(f"cover at {cover_url}")
         cover_url_full = f"{self._server}{cover_url}"
-        #print(f"full url {cover_url_full}")
+        # print(f"full url {cover_url_full}")
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print("Could not download cover at url code {response.status_code}")
@@ -149,7 +155,9 @@ class NextcloudMusicClient(GObject.Object):
                 os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
             except FileExistsError:
                 pass  # Expected to be possible, this is called from multiple threads
-        with open(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb") as cover_file:
+        with open(
+            f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb"
+        ) as cover_file:
             cover_file.write(response.content)
 
     def download_cover_async(self, album_id, cover_url, widget):
@@ -171,7 +179,7 @@ class NextcloudMusicClient(GObject.Object):
 
     def get_cover(self, album_list_item):
         album_details = self.album_details(album_list_item)
-        album_id = album_details['id']
+        album_id = album_details["id"]
         return f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}"
 
     def cover_downloaded(self, album_tile, task, baz):
@@ -192,7 +200,9 @@ class NextcloudMusicClient(GObject.Object):
         # TODO check if already exists and use a cache dir
         # TODO also add some method to clear cache cos could get big
         print(f"Attempting to call {self._base_url}/file/{song_id}/download")
-        response = requests.get(f"{self._base_url}/file/{song_id}/download", auth=self._auth)
+        response = requests.get(
+            f"{self._base_url}/file/{song_id}/download", auth=self._auth
+        )
         if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
             try:
                 os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
@@ -202,4 +212,3 @@ class NextcloudMusicClient(GObject.Object):
         with open(song_location, "wb") as song_file:
             song_file.write(response.content)
         return os.path.abspath(song_location)
-

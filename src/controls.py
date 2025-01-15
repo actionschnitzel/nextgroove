@@ -25,9 +25,10 @@ from .albumtile import AlbumTile
 from .queueitem import QueueItem
 from html import escape
 
-@Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/controls.ui')
+
+@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/controls.ui")
 class Controls(Gtk.ActionBar):
-    __gtype_name__ = 'Controls'
+    __gtype_name__ = "Controls"
 
     # Child Widgets
     play_pause_button = Gtk.Template.Child("playpause")
@@ -48,7 +49,7 @@ class Controls(Gtk.ActionBar):
 
     def __init__(self):
         super().__init__()
-        self.set_size_request(120,50)
+        self.set_size_request(120, 50)
 
     def connections(self, client, media, queue, window):
         # Remove old connections
@@ -60,9 +61,15 @@ class Controls(Gtk.ActionBar):
             self.previous_button.disconnect(self.previous_handler_id)
 
         # Connect new items
-        self.play_pause_handler_id = self.play_pause_button.connect("clicked", self.on_play_pause_button_pressed)
-        self.next_handler_id = self.next_button.connect("clicked", self.on_next_button_pressed)
-        self.previous_handler_id = self.previous_button.connect("clicked", self.on_previous_button_pressed)
+        self.play_pause_handler_id = self.play_pause_button.connect(
+            "clicked", self.on_play_pause_button_pressed
+        )
+        self.next_handler_id = self.next_button.connect(
+            "clicked", self.on_next_button_pressed
+        )
+        self.previous_handler_id = self.previous_button.connect(
+            "clicked", self.on_previous_button_pressed
+        )
         media.connect("notify::ended", self.song_ended)
 
         self._media = media
@@ -77,7 +84,9 @@ class Controls(Gtk.ActionBar):
         if not self._media:
             print("Not playing yet, ignoring play/pause")
             return
-        print(f"play pressed and apparently is it playing already {self._media.get_playing()} and duration is {self._media.get_timestamp()}")
+        print(
+            f"play pressed and apparently is it playing already {self._media.get_playing()} and duration is {self._media.get_timestamp()}"
+        )
         if self._media.get_playing():
             print("PAUSE")
             self._media.pause()

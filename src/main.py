@@ -21,8 +21,8 @@ import sys
 import gi
 from .client import NextcloudMusicClient
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gio, Adw
 from .window import NextcloudmusicWindow
@@ -36,11 +36,13 @@ class NextcloudmusicApplication(Adw.Application):
     _client = None
 
     def __init__(self):
-        super().__init__(application_id='net.rosebirch.nextcloudmusic',
-                         flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
-        self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action, ['<primary>p'])
+        super().__init__(
+            application_id="net.rosebirch.nextcloudmusic",
+            flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
+        )
+        self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
+        self.create_action("about", self.on_about_action)
+        self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
 
     def do_activate(self):
         """Called when the application is activated.
@@ -60,25 +62,24 @@ class NextcloudmusicApplication(Adw.Application):
     def update_client_credentials(self):
         s = self._window.settings
         self._client = NextcloudMusicClient(
-            s.get_string("server"),
-            s.get_string("user"),
-            s.get_string("token")
+            s.get_string("server"), s.get_string("user"), s.get_string("token")
         )
         self._window.set_client(self._client)
         callback = self._window.update_collection
         self._client.collection_async(callback)
 
-
     def on_about_action(self, *args):
         """Callback for the app.about action."""
-        about = Adw.AboutDialog(application_name='nextcloudmusic',
-                                application_icon='net.rosebirch.nextcloudmusic',
-                                developer_name='Dean Birch',
-                                version='0.1.0',
-                                developers=['Dean Birch'],
-                                copyright='© 2024 Dean Birch')
+        about = Adw.AboutDialog(
+            application_name="nextcloudmusic",
+            application_icon="net.rosebirch.nextcloudmusic",
+            developer_name="Dean Birch",
+            version="0.1.0",
+            developers=["Dean Birch"],
+            copyright="© 2024 Dean Birch",
+        )
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
-        about.set_translator_credits(_('translator-credits'))
+        about.set_translator_credits(_("translator-credits"))
         about.present(self.props.active_window)
 
     def on_preferences_action(self, widget, _):

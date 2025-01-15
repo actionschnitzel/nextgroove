@@ -13,7 +13,7 @@ from gi.repository import GObject, Gtk
 from .albumlistitem import AlbumListItem
 
 
-@Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/albumtile.ui')
+@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/albumtile.ui")
 class AlbumTile(Gtk.Box):
 
     __gtype_name__ = "AlbumTile"
@@ -26,11 +26,11 @@ class AlbumTile(Gtk.Box):
         """Initialise AlbumTile"""
         super().__init__()
         self._album = None
-        self._cover_image.set_size_request(128,128)
-
+        self._cover_image.set_size_request(128, 128)
 
     @GObject.Property(
-        type=AlbumListItem, flags=GObject.ParamFlags.READWRITE, default=None)
+        type=AlbumListItem, flags=GObject.ParamFlags.READWRITE, default=None
+    )
     def album(self):
         return self._album
 

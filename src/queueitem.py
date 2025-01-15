@@ -19,6 +19,7 @@
 
 from gi.repository import GObject
 
+
 class QueueItem(GObject.Object):
 
     title = None

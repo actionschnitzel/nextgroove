@@ -19,6 +19,7 @@
 
 from gi.repository import GObject
 
+
 class AlbumListItem(GObject.Object):
 
     artist = None
