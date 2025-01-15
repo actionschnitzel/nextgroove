@@ -160,6 +160,10 @@
         <attribute name="label" translatable="yes">_Play</attribute>
         <attribute name="action">app.album_play_clicked</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Add to queue</attribute>
+        <attribute name="action">app.album_queue_add_end_clicked</attribute>
+      </item>
     </section>
   </menu>
 </interface>
