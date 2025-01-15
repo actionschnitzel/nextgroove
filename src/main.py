@@ -44,6 +44,7 @@ class NextcloudmusicApplication(Adw.Application):
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
 
+
     def do_activate(self):
         """Called when the application is activated.
 
@@ -53,6 +54,7 @@ class NextcloudmusicApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = NextcloudmusicWindow(application=self)
+            self.create_action("album_play_clicked", win.album_play_clicked)
         win.present()
 
         self._window = win

@@ -26,6 +26,7 @@ class AlbumListItem(GObject.Object):
     album = None
     cover_url = None
     album_id = None
+    widget = None
 
     def __init__(self, artist, album, cover_url, album_id):
         super().__init__()
@@ -33,3 +34,6 @@ class AlbumListItem(GObject.Object):
         self.album = album
         self.cover_url = cover_url
         self.album_id = album_id
+
+    def set_widget(self, widget):
+        self.widget = widget

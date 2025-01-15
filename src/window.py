@@ -18,8 +18,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Adw
+from gi.repository import Gdk
 from gi.repository import Gtk
-from gi.repository import Gio, GObject
+from gi.repository import Gio, GObject, Graphene
 from html import escape
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
@@ -38,8 +39,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_view = Gtk.Template.Child("albumview")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
-    popover = Gtk.Template.Child("popover")
-    album_play_button = Gtk.Template.Child("album_play_button")
+    album_click_menu = Gtk.Template.Child("album_click_menu")
 
     # Data objects
     _settings = None
@@ -48,6 +48,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     _queue = None
     _songs = None
 
+    _album_selected = None
+
     def __init__(self, **kwargs):
         """Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
@@ -55,8 +57,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
-
-        self.popover.props.position = Gtk.PositionType.LEFT
 
     def set_client(self, client):
         """Connections created to link everything.
@@ -71,7 +71,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         selection_model = Gtk.MultiSelection.new(client.albums)
         self.album_view.props.model = selection_model
         self.album_view.connect("activate", self.album_clicked)
-        self.album_play_button.connect("clicked", self.album_play_clicked)
 
         # Queue page
         queue_item_factory = Gtk.SignalListItemFactory()
@@ -156,6 +155,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_list_item = list_item.props.item
         album_widget = list_item.props.child
         album_widget.set_album(album_list_item)
+        album_list_item.set_widget(album_widget)
         if os.path.exists(self._client.get_cover(album_list_item)):
             album_widget.set_cover(self._client.get_cover(album_list_item))
         else:
@@ -164,18 +164,17 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             )
 
     def album_clicked(self, event, album_id):
-        album = self._client.albums[album_id]
-        print(f"Clicked album '{album.album}' from artist {album.artist}")
-        # TODO make sure it appears near the album you clicked on.
-        self.popover.popup()
+        self._album_selected = album_id
+        album_tile = event.get_model()[album_id].widget
+        popover = Gtk.PopoverMenu.new_from_model(self.album_click_menu)
+        popover.set_parent(album_tile)
+        popover.popup()
 
-    def album_play_clicked(self, event):
+    def album_play_clicked(self, event, something):
         """Connected to activate signal from AlbumTile.
         A single click currently activates this and will attempt to play that album
         """
-        self.popover.popdown()
-        album_id = self.album_view.get_model().get_selection().get_nth(0)
-        print(f"got the slection as {album_id}")
+        album_id = self._album_selected
         album = self._client.albums[album_id]
         print(f"Clicked play on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
