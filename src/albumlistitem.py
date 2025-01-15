@@ -23,8 +23,12 @@ class AlbumListItem(GObject.Object):
 
     artist = None
     album = None
+    cover_url = None
+    album_id = None
 
-    def __init__(self, artist, album):
+    def __init__(self, artist, album, cover_url, album_id):
         super().__init__()
         self.artist = artist
         self.album = album
+        self.cover_url = cover_url
+        self.album_id = album_id

@@ -99,13 +99,16 @@ class NextcloudMusicClient(GObject.Object):
             artist_string = artist['name']
             for album in artist['albums']:
                 album_string = album['name']
-                album_item = AlbumListItem(artist_string, album_string)
-                self.albums_before_sorting.append(album_item)
+                album_cover = album['cover']
+                album_id = album['id']
                 if album['cover']:
                     self._album_urls_by_id[album['id']] = album['cover']
-                    self.download_cover_async(album['id'], album['cover'])
-            # FIXME remove but I'm lazy, let's fix for one first
-            #break
+                else:
+                    self._album_urls_by_id[album['id']] = None
+                album_item = AlbumListItem(artist_string, album_string, album_cover, album_id)
+                self.albums_before_sorting.append(album_item)
+
+
 
         print(f"Done and we have {len(self.albums_before_sorting)}")
         for album in sorted(self.albums_before_sorting, key=cmp_to_key(lambda album1, album2: self.latest_song_id_in_album(album1) - self.latest_song_id_in_album(album2)), reverse=True):
@@ -149,9 +152,9 @@ class NextcloudMusicClient(GObject.Object):
         with open(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb") as cover_file:
             cover_file.write(response.content)
 
-    def download_cover_async(self, album_id, cover_url):
+    def download_cover_async(self, album_id, cover_url, widget):
         """no callback needed"""
-        task = Gio.Task.new(self, None, None, None)
+        task = Gio.Task.new(widget, None, self.cover_downloaded, None)
         task.set_return_on_cancel(False)
         task.set_task_data(album_id)
         task.run_in_thread(self.download_cover_sync)
@@ -159,13 +162,21 @@ class NextcloudMusicClient(GObject.Object):
     def download_cover_sync(self, task, source_object, task_data, cancellable):
         album_id = task.get_task_data()
         cover_url = self._album_urls_by_id[album_id]
+        if not cover_url:
+            task.return_value(False)
+            return
+
         self.download_cover(album_id, cover_url)
-        task.return_value(True)
+        task.return_value(album_id)
 
     def get_cover(self, album_list_item):
         album_details = self.album_details(album_list_item)
         album_id = album_details['id']
         return f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}"
+
+    def cover_downloaded(self, album_tile, task, baz):
+        album_id = task.get_task_data()
+        album_tile.set_cover(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}")
 
     def collection_async(self, callback):
         print("Starting async call")

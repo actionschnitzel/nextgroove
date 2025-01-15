@@ -24,6 +24,7 @@ from html import escape
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
 from .controls import Controls
+import os.path
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):
@@ -55,7 +56,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_list_item = list_item.props.item
         album_widget = list_item.props.child
         album_widget.set_album(album_list_item)
-        album_widget.set_cover(self._client.get_cover(album_list_item))
+        if os.path.exists(self._client.get_cover(album_list_item)):
+            album_widget.set_cover(self._client.get_cover(album_list_item))
+        else:
+            self._client.download_cover_async(album_list_item.album_id, album_list_item.cover_url, album_widget)
 
     def _setup_queue_list_item(
             self, factory: Gtk.SignalListItemFactory,
