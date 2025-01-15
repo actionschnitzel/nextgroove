@@ -28,6 +28,7 @@ configure_file(
 
 nextcloudmusic_sources = [
   '__init__.py',
+  'client.py',
   'main.py',
   'window.py',
   'settings.py'
