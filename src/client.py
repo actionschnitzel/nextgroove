@@ -104,7 +104,6 @@ class NextcloudMusicClient(GObject.Object):
                 if album['cover']:
                     self._album_urls_by_id[album['id']] = album['cover']
                     self.download_cover_async(album['id'], album['cover'])
-                print(f"----------{album}")
             # FIXME remove but I'm lazy, let's fix for one first
             #break
 
