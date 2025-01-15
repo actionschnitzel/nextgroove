@@ -352,9 +352,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         if queue_list_item.is_now_playing():
             song_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
-            albumartist_widget.set_markup(f"<b>{artist_str}  <i>{album_str}</i></b>")
+            albumartist_widget.set_markup(f"<b>{escape(artist_str)}  <i>{escape(album_str)}</i></b>")
         else:
-            albumartist_widget.set_markup(f"{artist_str}  <i>{album_str}</i>")
+            albumartist_widget.set_markup(f"{escape(artist_str)}  <i>{escape(album_str)}</i>")
             song_widget.set_text(queue_list_item.get_title())
 
     def queue_clicked(self, event, queue_id):
