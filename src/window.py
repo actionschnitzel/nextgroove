@@ -67,6 +67,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             list_item: Gtk.ListItem) -> None:
         queue_list_item = list_item.props.item
         queue_list_widget = list_item.props.child
+        queue_list_item.set_widget(queue_list_widget)
         if queue_list_item.is_now_playing():
             queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
         else:
@@ -177,4 +178,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._media.play()
         self.controls.connections(self._client, self._media, self._queue, self)
         self.controls.set_now_playing(song_title)
+
+        # Trick the UI to redraw, no redraw call works
+        # I am clearly doing something wrong here!
+        fake_item = QueueItem('FAKE', 0)
+        self._queue.insert(0, fake_item)
+        self._queue.remove(0)
 
