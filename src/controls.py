@@ -44,6 +44,7 @@ class Controls(Gtk.ActionBar):
     # Signal handlers for disconnecting
     play_pause_handler_id = None
     next_handler_id = None
+    previous_handler_id = None
 
     def __init__(self):
         super().__init__()
@@ -55,16 +56,22 @@ class Controls(Gtk.ActionBar):
             self.play_pause_button.disconnect(self.play_pause_handler_id)
         if self.next_handler_id:
             self.next_button.disconnect(self.next_handler_id)
+        if self.previous_handler_id:
+            self.previous_button.disconnect(self.previous_handler_id)
 
         # Connect new items
         self.play_pause_handler_id = self.play_pause_button.connect("clicked", self.on_play_pause_button_pressed)
         self.next_handler_id = self.next_button.connect("clicked", self.on_next_button_pressed)
+        self.previous_handler_id = self.previous_button.connect("clicked", self.on_previous_button_pressed)
         media.connect("notify::ended", self.song_ended)
 
         self._media = media
         self._client = client
         self._queue = queue
         self._window = window
+
+        if self._media.get_duration() > 0:
+            self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def on_play_pause_button_pressed(self, event):
         if not self._media:
@@ -74,9 +81,31 @@ class Controls(Gtk.ActionBar):
         if self._media.get_playing():
             print("PAUSE")
             self._media.pause()
+            self.play_pause_button.set_icon_name("media-playback-start-symbolic")
         else:
             print("PLAY")
             self._media.play()
+            self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
+
+    def on_previous_button_pressed(self, event):
+        print("Previous button pressed")
+        last_song = None
+        current_song = None
+        for song in self._queue:
+            if song.is_now_playing():
+                current_song = song
+                break
+            last_song = song
+        if not last_song:
+            print("No previous song, just replay the same one")
+            song_file = self._client.get_song(current_song.get_song_id())
+            self._window.play_song(song_file, current_song.get_title())
+        else:
+            last_song.set_now_playing(True)
+            current_song.set_now_playing(False)
+            print(f"Try and play {last_song.get_title()}")
+            song_file = self._client.get_song(last_song.get_song_id())
+            self._window.play_song(song_file, last_song.get_title())
 
     def on_next_button_pressed(self, event):
         next_song = False
@@ -91,7 +120,7 @@ class Controls(Gtk.ActionBar):
                 next_song = True
 
         if not song_queue_item:
-            print("Probs at end, stop?")
+            print("Reached end of queue, not playing new song.")
             return
 
         current_song_queue_item.set_now_playing(False)
@@ -101,6 +130,7 @@ class Controls(Gtk.ActionBar):
 
     def set_now_playing(self, song):
         self.now_playing_label.set_text(f"{escape(song)}")
+        self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def song_ended(self, foo, bar):
         print("Song ended")

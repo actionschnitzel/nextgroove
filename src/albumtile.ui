@@ -27,7 +27,7 @@
     <child>
       <object class="GtkLabel" id="_artist_label">
         <property name="ellipsize">middle</property>
-        <property name="max_width_chars">20</property>
+        <property name="max_width_chars">40</property>
         <style>
           <class name="artist-label"/>
           <class name="dim-label"/>

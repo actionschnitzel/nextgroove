@@ -1,6 +1,15 @@
 # nextcloudmusic
 
-A basic attempt at having a native nextcloud music client for gnome.
+Limited GNOME based client for Nextcloud Music created as a holiday programming
+project. Check the current capabilities section.
+
+## Current Capabilities
+
+ - Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the [Nextcloud ones](https://github.com/owncloud/music?tab=readme-ov-file#api)
+ - Configurable from a settings page, *but client is not currently reloaded: update the settings then restart the program.*
+ - View albums in a grid, most recently uploaded first.
+ - Click an album to play an album.
+ - The current play queue is viewable showing what song is currently playing in bold.
 
 ## TODO
 
@@ -12,17 +21,13 @@ many, many, flaws that need to be fixed!
  - [x] ordering (albums)
  - [ ] making the collection view not look like arse (tabular?)
  - [ ] tab view at top level, to switch between views:
-   - [ ] Album view
+   - [x] Album view
    - [ ] All song view (i.e. current one)
    - [ ] Playlists
    - [ ] Podcasts
 - [x] Some sidebar to show the queue (kinda - just did a tab)
-- [ ] oh yeah a queuing system in general (added to a queue, but doesn't work yet)
-- [ ] media player controls
+- [x] oh yeah a queuing system in general (added to a queue, but doesn't work yet)
+- [x] media player controls
 - [ ] mpris
- 
-
-# CBATODO (yet)
-
- - [ ] update client auth on settings window closed
- - [ ] hide token
+- [ ] update client auth on settings window closed
+- [x] hide token

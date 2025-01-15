@@ -32,6 +32,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">albums</property>
                 <property name="title">Albums</property>
+                <property name="icon-name">media-optical-cd-audio-symbolic</property>
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window">
                     <child>
@@ -48,6 +49,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">collection</property>
                 <property name="title">Collection</property>
+                <property name="icon-name">view-list-bullet-symbolic</property>
                 <property name="child">
                   <object class="GtkListBox" id="list">
                     <property name="selection-mode">none</property>
@@ -62,6 +64,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">queue</property>
                 <property name="title">Queue</property>
+                <property name="icon-name">view-list-ordered-symbolic</property>
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window_queue">
                     <child>

@@ -45,6 +45,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue = Gio.ListStore()
         self._media = Gtk.MediaFile.new_for_filename("/tmp/doesnotexist")
 
+
     def _setup_list_item(
             self, factory: Gtk.SignalListItemFactory,
             list_item: Gtk.ListItem) -> None:
