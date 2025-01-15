@@ -56,6 +56,7 @@ class NextcloudmusicApplication(Adw.Application):
             win = NextcloudmusicWindow(application=self)
             self.create_action("album_play_clicked", win.album_play_clicked)
             self.create_action("album_queue_add_end_clicked", win.album_queue_add_end_clicked)
+            self.create_action("album_queue_add_next_clicked", win.album_queue_add_next_clicked)
         win.present()
 
         self._window = win

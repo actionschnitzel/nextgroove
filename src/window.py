@@ -219,6 +219,33 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
             self._queue.append(song_item)
 
+    def album_queue_add_next_clicked(self, event, something):
+        if len(self._queue) == 0:
+            print("Add to next in queue is identical to play when no queue: rerouting...")
+            self.album_play_clicked(event, something)
+            return
+        album_id = self._album_selected
+        album = self._client.albums[album_id]
+        print(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
+        album_details = self._client.album_details(album)
+        artist_id = self._client.get_artist_id_for_album_list_item(album)
+
+        # Tracks are not ordered in the json output
+        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+
+        # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
+        # we need that file ID, which makes this look quite ugly
+        insert_index = 0
+        for queue_song in self._queue:
+            if queue_song.is_now_playing():
+                break
+            insert_index += 1
+        print(f"discovered now playing at queue position {insert_index}")
+        for song in reversed(sorted_tracks):
+            queued_song_id = list(song["files"].values())[0]
+            song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            self._queue.insert(insert_index+1, song_item)
+
     ##############
     # Queue View #
     ##############
