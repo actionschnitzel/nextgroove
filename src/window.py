@@ -94,7 +94,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.queue_view.connect("activate", self.queue_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
-        self.controls.connections(self._client, self._media, self._queue)
+        self.controls.connections(self._client, self._media, self._queue, self)
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -175,6 +175,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # and then connect the damn signals again
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
-        self.controls.connections(self._client, self._media, self._queue)
+        self.controls.connections(self._client, self._media, self._queue, self)
         self.controls.set_now_playing(song_title)
 

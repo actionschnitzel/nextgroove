@@ -39,6 +39,7 @@ class Controls(Gtk.ActionBar):
     _client = None
     _media = None
     _queue = None
+    _window = None
 
     # Signal handlers for disconnecting
     play_pause_handler_id = None
@@ -48,7 +49,7 @@ class Controls(Gtk.ActionBar):
         super().__init__()
         self.set_size_request(120,50)
 
-    def connections(self, client, media, queue):
+    def connections(self, client, media, queue, window):
         # Remove old connections
         if self.play_pause_handler_id:
             self.play_pause_button.disconnect(self.play_pause_handler_id)
@@ -62,6 +63,7 @@ class Controls(Gtk.ActionBar):
         self._media = media
         self._client = client
         self._queue = queue
+        self._window = window
 
     def on_play_pause_button_pressed(self, event):
         if not self._media:
@@ -76,7 +78,21 @@ class Controls(Gtk.ActionBar):
             self._media.play()
 
     def on_next_button_pressed(self, event):
-        pass
+        next_song = False
+        song_queue_item = None
+        current_song_queue_item = None
+        for song in self._queue:
+            if next_song:
+                song_queue_item = song
+                break
+            if song.is_now_playing():
+                current_song_queue_item = song
+                next_song = True
+
+        current_song_queue_item.set_now_playing(False)
+        song_queue_item.set_now_playing(True)
+        song_file = self._client.get_song(song_queue_item.get_song_id())
+        self._window.play_song(song_file, song_queue_item.get_title())
 
     def set_now_playing(self, song):
         self.now_playing_label.set_text(f"{escape(song)}")
