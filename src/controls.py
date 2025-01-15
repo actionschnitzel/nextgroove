@@ -23,6 +23,7 @@ from gi.repository import Gio, GObject
 from html import escape
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
+from html import escape
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/controls.ui')
 class Controls(Gtk.ActionBar):
@@ -62,3 +63,6 @@ class Controls(Gtk.ActionBar):
         else:
             print("PLAY")
             self._media.play()
+
+    def set_now_playing(self, song):
+        self.now_playing_label.set_text(f"{escape(song)}")

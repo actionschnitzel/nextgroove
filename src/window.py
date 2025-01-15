@@ -141,7 +141,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # FIXME do some async goodness here, but need to know if this bit works or I'm outta here
         song_file = self._client.get_song(song_id)
         print(f"Got a file: {song_file}")
-        self.play_song(song_file)
+        self.play_song(song_files, song_name="...")
 
     def album_clicked(self, event, album_id):
         album = self._client.albums[album_id]
@@ -151,9 +151,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         sorted_tracks = sorted(album_details['tracks'], key=lambda item: item['number'])
 
         song_id = list(sorted_tracks[0]['files'].values())[0]
+        song_name = sorted_tracks[0]['title']
         song_file = self._client.get_song(song_id)
         print(f"Got a file: {song_file}")
-        self.play_song(song_file)
+        self.play_song(song_file, song_name)
         self._queue.remove_all()
         for song in sorted_tracks:
             # FIXME need to add more shit into the QueueItem so it can actually be played after
@@ -162,10 +163,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def queue_clicked(self, event, queue_id):
         print("clickerooni on the ol queue")
 
-    def play_song(self, song_file):
+    def play_song(self, song_file, song_title):
         # I can't seem to reuse the same object, so make another
         # and then connect the damn signals again
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
         self.controls.connections(self._client, self._media)
+        self.controls.set_now_playing(song_title)
 
