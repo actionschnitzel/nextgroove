@@ -35,6 +35,8 @@ class NextcloudMusicClient(GObject.Object):
     albums_before_sorting = None
     _server = None
     _album_urls_by_id = None
+    artist_name_by_id = None
+    album_name_by_id = None
 
     def __init__(self, server, user, token):
         super().__init__()
@@ -44,6 +46,8 @@ class NextcloudMusicClient(GObject.Object):
         self.albums_before_sorting = Gio.ListStore()
         self._server = server
         self._album_urls_by_id = {}
+        self.artist_name_by_id = {}
+        self.album_name_by_id = {}
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
@@ -54,7 +58,14 @@ class NextcloudMusicClient(GObject.Object):
                 for album in artist["albums"]:
                     if album["name"] == album_list_item.album:
                         return album
-        print("ERROR client.album_detils could not find an album")
+        print("ERROR client.album_details could not find an album")
+        return None
+
+    def get_artist_id_for_album_list_item(self, album_list_item):
+        for artist in self.collection:
+            if artist["name"] == album_list_item.artist:
+                return artist["id"]
+        print("ERROR client.get_artist_id_for_album_list_item could not find artist")
         return None
 
     def update_collection(self):
@@ -73,12 +84,16 @@ class NextcloudMusicClient(GObject.Object):
 
     def update_albums(self):
         # TODO in the event this needs to be called again, remove_all() on liststore
+        # And same goes for lookups like artist_name_by_id
         for artist in self.collection:
             artist_string = artist["name"]
+            artist_id = artist["id"]
+            self.artist_name_by_id[artist_id] = artist_string
             for album in artist["albums"]:
                 album_string = album["name"]
                 album_cover = album["cover"]
                 album_id = album["id"]
+                self.album_name_by_id[album_id] = album_string
                 if album["cover"]:
                     self._album_urls_by_id[album["id"]] = album["cover"]
                 else:

@@ -26,11 +26,15 @@ class QueueItem(GObject.Object):
     song_id = None
     now_playing = None
     _widget = None
+    album_id = None
+    artist_id = None
 
-    def __init__(self, title, song_id):
+    def __init__(self, title, song_id, album_id, artist_id):
         super().__init__()
         self.title = title
         self.song_id = song_id
+        self.artist_id = artist_id
+        self.album_id = album_id
 
     def get_title(self):
         return self.title
