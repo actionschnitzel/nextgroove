@@ -35,13 +35,21 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
 
     def present(self, window):
         self._settings = window.props.settings
+
+        # Set previous values and connect to update them if needed
         self._server_row.connect("changed", self._update_server)
         self._server_row.set_text(self._settings.get_string("server"))
+        self._user_row.connect("changed", self._update_user)
+        self._user_row.set_text(self._settings.get_string("user"))
+        self._token_row.connect("changed", self._update_token)
+        self._token_row.set_text(self._settings.get_string("token"))
         super().present(window)
 
     def _update_server(self, server_row):
         self._settings.set_string("server", server_row.get_text())
 
+    def _update_user(self, user_row):
+        self._settings.set_string("user", user_row.get_text())
 
-
-
+    def _update_token(self, token_row):
+        self._settings.set_string("token", token_row.get_text())

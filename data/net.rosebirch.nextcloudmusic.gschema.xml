@@ -4,5 +4,11 @@
     <key name="server" type="s">
       <default>"default"</default>
     </key>
+	  <key name="user" type="s">
+      <default>""</default>
+    </key>
+	  <key name="token" type="s">
+      <default>""</default>
+    </key>
 	</schema>
 </schemalist>
