@@ -178,3 +178,11 @@ class Controls(Gtk.ActionBar):
         new_volume = value / 100
         self._media.set_volume(new_volume)
         # TODO maybe save that setting and restore on startup
+        if value == 0:
+            self.volumebutton.set_icon_name("audio-volume-muted")
+        elif value < 40:
+            self.volumebutton.set_icon_name("audio-volume-low")
+        elif value < 70:
+            self.volumebutton.set_icon_name("audio-volume-medium")
+        else:
+            self.volumebutton.set_icon_name("audio-volume-high")
