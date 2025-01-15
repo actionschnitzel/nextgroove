@@ -316,7 +316,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         """Generate UI element"""
-        list_item.props.child = Gtk.Label()
+        list_item.props.child = Gtk.Box()
+        song_label = Gtk.Label()
+        song_label.set_halign(1)
+        song_label.set_hexpand(True)
+        song_label.set_parent(list_item.props.child)
+        albumartist_label = Gtk.Label()
+        albumartist_label.set_halign(2)
+        albumartist_label.set_parent(list_item.props.child)
 
     def _bind_queue_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -325,11 +332,22 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         As we don't have a specialised widget, we just make the now playing the bold one.
         """
         queue_list_item = list_item.props.item
-        queue_list_widget = list_item.props.child
+        if queue_list_item.artist_id == -1:
+            # This is being called with a fake value to redraw the others, ignore this
+            return
+
+        song_widget = list_item.props.child.get_first_child()
+        albumartist_widget = song_widget.get_next_sibling()
+
+        album_str = self._client.album_name_by_id[queue_list_item.album_id]
+        artist_str = self._client.artist_name_by_id[queue_list_item.artist_id]
+
         if queue_list_item.is_now_playing():
-            queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
+            song_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
+            albumartist_widget.set_markup(f"<b>{artist_str}  <i>{album_str}</i></b>")
         else:
-            queue_list_widget.set_text(queue_list_item.get_title())
+            albumartist_widget.set_markup(f"{artist_str}  <i>{album_str}</i>")
+            song_widget.set_text(queue_list_item.get_title())
 
     def queue_clicked(self, event, queue_id):
         """When (double) clicked on the queue item, play it!"""
@@ -368,7 +386,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         # Trick the UI to redraw, no redraw call works
         # I am clearly doing something wrong here!
-        fake_item = QueueItem("FAKE", 0, 0, 0)
+        fake_item = QueueItem("FAKE", -1, -1, -1)
         self._queue.insert(0, fake_item)
         self._queue.remove(0)
 
