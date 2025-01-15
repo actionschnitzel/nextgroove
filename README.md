@@ -8,7 +8,7 @@ Just some notes on what I want to focus on next, not an exhaustive list of the
 many, many, flaws that need to be fixed!
 
  - [ ] Scrolling on the songs
- - [ ] clicking a song and play the song
+ - [x] clicking a song and play the song
  - [ ] ordering
  - [ ] making the collection view not look like arse (tabular?)
  - [ ] tab view at top level, to switch between views:

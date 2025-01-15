@@ -66,6 +66,7 @@ class NextcloudmusicApplication(Adw.Application):
         )
         callback = self._window.update_collection
         self._client.collection_async(callback)
+        self._window.set_client(self._client)
 
 
     def on_about_action(self, *args):

@@ -19,6 +19,7 @@
 
 import requests
 import json
+import os
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio
 
@@ -81,13 +82,13 @@ class NextcloudMusicClient(GObject.Object):
         collection = self.update_collection()
         task.return_value(collection)
 
-
-    # Got ID as 121587 "my god is the sun"
-
-#    response = requests.get(f"{url}/file/121587/download", auth=user_auth)
-#    print(f"response on download is {response.status_code}")
-#    with open("test.flac", "wb") as outfile:
-#        outfile.write(response.content)
-#print("DONE")
-
+    def get_song(self, song_id):
+        print(f"Attempting to call {self._base_url}/file/{song_id}/download")
+        response = requests.get(f"{self._base_url}/file/{song_id}/download", auth=self._auth)
+        if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
+            os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+        song_location = f"/tmp/net.rosebirch.nextcloudmusic/{song_id}"
+        with open(song_location, "wb") as song_file:
+            song_file.write(response.content)
+        return os.path.abspath(song_location)
 

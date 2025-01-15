@@ -29,10 +29,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     label = Gtk.Template.Child()
     musiclist = Gtk.Template.Child("list")
     _settings = None
+    _client = None
+    _media = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
+
+    def set_client(self, client):
+        self._client = client
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -47,9 +52,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         else:
             print("Failed")
             self.label.set_text("Connection failed")
-        testlabel = Gtk.Label()
-        testlabel.set_markup("<b>Artist</b> <i>Album</i> song")
-        self.musiclist.insert(testlabel, 0)
 
     def update_collection(self, source_object, result, user_data):
         collection = result.propagate_value().value
@@ -59,13 +61,22 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 album_string = album['name']
                 for song in album['tracks']:
                     song_string = song['title']
-                    self.add_song(artist_string, album_string, song_string)
+                    song_id = list(song['files'].values())[0]
+                    print(f"song {song}")
+                    self.add_song(artist_string, album_string, song_string, song_id)
             break
 
 
-    def add_song(self, artist, album, song):
+    def add_song(self, artist, album, song, song_id):
         testlabel = Gtk.Label()
-        testlabel.set_markup(f"<b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}")
+        testlabel.set_markup(f"<a href=\"{song_id}\"><b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}</a>")
+        testlabel.connect("activate-link", self.song_clicked)
         self.musiclist.insert(testlabel, 0)
 
-
+    def song_clicked(self, event, song_id):
+        print(f"song pressed {event}, and song ID {song_id}")
+        # FIXME do some async goodness here, but need to know if this bit works or I'm outta here
+        song_file = self._client.get_song(song_id)
+        print(f"Got a file: {song_file}")
+        self._media = Gtk.MediaFile.new_for_filename(song_file)
+        self._media.play()
