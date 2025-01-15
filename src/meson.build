@@ -30,6 +30,7 @@ nextcloudmusic_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'settings.py'
 ]
 
 install_data(nextcloudmusic_sources, install_dir: moduledir)

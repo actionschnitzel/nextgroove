@@ -25,10 +25,13 @@ gi.require_version('Adw', '1')
 
 from gi.repository import Gtk, Gio, Adw
 from .window import NextcloudmusicWindow
+from .settings import NextcloudmusicSettingsWindow
 
 
 class NextcloudmusicApplication(Adw.Application):
     """The main application singleton class."""
+
+    _window = None
 
     def __init__(self):
         super().__init__(application_id='net.rosebirch.nextcloudmusic',
@@ -48,6 +51,8 @@ class NextcloudmusicApplication(Adw.Application):
             win = NextcloudmusicWindow(application=self)
         win.present()
 
+        self._window = win
+
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(application_name='nextcloudmusic',
@@ -63,6 +68,9 @@ class NextcloudmusicApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         print('app.preferences action activated')
+        settings = NextcloudmusicSettingsWindow()
+        print(f"self.window is {self._window}")
+        settings.present(self._window)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
