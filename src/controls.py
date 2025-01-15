@@ -28,9 +28,11 @@ from .queueitem import QueueItem
 class Controls(Gtk.ActionBar):
     __gtype_name__ = 'Controls'
 
-    left = Gtk.Template.Child()
-    middle = Gtk.Template.Child()
-    right = Gtk.Template.Child()
+    play_pause_button = Gtk.Template.Child("playpause")
+    previous_button = Gtk.Template.Child("previous")
+    next_button = Gtk.Template.Child("next")
+    now_playing_label = Gtk.Template.Child("nowplaying")
 
     def __init__(self):
         super().__init__()
+        self.set_size_request(120,50)

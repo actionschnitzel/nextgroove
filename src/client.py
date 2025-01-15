@@ -21,7 +21,7 @@ import requests
 import json
 import os
 from requests.auth import HTTPBasicAuth
-from gi.repository import GObject, Gio
+from gi.repository import GObject, Gio, GLib
 from .albumlistitem import AlbumListItem
 from functools import cmp_to_key
 
@@ -142,7 +142,10 @@ class NextcloudMusicClient(GObject.Object):
         if response.status_code != 200:
             print("Could not download cover at url code {response.status_code}")
         if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
-            os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+            try:
+                os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+            except FileExistsError:
+                pass  # Expected to be possible, this is called from multiple threads
         with open(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb") as cover_file:
             cover_file.write(response.content)
 
@@ -180,7 +183,10 @@ class NextcloudMusicClient(GObject.Object):
         print(f"Attempting to call {self._base_url}/file/{song_id}/download")
         response = requests.get(f"{self._base_url}/file/{song_id}/download", auth=self._auth)
         if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
-            os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+            try:
+                os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+            except FileExistsError:
+                pass  # Expected to be possible, this is called from multiple threads
         song_location = f"/tmp/net.rosebirch.nextcloudmusic/{song_id}"
         with open(song_location, "wb") as song_file:
             song_file.write(response.content)

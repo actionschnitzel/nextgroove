@@ -7,18 +7,31 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="center">
-        <property name="justify">center</property>
-        <property name="wrap">True</property>
-        <property name="ellipsize">middle</property>
-        <property name="max_width_chars">20</property>
-        <property name="lines">1</property>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkButton" id="previous">
+            <property name="label">prev</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="playpause">
+            <property name="label">play/pause</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="next">
+            <property name="label">next</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="nowplaying">
+            <property name="label">...</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="right">
-        <property name="ellipsize">middle</property>
-        <property name="max_width_chars">20</property>
       </object>
     </child>
   </template>
