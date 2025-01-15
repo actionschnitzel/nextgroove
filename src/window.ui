@@ -39,6 +39,35 @@
                       <object class="GtkGridView" id="albumview">
                         <property name="max-columns">10</property>
                         <property name="single-click-activate">True</property>
+                        <child>
+                          <object class="GtkPopover" id="popover">
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkButton" id="album_play_button">
+                                    <property name="label">Play</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label">Find in Collection</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label">Append to end of queue</property>
+                                  </object>
+                              </child>
+                              <child>
+                                  <object class="GtkButton">
+                                    <property name="label">Append as next in queue</property>
+                                  </object>
+                              </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

@@ -38,6 +38,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_view = Gtk.Template.Child("albumview")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
+    popover = Gtk.Template.Child("popover")
+    album_play_button = Gtk.Template.Child("album_play_button")
 
     # Data objects
     _settings = None
@@ -54,6 +56,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
 
+        self.popover.props.position = Gtk.PositionType.LEFT
+
     def set_client(self, client):
         """Connections created to link everything.
         Touches album view, queue view, media controls"""
@@ -67,6 +71,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         selection_model = Gtk.MultiSelection.new(client.albums)
         self.album_view.props.model = selection_model
         self.album_view.connect("activate", self.album_clicked)
+        self.album_play_button.connect("clicked", self.album_play_clicked)
 
         # Queue page
         queue_item_factory = Gtk.SignalListItemFactory()
@@ -159,11 +164,20 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             )
 
     def album_clicked(self, event, album_id):
+        album = self._client.albums[album_id]
+        print(f"Clicked album '{album.album}' from artist {album.artist}")
+        # TODO make sure it appears near the album you clicked on.
+        self.popover.popup()
+
+    def album_play_clicked(self, event):
         """Connected to activate signal from AlbumTile.
         A single click currently activates this and will attempt to play that album
         """
+        self.popover.popdown()
+        album_id = self.album_view.get_model().get_selection().get_nth(0)
+        print(f"got the slection as {album_id}")
         album = self._client.albums[album_id]
-        print(f"Clicked album '{album.album}' from artist {album.artist}")
+        print(f"Clicked play on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
