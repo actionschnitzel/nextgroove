@@ -38,7 +38,6 @@
         </child>
     <child>
       <object class="GtkBox" id="right">
-        <property name="valign">right</property>
         <property name="hexpand">True</property>
       </object>
     </child>
