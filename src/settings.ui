@@ -18,7 +18,7 @@
               </object>
             </child>
             <child>
-              <object class="AdwEntryRow" id="_token_row">
+              <object class="AdwPasswordEntryRow" id="_token_row">
                 <property name="title" translatable="true">Token</property>
               </object>
             </child>
