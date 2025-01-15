@@ -48,7 +48,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_list_item = list_item.props.item
         album_widget = list_item.props.child
         album_widget.set_album(album_list_item)
-        #album_widget.connect("button-press-event", self.album_clicked)
+        album_widget.set_cover(self._client.get_cover(album_list_item))
 
     def set_client(self, client):
         self._client = client

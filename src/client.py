@@ -30,12 +30,14 @@ class NextcloudMusicClient(GObject.Object):
     _base_url = None
     collection = None
     albums = None
+    _server = None
 
     def __init__(self, server, user, token):
         super().__init__()
         self._base_url = f"{server}/index.php/apps/music/api"
         self._auth = HTTPBasicAuth(user, token)
         self.albums = Gio.ListStore()
+        self._server = server
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
@@ -93,9 +95,28 @@ class NextcloudMusicClient(GObject.Object):
                 album_string = album['name']
                 album_item = AlbumListItem(artist_string, album_string)
                 self.albums.append(album_item)
+                if album['cover']:
+                    self.download_cover(album['id'], album['cover'])
                 print(album)
             # FIXME remove but I'm lazy, let's fix for one first
             break
+
+    def download_cover(self, album_id, cover_url):
+        print(f"cover at {cover_url}")
+        cover_url_full = f"{self._server}{cover_url}"
+        print(f"full url {cover_url_full}")
+        response = requests.get(cover_url_full, auth=self._auth)
+        if response.status_code != 200:
+            print("Could not download cover at url code {response.status_code}")
+        if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
+            os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+        with open(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb") as cover_file:
+            cover_file.write(response.content)
+
+    def get_cover(self, album_list_item):
+        album_details = self.album_details(album_list_item)
+        album_id = album_details['id']
+        return f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}"
 
     def collection_async(self, callback):
         print("Starting async call")

@@ -39,5 +39,5 @@ class AlbumTile(Gtk.Box):
         self._artist_label.set_text(album.artist)
         self._album_label.set_text(album.album)
 
-    def clickybit(self):
-        return self._cover_image
+    def set_cover(self, cover_file):
+        self._cover_image.set_from_file(cover_file)
