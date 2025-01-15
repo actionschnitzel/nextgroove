@@ -22,10 +22,22 @@ from gi.repository import GObject
 class QueueItem(GObject.Object):
 
     title = None
+    song_id = None
+    now_playing = None
 
-    def __init__(self, title):
+    def __init__(self, title, song_id):
         super().__init__()
         self.title = title
+        self.song_id = song_id
 
     def get_title(self):
         return self.title
+
+    def get_song_id(self):
+        return self.song_id
+
+    def is_now_playing(self):
+        return self.now_playing
+
+    def set_now_playing(self, now_playing):
+        self.now_playing = now_playing

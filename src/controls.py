@@ -29,28 +29,39 @@ from html import escape
 class Controls(Gtk.ActionBar):
     __gtype_name__ = 'Controls'
 
+    # Child Widgets
     play_pause_button = Gtk.Template.Child("playpause")
     previous_button = Gtk.Template.Child("previous")
     next_button = Gtk.Template.Child("next")
     now_playing_label = Gtk.Template.Child("nowplaying")
 
+    # Data refs
     _client = None
     _media = None
+    _queue = None
 
+    # Signal handlers for disconnecting
     play_pause_handler_id = None
+    next_handler_id = None
 
     def __init__(self):
         super().__init__()
         self.set_size_request(120,50)
 
-    def connections(self, client, media):
+    def connections(self, client, media, queue):
+        # Remove old connections
         if self.play_pause_handler_id:
-            print("Disconnecting old handler")
             self.play_pause_button.disconnect(self.play_pause_handler_id)
+        if self.next_handler_id:
+            self.next_button.disconnect(self.next_handler_id)
+
+        # Connect new items
         self.play_pause_handler_id = self.play_pause_button.connect("clicked", self.on_play_pause_button_pressed)
-        print("ConnecteD")
+        self.next_handler_id = self.next_button.connect("clicked", self.on_next_button_pressed)
+
         self._media = media
         self._client = client
+        self._queue = queue
 
     def on_play_pause_button_pressed(self, event):
         if not self._media:
@@ -63,6 +74,9 @@ class Controls(Gtk.ActionBar):
         else:
             print("PLAY")
             self._media.play()
+
+    def on_next_button_pressed(self, event):
+        pass
 
     def set_now_playing(self, song):
         self.now_playing_label.set_text(f"{escape(song)}")

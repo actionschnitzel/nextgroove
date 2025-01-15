@@ -67,7 +67,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             list_item: Gtk.ListItem) -> None:
         queue_list_item = list_item.props.item
         queue_list_widget = list_item.props.child
-        queue_list_widget.set_text(queue_list_item.get_title())
+        if queue_list_item.is_now_playing():
+            queue_list_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
+        else:
+            queue_list_widget.set_text(queue_list_item.get_title())
 
     def set_client(self, client):
         self._client = client
@@ -91,7 +94,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.queue_view.connect("activate", self.queue_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
-        #self.controls.connections(self._client, self._media)
+        self.controls.connections(self._client, self._media, self._queue)
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -153,12 +156,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         song_id = list(sorted_tracks[0]['files'].values())[0]
         song_name = sorted_tracks[0]['title']
         song_file = self._client.get_song(song_id)
-        print(f"Got a file: {song_file}")
+        print(f"Got a file: {song_file} with id {song_id}")
         self.play_song(song_file, song_name)
         self._queue.remove_all()
         for song in sorted_tracks:
             # FIXME need to add more shit into the QueueItem so it can actually be played after
-            self._queue.append(QueueItem(song['title']))
+            queued_song_id = list(song['files'].values())[0]
+            song_item = QueueItem(song['title'], queued_song_id)
+            if queued_song_id == song_id:
+                song_item.set_now_playing(True)
+            self._queue.append(song_item)
 
     def queue_clicked(self, event, queue_id):
         print("clickerooni on the ol queue")
@@ -168,6 +175,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # and then connect the damn signals again
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
-        self.controls.connections(self._client, self._media)
+        self.controls.connections(self._client, self._media, self._queue)
         self.controls.set_now_playing(song_title)
 
