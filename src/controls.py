@@ -59,6 +59,7 @@ class Controls(Gtk.ActionBar):
         # Connect new items
         self.play_pause_handler_id = self.play_pause_button.connect("clicked", self.on_play_pause_button_pressed)
         self.next_handler_id = self.next_button.connect("clicked", self.on_next_button_pressed)
+        media.connect("notify::ended", self.song_ended)
 
         self._media = media
         self._client = client
@@ -89,6 +90,10 @@ class Controls(Gtk.ActionBar):
                 current_song_queue_item = song
                 next_song = True
 
+        if not song_queue_item:
+            print("Probs at end, stop?")
+            return
+
         current_song_queue_item.set_now_playing(False)
         song_queue_item.set_now_playing(True)
         song_file = self._client.get_song(song_queue_item.get_song_id())
@@ -96,3 +101,7 @@ class Controls(Gtk.ActionBar):
 
     def set_now_playing(self, song):
         self.now_playing_label.set_text(f"{escape(song)}")
+
+    def song_ended(self, foo, bar):
+        print("Song ended")
+        self.on_next_button_pressed(None)
