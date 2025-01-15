@@ -49,6 +49,7 @@
               <object class="AdwViewStackPage">
                 <property name="name">collection</property>
                 <property name="title">Collection</property>
+                <property name="visible">False</property>
                 <property name="icon-name">view-list-bullet-symbolic</property>
                 <property name="child">
                   <object class="GtkListBox" id="list">
