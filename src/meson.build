@@ -29,12 +29,12 @@ configure_file(
 nextcloudmusic_sources = [
   '__init__.py',
   'albumtile.py',
-  'albumlistitem.py',
+  'models/albumlistitem.py',
   'client.py',
   'controls.py',
   'main.py',
-  'playlist.py',
-  'queueitem.py',
+  'models/playlist.py',
+  'models/queueitem.py',
   'window.py',
   'settings.py'
 ]

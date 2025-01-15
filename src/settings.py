@@ -21,7 +21,7 @@ from gi.repository import Adw
 from gi.repository import Gtk
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/settings.ui")
+@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/gtk/settings.ui")
 class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
     __gtype_name__ = "NextcloudmusicSettingsWindow"
 

@@ -28,7 +28,7 @@ from .controls import Controls
 import os.path
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/window.ui")
+@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/gtk/window.ui")
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     """Main window"""
 

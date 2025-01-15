@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/net/rosebirch/nextcloudmusic">
-    <file preprocess="xml-stripblanks">controls.ui</file>
-    <file preprocess="xml-stripblanks">window.ui</file>
-    <file preprocess="xml-stripblanks">albumtile.ui</file>
-    <file preprocess="xml-stripblanks">settings.ui</file>
+    <file preprocess="xml-stripblanks">gtk/controls.ui</file>
+    <file preprocess="xml-stripblanks">gtk/window.ui</file>
+    <file preprocess="xml-stripblanks">gtk/albumtile.ui</file>
+    <file preprocess="xml-stripblanks">gtk/settings.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
   </gresource>
 </gresources>
