@@ -162,7 +162,7 @@ class Controls(Gtk.ActionBar):
         artist_title = self._client.artist_name_by_id[queue_item.artist_id]
         album_title = self._client.album_name_by_id[queue_item.album_id]
         self.now_playing_label.set_text(song_title)
-        self.current_album_artist.set_markup(f"{artist_title}: <i>{album_title}</i>")
+        self.current_album_artist.set_markup(f"{escape(artist_title)}: <i>{escape(album_title)}</i>")
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def song_ended(self, foo, bar):
