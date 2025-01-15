@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=net.rosebirch.nextcloudmusic
+Exec=@bindir@/nextcloudmusic --gapplication-service

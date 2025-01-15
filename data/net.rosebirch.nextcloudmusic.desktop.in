@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=nextcloudmusic
+Exec=nextcloudmusic
+Icon=net.rosebirch.nextcloudmusic
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

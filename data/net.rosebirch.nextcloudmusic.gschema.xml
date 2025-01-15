@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="nextcloudmusic">
+	<schema id="net.rosebirch.nextcloudmusic" path="/net/rosebirch/nextcloudmusic/">
+	</schema>
+</schemalist>
