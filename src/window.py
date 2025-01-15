@@ -62,7 +62,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 for song in album['tracks']:
                     song_string = song['title']
                     song_id = list(song['files'].values())[0]
-                    print(f"song {song}")
                     self.add_song(artist_string, album_string, song_string, song_id)
             break
 

@@ -7,37 +7,28 @@
     <property name="default-width">800</property>
     <property name="default-height">600</property>
     <property name="content">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar">
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="primary">True</property>
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Main Menu</property>
-                <property name="menu-model">primary_menu</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <property name="content">
-          <object class="GtkLabel" id="label">
-            <property name="label" translatable="yes">Loading</property>
-            <property name="visible">true</property>
-            <style>
-              <class name="title-1"/>
-            </style>
-          </object>
-          <object class="AdwClamp">
-            <property name="child">
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="margin-top">24</property>
-                <property name="margin-bottom">24</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="spacing">24</property>
-                <child>
+    <object class="AdwToolbarView">
+      <child type="top">
+        <object class="AdwHeaderBar" id="header_bar">
+          <property name="title-widget">
+            <object class="AdwViewSwitcher">
+              <property name="stack">stack</property>
+              <property name="policy">wide</property>
+            </object>
+          </property>
+          <child type="end">
+-              <object class="GtkMenuButton">
+-                <property name="primary">True</property>
+-                <property name="icon-name">open-menu-symbolic</property>
+-                <property name="tooltip-text" translatable="yes">Main Menu</property>
+-                <property name="menu-model">primary_menu</property>
+-              </object>
+-            </child>
+        </object>
+      </child>
+      <property name="content">
+        <object class="AdwViewStack" id="stack">
+           <child>
                   <object class="GtkListBox" id="list">
                     <property name="selection-mode">none</property>
                     <style>
@@ -45,15 +36,18 @@
                     </style>
                     <!-- rows -->
                   </object>
-                </child>
-                <!-- more lists -->
-              </object>
-            </property>
-</object>
 
-        </property>
-      </object>
-    </property>
+                </child>
+
+        </object>
+      </property>
+      <child type="bottom">
+        <object class="AdwViewSwitcherBar" id="switcher_bar">
+          <property name="stack">stack</property>
+        </object>
+      </child>
+    </object>
+  </property>
   </template>
   <menu id="primary_menu">
     <section>
