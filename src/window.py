@@ -22,6 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gio, GObject
 from html import escape
 from .albumtile import AlbumTile
+from .queueitem import QueueItem
 
 @Gtk.Template(resource_path='/net/rosebirch/nextcloudmusic/window.ui')
 class NextcloudmusicWindow(Adw.ApplicationWindow):
@@ -29,13 +30,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     musiclist = Gtk.Template.Child("list")
     album_view = Gtk.Template.Child("albumview")
+    queue_view = Gtk.Template.Child("queueview")
     _settings = None
     _client = None
     _media = None
+    _queue = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._settings = Gio.Settings.new('net.rosebirch.nextcloudmusic')
+        self._queue = Gio.ListStore()
 
     def _setup_list_item(
             self, factory: Gtk.SignalListItemFactory,
@@ -50,6 +54,18 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_widget.set_album(album_list_item)
         album_widget.set_cover(self._client.get_cover(album_list_item))
 
+    def _setup_queue_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        list_item.props.child = Gtk.Label()
+
+    def _bind_queue_list_item(
+            self, factory: Gtk.SignalListItemFactory,
+            list_item: Gtk.ListItem) -> None:
+        queue_list_item = list_item.props.item
+        queue_list_widget = list_item.props.child
+        queue_list_widget.set_text(queue_list_item.get_title())
+
     def set_client(self, client):
         self._client = client
         print("Setting client")
@@ -61,6 +77,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         selection_model = Gtk.MultiSelection.new(client.albums)
         self.album_view.props.model = selection_model
         self.album_view.connect("activate", self.album_clicked)
+
+        # Queue page
+        queue_item_factory = Gtk.SignalListItemFactory()
+        queue_item_factory.connect("setup", self._setup_queue_list_item)
+        queue_item_factory.connect("bind", self._bind_queue_list_item)
+        self.queue_view.props.factory = queue_item_factory
+        selection_model = Gtk.MultiSelection.new(self._queue)
+        self.queue_view.props.model = selection_model
+        self.queue_view.connect("activate", self.queue_clicked)
 
     @GObject.Property(
         type=Gio.Settings, flags=GObject.ParamFlags.READABLE)
@@ -99,8 +124,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             list_item_factory = Gtk.SignalListItemFactory()
             print("model doesn't exist yet")
 
-
-
     def add_song(self, artist, album, song, song_id):
         testlabel = Gtk.Label()
         testlabel.set_markup(f"<a href=\"{song_id}\"><b>{escape(artist)}</b> <i>{escape(album)}</i> {escape(song)}</a>")
@@ -124,5 +147,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         print(f"Got a file: {song_file}")
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
+        print(album_details['tracks'][0])
+        self._queue.remove_all()
+        self._queue.append(QueueItem(album_details['tracks'][0]['title']))
 
+    def queue_clicked(self, event, queue_id):
+        print("clickerooni on the ol queue")
 

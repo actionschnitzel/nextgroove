@@ -58,6 +58,22 @@
                 </property>
               </object>
             </child>
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">queue</property>
+                <property name="title">Queue</property>
+                <property name="child">
+                  <object class="GtkScrolledWindow" id="_scrolled_window_queue">
+                    <child>
+                      <object class="GtkGridView" id="queueview">
+                        <property name="max-columns">10</property>
+                        <property name="single-click-activate">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
           </object>
         </property>
         <child type="bottom">
