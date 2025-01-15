@@ -31,6 +31,7 @@ class NextcloudMusicClient(GObject.Object):
     collection = None
     albums = None
     _server = None
+    _album_urls_by_id = None
 
     def __init__(self, server, user, token):
         super().__init__()
@@ -38,6 +39,7 @@ class NextcloudMusicClient(GObject.Object):
         self._auth = HTTPBasicAuth(user, token)
         self.albums = Gio.ListStore()
         self._server = server
+        self._album_urls_by_id = {}
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
@@ -96,15 +98,19 @@ class NextcloudMusicClient(GObject.Object):
                 album_item = AlbumListItem(artist_string, album_string)
                 self.albums.append(album_item)
                 if album['cover']:
-                    self.download_cover(album['id'], album['cover'])
-                print(album)
+                    self._album_urls_by_id[album['id']] = album['cover']
+                    keys = self._album_urls_by_id.keys()
+                    print(f"Current keys in albums: {keys}")
+                    self.download_cover_async(album['id'], album['cover'])
+                #print(album)
             # FIXME remove but I'm lazy, let's fix for one first
-            break
+            #break
+
 
     def download_cover(self, album_id, cover_url):
-        print(f"cover at {cover_url}")
+        #print(f"cover at {cover_url}")
         cover_url_full = f"{self._server}{cover_url}"
-        print(f"full url {cover_url_full}")
+        #print(f"full url {cover_url_full}")
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print("Could not download cover at url code {response.status_code}")
@@ -112,6 +118,19 @@ class NextcloudMusicClient(GObject.Object):
             os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
         with open(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb") as cover_file:
             cover_file.write(response.content)
+
+    def download_cover_async(self, album_id, cover_url):
+        """no callback needed"""
+        task = Gio.Task.new(self, None, None, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(album_id)
+        task.run_in_thread(self.download_cover_sync)
+
+    def download_cover_sync(self, task, source_object, task_data, cancellable):
+        album_id = task.get_task_data()
+        cover_url = self._album_urls_by_id[album_id]
+        self.download_cover(album_id, cover_url)
+        task.return_value(True)
 
     def get_cover(self, album_list_item):
         album_details = self.album_details(album_list_item)
