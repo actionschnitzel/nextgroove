@@ -1,8 +1,8 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-data/net.rosebirch.nextcloudmusic.desktop.in
-data/net.rosebirch.nextcloudmusic.metainfo.xml.in
-data/net.rosebirch.nextcloudmusic.gschema.xml
+data/net.rosebirch.nextgroove.desktop.in
+data/net.rosebirch.nextgroove.metainfo.xml.in
+data/net.rosebirch.nextgroove.gschema.xml
 src/main.py
 src/window.py
 src/window.ui

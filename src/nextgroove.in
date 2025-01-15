@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# nextcloudmusic.in
+# nextgroove.in
 #
 # Copyright 2024 Dean Birch
 #
@@ -31,16 +31,16 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('nextcloudmusic', localedir)
-locale.textdomain('nextcloudmusic')
-gettext.install('nextcloudmusic', localedir)
+locale.bindtextdomain('nextgroove', localedir)
+locale.textdomain('nextgroove')
+gettext.install('nextgroove', localedir)
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'nextcloudmusic.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'nextgroove.gresource'))
     resource._register()
 
-    from nextcloudmusic import main
+    from nextgroove import main
     sys.exit(main.main(VERSION))

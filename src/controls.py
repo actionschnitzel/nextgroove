@@ -26,7 +26,7 @@ from .queueitem import QueueItem
 from html import escape
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/gtk/controls.ui")
+@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/controls.ui")
 class Controls(Gtk.ActionBar):
     __gtype_name__ = "Controls"
 

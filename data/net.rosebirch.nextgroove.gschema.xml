@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="nextcloudmusic">
-	<schema id="net.rosebirch.nextcloudmusic" path="/net/rosebirch/nextcloudmusic/">
+<schemalist gettext-domain="nextgroove">
+	<schema id="net.rosebirch.nextgroove" path="/net/rosebirch/nextgroove/">
     <key name="server" type="s">
-      <default>"default"</default>
+      <default>""</default>
     </key>
 	  <key name="user" type="s">
       <default>""</default>

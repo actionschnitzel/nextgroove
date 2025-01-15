@@ -167,13 +167,13 @@ class NextcloudMusicClient(GObject.Object):
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print("Could not download cover at url code {response.status_code}")
-        if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
+        if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
-                os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+                os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
             except FileExistsError:
                 pass  # Expected to be possible, this is called from multiple threads
         with open(
-            f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}", "wb"
+            f"/tmp/net.rosebirch.nextgroove/cover_{album_id}", "wb"
         ) as cover_file:
             cover_file.write(response.content)
 
@@ -199,11 +199,11 @@ class NextcloudMusicClient(GObject.Object):
             # FIXME if album_details doesn't return, why is that
             return "🤷"  # Well that's not a path
         album_id = album_details["id"]
-        return f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}"
+        return f"/tmp/net.rosebirch.nextgroove/cover_{album_id}"
 
     def cover_downloaded(self, album_tile, task, baz):
         album_id = task.get_task_data()
-        album_tile.set_cover(f"/tmp/net.rosebirch.nextcloudmusic/cover_{album_id}")
+        album_tile.set_cover(f"/tmp/net.rosebirch.nextgroove/cover_{album_id}")
 
     def collection_async(self, callback):
         print("Starting async call")
@@ -258,12 +258,12 @@ class NextcloudMusicClient(GObject.Object):
         response = requests.get(
             f"{self._base_url}/file/{song_id}/download", auth=self._auth
         )
-        if not os.path.exists(f"/tmp/net.rosebirch.nextcloudmusic/"):
+        if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
-                os.makedirs(f"/tmp/net.rosebirch.nextcloudmusic/")
+                os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
             except FileExistsError:
                 pass  # Expected to be possible, this is called from multiple threads
-        song_location = f"/tmp/net.rosebirch.nextcloudmusic/{song_id}"
+        song_location = f"/tmp/net.rosebirch.nextgroove/{song_id}"
         with open(song_location, "wb") as song_file:
             song_file.write(response.content)
         return os.path.abspath(song_location)

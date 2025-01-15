@@ -37,7 +37,7 @@ class NextcloudmusicApplication(Adw.Application):
 
     def __init__(self):
         super().__init__(
-            application_id="net.rosebirch.nextcloudmusic",
+            application_id="net.rosebirch.nextgroove",
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
@@ -79,8 +79,8 @@ class NextcloudmusicApplication(Adw.Application):
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(
-            application_name="nextcloudmusic",
-            application_icon="net.rosebirch.nextcloudmusic",
+            application_name="nextgroove",
+            application_icon="net.rosebirch.nextgroove",
             developer_name="Dean Birch",
             version="0.1.0",
             developers=["Dean Birch"],

@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-        input: 'net.rosebirch.nextcloudmusic.desktop.in',
-       output: 'net.rosebirch.nextcloudmusic.desktop',
+        input: 'net.rosebirch.nextgroove.desktop.in',
+       output: 'net.rosebirch.nextgroove.desktop',
          type: 'desktop',
        po_dir: '../po',
       install: true,
@@ -13,8 +13,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-        input: 'net.rosebirch.nextcloudmusic.metainfo.xml.in',
-       output: 'net.rosebirch.nextcloudmusic.metainfo.xml',
+        input: 'net.rosebirch.nextgroove.metainfo.xml.in',
+       output: 'net.rosebirch.nextgroove.metainfo.xml',
        po_dir: '../po',
       install: true,
   install_dir: get_option('datadir') / 'metainfo'
@@ -24,7 +24,7 @@ appstreamcli = find_program('appstreamcli', required: false, disabler: true)
 test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file])
 
-install_data('net.rosebirch.nextcloudmusic.gschema.xml',
+install_data('net.rosebirch.nextgroove.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 
@@ -37,8 +37,8 @@ test('Validate schema file',
 service_conf = configuration_data()
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
 configure_file(
-  input: 'net.rosebirch.nextcloudmusic.service.in',
-  output: 'net.rosebirch.nextcloudmusic.service',
+  input: 'net.rosebirch.nextgroove.service.in',
+  output: 'net.rosebirch.nextgroove.service',
   configuration: service_conf,
   install_dir: get_option('datadir') / 'dbus-1' / 'services'
 )

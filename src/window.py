@@ -28,7 +28,7 @@ from .controls import Controls
 import os.path
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/gtk/window.ui")
+@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     """Main window"""
 
@@ -58,7 +58,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         """Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
-        self._settings = Gio.Settings.new("net.rosebirch.nextcloudmusic")
+        self._settings = Gio.Settings.new("net.rosebirch.nextgroove")
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()

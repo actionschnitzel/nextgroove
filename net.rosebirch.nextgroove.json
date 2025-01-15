@@ -1,9 +1,9 @@
 {
-    "id" : "net.rosebirch.nextcloudmusic",
+    "id" : "net.rosebirch.nextgroove",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "47",
     "sdk" : "org.gnome.Sdk",
-    "command" : "nextcloudmusic",
+    "command" : "nextgroove",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -37,7 +37,7 @@
         ]
       },
         {
-            "name" : "nextcloudmusic",
+            "name" : "nextgroove",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [

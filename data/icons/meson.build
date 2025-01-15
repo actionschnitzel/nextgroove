@@ -1,4 +1,4 @@
-application_id = 'net.rosebirch.nextcloudmusic'
+application_id = 'net.rosebirch.nextgroove'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

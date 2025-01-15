@@ -13,7 +13,7 @@ from gi.repository import GObject, Gtk
 from .albumlistitem import AlbumListItem
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextcloudmusic/gtk/albumtile.ui")
+@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/albumtile.ui")
 class AlbumTile(Gtk.Box):
 
     __gtype_name__ = "AlbumTile"

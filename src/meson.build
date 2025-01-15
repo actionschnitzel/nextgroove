@@ -1,9 +1,9 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'nextcloudmusic'
+moduledir = pkgdatadir / 'nextgroove'
 gnome = import('gnome')
 
-gnome.compile_resources('nextcloudmusic',
-  'nextcloudmusic.gresource.xml',
+gnome.compile_resources('nextgroove',
+  'nextgroove.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -18,25 +18,25 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'nextcloudmusic.in',
-  output: 'nextcloudmusic',
+  input: 'nextgroove.in',
+  output: 'nextgroove',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
 )
 
-nextcloudmusic_sources = [
+nextgroove_sources = [
   '__init__.py',
   'albumtile.py',
-  'models/albumlistitem.py',
   'client.py',
   'controls.py',
   'main.py',
+  'models/albumlistitem.py',
   'models/playlist.py',
   'models/queueitem.py',
-  'window.py',
-  'settings.py'
+  'settings.py',
+  'window.py'
 ]
 
-install_data(nextcloudmusic_sources, install_dir: moduledir)
+install_data(nextgroove_sources, install_dir: moduledir)

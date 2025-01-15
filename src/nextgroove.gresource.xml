@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/net/rosebirch/nextcloudmusic">
+  <gresource prefix="/net/rosebirch/nextgroove">
     <file preprocess="xml-stripblanks">gtk/controls.ui</file>
     <file preprocess="xml-stripblanks">gtk/window.ui</file>
     <file preprocess="xml-stripblanks">gtk/albumtile.ui</file>
