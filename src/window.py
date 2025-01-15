@@ -41,6 +41,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
 
+    collection_play = Gtk.Template.Child("collection_play")
+
     # Data objects
     _settings = None
     _client = None
@@ -84,6 +86,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Collection page
         self.collection_view.props.model = self._songs
         self.collection_view.connect("row-activated", self.collection_clicked)
+        self.collection_play.connect("clicked", self.collection_play_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
@@ -96,6 +99,26 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     # Collection view (hidden) #
     ############################
 
+    def collection_play_clicked(self, thing):
+        print(f"hi from clicked play on collection, we have {thing}")
+        selection = self.collection_view.get_selection().get_selected_rows()[1]
+        print(f"we have {len(selection)} items in selection")
+        if len(selection) == 0:
+            print("Can't play if nothing selected")
+            return
+
+        self._queue.remove_all()
+        first_song = self._songs[selection[0]]
+        print(f"first song is {first_song}")
+        first_song[3].set_now_playing(True)
+        for row in selection:
+            artist, album, song, queue_item = self._songs[row]
+            self._queue.append(queue_item)
+
+        song_file = self._client.get_song(first_song[3].get_song_id())
+        print(f"Got a file: {song_file} with id {first_song[3].get_song_id()}")
+        self.play_song(song_file, first_song[3].title)
+
 
     def collection_clicked(self, treeview, row, column):
         artist_name, album_name, song_title, queue_item = self._songs[row]
@@ -105,7 +128,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue.remove_all()
         queue_item.set_now_playing(True)
         self._queue.append(queue_item)
-
 
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
