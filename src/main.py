@@ -79,8 +79,9 @@ class NextcloudmusicApplication(Adw.Application):
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(
-            application_name="nextgroove",
+            application_name="NextGroove",
             application_icon="net.rosebirch.nextgroove",
+            comments="Linux client for Nextcloud Music",
             developer_name="Dean Birch",
             version="0.1.0",
             developers=["Dean Birch"],
