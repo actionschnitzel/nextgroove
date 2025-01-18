@@ -35,6 +35,7 @@ nextgroove_sources = [
   'models/albumlistitem.py',
   'models/playlist.py',
   'models/queueitem.py',
+  'mpris.py',
   'settings.py',
   'window.py'
 ]

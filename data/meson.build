@@ -42,5 +42,11 @@ configure_file(
   configuration: service_conf,
   install_dir: get_option('datadir') / 'dbus-1' / 'services'
 )
+configure_file(
+  input: 'org.mpris.MediaPlayer2.nextgroove.service.in',
+  output: 'org.mpris.MediaPlayer2.nextgroove.service',
+  configuration: service_conf,
+  install_dir: get_option('datadir') / 'dbus-1' / 'services'
+)
 
 subdir('icons')

@@ -45,6 +45,7 @@ class Controls(Gtk.ActionBar):
     _media = None
     _queue = None
     _window = None
+    mpris = None
 
     # Signal handlers for disconnecting
     play_pause_handler_id = None
@@ -59,6 +60,9 @@ class Controls(Gtk.ActionBar):
         self.volumescale.set_increments(5,10)
         self.volumescale.set_size_request(150, 30)
         self.volumescale.connect("value-changed", self.volume_changed)
+
+    def set_mpris(self, mpris):
+        self.mpris = mpris
 
     def connections(self, client, media, queue, window):
         # Remove old connections
@@ -108,6 +112,7 @@ class Controls(Gtk.ActionBar):
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
         else:
             print("Likely no media loaded yet, no action from play/pause")
+        self.mpris._on_playing_changed(None, None)
 
     def on_previous_button_pressed(self, event):
         if len(self._queue) == 0:
@@ -186,3 +191,6 @@ class Controls(Gtk.ActionBar):
             self.volumebutton.set_icon_name("audio-volume-medium")
         else:
             self.volumebutton.set_icon_name("audio-volume-high")
+
+    def is_playing(self):
+        return self._media.get_playing()

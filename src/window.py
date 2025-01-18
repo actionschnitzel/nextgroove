@@ -63,6 +63,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
 
+    def set_mpris(self, mpris):
+        self.mpris = mpris
+        self.controls.set_mpris(mpris)
+
     def set_client(self, client):
         """Connections created to link everything.
         Touches album view, queue view, media controls"""
@@ -436,6 +440,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.controls.connections(self._client, self._media, self._queue, self)
         # Get QueueItem from queue to get full details
         self.controls.set_now_playing(self.current_song())
+        self.mpris.new_song()
 
         # Trick the UI to redraw, no redraw call works
         # I am clearly doing something wrong here!
