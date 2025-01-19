@@ -41,6 +41,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
     playlist_view = Gtk.Template.Child("playlistview")
+    welcome_view = Gtk.Template.Child("welcomepage")
+
+    stack = Gtk.Template.Child("stack")
+    album_stack = Gtk.Template.Child("album_stack")
+    collection_stack = Gtk.Template.Child("collection_stack")
+    playlist_stack = Gtk.Template.Child("playlist_stack")
+    queue_stack = Gtk.Template.Child("queue_stack")
 
     collection_play = Gtk.Template.Child("collection_play")
     collection_append_queue = Gtk.Template.Child("collection_append_queue")
@@ -184,8 +191,18 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
         """
-        self._songs.clear()
         collection = result.propagate_value().value
+
+        # Hide welcome view
+        self.welcome_view.props.visible = False
+        self.album_stack.props.visible = True
+        self.playlist_stack.props.visible = True
+        self.collection_stack.props.visible = True
+        self.queue_stack.props.visible = True
+        self.stack.props.visible_child_name = "albums"
+
+        self._songs.clear()
+
         for artist in sorted(collection, key=self.get_artist_name):
             artist_string = artist["name"]
             artist_id = artist["id"]

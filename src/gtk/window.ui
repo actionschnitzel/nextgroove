@@ -29,10 +29,25 @@
         <property name="content">
           <object class="AdwViewStack" id="stack">
             <child>
-              <object class="AdwViewStackPage">
+              <object class="AdwViewStackPage" id="welcomepage">
+                <property name="name">welcome</property>
+                <property name="title">Welcome</property>
+                <property name="icon-name">user-home-symbolic</property>
+                <property name="child">
+ <object class="AdwStatusPage" >
+                    <property name="title">Welcome</property>
+                    <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwViewStackPage" id="album_stack">
                 <property name="name">albums</property>
                 <property name="title">Albums</property>
                 <property name="icon-name">media-optical-cd-audio-symbolic</property>
+                <property name="visible">False</property>
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window">
                     <child>
@@ -46,10 +61,10 @@
               </object>
             </child>
             <child>
-              <object class="AdwViewStackPage">
+              <object class="AdwViewStackPage" id="collection_stack">
                 <property name="name">collection</property>
                 <property name="title">Collection</property>
-                <property name="visible">True</property>
+                <property name="visible">False</property>
                 <property name="icon-name">view-list-bullet-symbolic</property>
                 <property name="child">
                   <object class="GtkBox">
@@ -146,10 +161,11 @@
               </object>
             </child>
             <child>
-              <object class="AdwViewStackPage">
+              <object class="AdwViewStackPage" id="playlist_stack">
                 <property name="name">playlists</property>
                 <property name="title">Playlists</property>
                 <property name="icon-name">view-list-ordered-symbolic</property>
+                <property name="visible">False</property>
                 <property name="child">
                   <object class="GtkScrolledWindow">
                     <child>
@@ -161,10 +177,11 @@
               </object>
             </child>
             <child>
-              <object class="AdwViewStackPage">
+              <object class="AdwViewStackPage" id="queue_stack">
                 <property name="name">queue</property>
                 <property name="title">Queue</property>
                 <property name="icon-name">view-list-ordered-symbolic</property>
+                <property name="visible">False</property>
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window_queue">
                     <child>

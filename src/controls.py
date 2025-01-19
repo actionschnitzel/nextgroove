@@ -182,6 +182,10 @@ class Controls(Gtk.ActionBar):
     def volume_changed(self, scale):
         value = scale.get_value()
         new_volume = value / 100
+        if not self._media:
+            # Being modified before welcome page dismissed
+            return
+
         self._media.set_volume(new_volume)
         if value == 0:
             self.volumebutton.set_icon_name("audio-volume-muted")
