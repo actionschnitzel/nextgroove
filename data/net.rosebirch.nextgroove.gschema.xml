@@ -10,5 +10,8 @@
 	  <key name="token" type="s">
       <default>""</default>
     </key>
+	  <key name="volume" type="i">
+      <default>100</default>
+    </key>
 	</schema>
 </schemalist>

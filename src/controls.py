@@ -56,7 +56,6 @@ class Controls(Gtk.ActionBar):
         super().__init__()
         self.set_size_request(120, 50)
         self.volumescale.set_range(0, 100)
-        self.volumescale.set_value(100)
         self.volumescale.set_increments(5,10)
         self.volumescale.set_size_request(150, 30)
         self.volumescale.connect("value-changed", self.volume_changed)
@@ -72,6 +71,8 @@ class Controls(Gtk.ActionBar):
             self.next_button.disconnect(self.next_handler_id)
         if self.previous_handler_id:
             self.previous_button.disconnect(self.previous_handler_id)
+
+        self.volumescale.set_value(window.settings.get_int("volume"))
 
         # Connect new items
         self.play_pause_handler_id = self.play_pause_button.connect(
@@ -182,7 +183,6 @@ class Controls(Gtk.ActionBar):
         value = scale.get_value()
         new_volume = value / 100
         self._media.set_volume(new_volume)
-        # TODO maybe save that setting and restore on startup
         if value == 0:
             self.volumebutton.set_icon_name("audio-volume-muted")
         elif value < 40:
@@ -191,6 +191,8 @@ class Controls(Gtk.ActionBar):
             self.volumebutton.set_icon_name("audio-volume-medium")
         else:
             self.volumebutton.set_icon_name("audio-volume-high")
+
+        self._window.props.settings.set_int("volume", int(value))
 
     def is_playing(self):
         return self._media.get_playing()
