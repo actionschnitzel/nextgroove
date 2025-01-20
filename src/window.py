@@ -79,6 +79,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         Touches album view, queue view, media controls"""
         self._client = client
         print("Setting client")
+
         # We like Albums
         if not self.album_view.props.factory:
             album_item_factory = Gtk.SignalListItemFactory()
@@ -220,6 +221,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_item = QueueItem(song_string, song_id, album_id, artist_id)
                     self._songs.append([artist_string, album_string, song_string, song_item])
         print(f"we have {len(self._songs)} songs")
+
+        # Trick the UI to redraw, no redraw call works
+        # I am clearly doing something wrong here!
+        fake_item = QueueItem("FAKE", -1, -1, -1)
+        self._queue.insert(0, fake_item)
+        self._queue.remove(0)
 
     def get_artist_name(self, thing):
         return thing['name']

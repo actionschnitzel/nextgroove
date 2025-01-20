@@ -93,7 +93,6 @@ class Controls(Gtk.ActionBar):
         self._window = window
 
         if self._media.get_playing():
-            print(f"apparently get_playing is {self._media.get_playing()}")
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
     def on_play_pause_button_pressed(self, event):
