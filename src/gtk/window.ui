@@ -69,7 +69,7 @@
                 <property name="child">
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
-                    <property name="halign">start</property>
+                    <property name="halign">left</property>
                     <property name="hexpand">true</property>
                     <child>
                       <object class="GtkBox">
