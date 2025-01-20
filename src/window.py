@@ -80,13 +80,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._client = client
         print("Setting client")
         # We like Albums
-        album_item_factory = Gtk.SignalListItemFactory()
-        album_item_factory.connect("setup", self._setup_list_item)
-        album_item_factory.connect("bind", self._bind_list_item)
-        self.album_view.props.factory = album_item_factory
-        selection_model = Gtk.MultiSelection.new(client.albums)
-        self.album_view.props.model = selection_model
-        self.album_view.connect("activate", self.album_clicked)
+        if not self.album_view.props.factory:
+            album_item_factory = Gtk.SignalListItemFactory()
+            album_item_factory.connect("setup", self._setup_list_item)
+            album_item_factory.connect("bind", self._bind_list_item)
+            self.album_view.props.factory = album_item_factory
+        if not self.album_view.props.model:
+            selection_model = Gtk.MultiSelection.new(client.albums)
+            self.album_view.props.model = selection_model
+            self.album_view.connect("activate", self.album_clicked)
 
         # Queue page
         queue_item_factory = Gtk.SignalListItemFactory()
@@ -200,6 +202,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.collection_stack.props.visible = True
         self.queue_stack.props.visible = True
         self.stack.props.visible_child_name = "albums"
+        if collection is None:
+            print("Collection is none atm, come back later")
+            return
 
         self._songs.clear()
 
@@ -368,7 +373,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         song_widget = list_item.props.child.get_first_child()
         albumartist_widget = song_widget.get_next_sibling()
 
+        if queue_list_item.album_id not in self._client.album_name_by_id:
+            # We are repopulating during a client refreh, try again soon
+            return
         album_str = self._client.album_name_by_id[queue_list_item.album_id]
+        if queue_list_item.artist_id not in self._client.artist_name_by_id:
+            # We are repopulating during a client refresh, try again in a sec
+            return
         artist_str = self._client.artist_name_by_id[queue_list_item.artist_id]
 
         if queue_list_item.is_now_playing():

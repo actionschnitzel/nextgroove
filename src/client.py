@@ -62,8 +62,8 @@ class NextcloudMusicClient(GObject.Object):
 
     def album_details(self, album_list_item):
         if not self.collection:
-            # TODO find why this happens
-            print("COLLECTION is None")
+            # Happens during a client refresh, but then is called again once
+            # everything is reinitialized
             return
         for artist in self.collection:
             if artist["name"] == album_list_item.artist:
@@ -185,6 +185,9 @@ class NextcloudMusicClient(GObject.Object):
 
     def download_cover_sync(self, task, source_object, task_data, cancellable):
         album_id = task.get_task_data()
+        if album_id not in self._album_urls_by_id:
+            # We are mid update
+            return
         cover_url = self._album_urls_by_id[album_id]
         if not cover_url:
             task.return_value(False)
