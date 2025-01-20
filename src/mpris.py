@@ -19,7 +19,6 @@ class Server:
         method_outargs = {}
         method_inargs = {}
         for interface in Gio.DBusNodeInfo.new_for_xml(self.__doc__ or "").interfaces:
-            print(f" interface is {interface}" )
             for method in interface.methods:
                 method_outargs[method.name] = (
                     "(" + "".join([arg.signature for arg in method.out_args]) + ")"
@@ -201,7 +200,6 @@ class MPRIS(Server):
             self.app._window.controls.on_play_pause_button_pressed(None)
 
     def Get(self, interface, property_name):
-        print(f"interface {interface} and {property_name}")
         if property_name in [
             "CanQuit",
             "CanRaise",
