@@ -17,15 +17,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gdk
-from gi.repository import Gtk
-from gi.repository import Gio, GObject, Graphene
+import os.path
 from html import escape
+
+from gi.repository import Adw
+from gi.repository import Gtk
+from gi.repository import Gio, GObject
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
 from .controls import Controls
-import os.path
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -59,6 +59,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     _media = None
     _queue = None
     _songs = None
+    mpris = None
 
     _album_selected = None
 
@@ -487,3 +488,4 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         song_file = result.propagate_value().value
         print(f"Got a file: {song_file}  from callback")
         self.play_song(song_file, self._client.song_title_last_callback)
+

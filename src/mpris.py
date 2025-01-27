@@ -314,7 +314,7 @@ class MPRIS(Server):
         album_title = self.app._window._client.album_name_by_id[now_playing.album_id]
 
         self.__metadata["mpris:trackid"] = GLib.Variant(
-            "o", f"/org/mpris/MediaPlayer2/TrackList/NoTrack"
+            "o", "/org/mpris/MediaPlayer2/TrackList/NoTrack"
         )
         self.__metadata["xesam:title"] = GLib.Variant(
             "s", _(song_title)

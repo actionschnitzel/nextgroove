@@ -1,33 +1,18 @@
-# nextcloudmusic
+#  NextGroove
 
-Limited GNOME based client for Nextcloud Music created as a holiday programming
-project. Check the current capabilities section.
+GNOME based client for Nextcloud Music created as a holiday programming
+project and therefore its functionality is quite limited: check the current capabilities section.
+
+![a](screenshots/screenshot1.png "Screenshot of NextGroove")
 
 ## Current Capabilities
 
  - Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the [Nextcloud ones](https://github.com/owncloud/music?tab=readme-ov-file#api)
- - Configurable from a settings page, *but client is not currently reloaded: update the settings then restart the program.*
- - View albums in a grid, most recently uploaded first.
- - Click an album to play an album.
- - The current play queue is viewable showing what song is currently playing in bold.
+ - Can select music from an album view (most recent first), a full list of songs in the collection, or playlists.
+ - Can append to the queue from album and collections view, but not from playlist view.
+ - Basic MPRIS support allowing to be controlled via common controls and shortcuts.
+ - Does *not* support shuffle play or repeating the queued music.
+ - Does *not* support other media like podcasts.
+ - Does *not* cache music/album-art/collection details. Therefore this will do many calls on every startup to retrieve album art. This was tested with the server sitting next to the desktop running this client.
 
-## TODO
 
-Just some notes on what I want to focus on next, not an exhaustive list of the
-many, many, flaws that need to be fixed!
-
- - [ ] Scrolling on the songs
- - [x] clicking a song and play the song
- - [x] ordering (albums)
- - [ ] making the collection view not look like arse (tabular?)
- - [ ] tab view at top level, to switch between views:
-   - [x] Album view
-   - [ ] All song view (i.e. current one)
-   - [ ] Playlists
-   - [ ] Podcasts
-- [x] Some sidebar to show the queue (kinda - just did a tab)
-- [x] oh yeah a queuing system in general (added to a queue, but doesn't work yet)
-- [x] media player controls
-- [ ] mpris
-- [ ] update client auth on settings window closed
-- [x] hide token
