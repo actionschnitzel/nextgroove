@@ -9,14 +9,14 @@
           <object class="GtkLabel" id="nowplaying">
             <property name="label"/>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">False</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="current_album_artist">
             <property name="label"/>
             <property name="halign">start</property>
-            <property name="hexpand">True</property>
+            <property name="hexpand">False</property>
           </object>
         </child>
       </object>
