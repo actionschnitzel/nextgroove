@@ -384,9 +384,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_list_item = list_item.props.item
         artist_label = list_item.props.child
         artist_label.set_label(artist_list_item.artist)
+        artist_label.set_halign(Gtk.Align.START)
 
-    def artist_clicked(event, artist_list_id, other):
-        print(f"Clicked on artist {artist_list_id}")
+    def artist_clicked(self, artist_list_id, list_number):
+        artist = self._artists[list_number]
+        print(f"Clicked on artist {artist.artist}")
+
 
     ##############
     # Queue View #
