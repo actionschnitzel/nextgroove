@@ -26,6 +26,7 @@ from gi.repository import Gio, GObject
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
 from .controls import Controls
+from .artist import ArtistItem
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -37,6 +38,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     # Widgets
     collection_view = Gtk.Template.Child("collectionview")
     album_view = Gtk.Template.Child("albumview")
+    artist_sidebar = Gtk.Template.Child("artist_sidebar")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
@@ -70,6 +72,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
+        self._artists = Gio.ListStore()
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -107,6 +110,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.collection_play.connect("clicked", self.collection_play_clicked)
         self.collection_append_queue.connect("clicked", self.collection_append_queue_clicked)
         self.collection_insert_queue.connect("clicked", self.collection_insert_queue_clicked)
+
+        # Artist Sidebar
+        artist_sidebar_factory = Gtk.SignalListItemFactory()
+        artist_sidebar_factory.connect("setup", self._setup_artist_list_item)
+        artist_sidebar_factory.connect("bind", self._bind_artist_list_item)
+        self.artist_sidebar.props.factory = artist_sidebar_factory
+        selection_model = Gtk.MultiSelection.new(self._artists)
+        self.artist_sidebar.props.model = selection_model
+        self.artist_sidebar.connect("activate", self.artist_clicked)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -213,6 +225,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         for artist in sorted(collection, key=self.get_artist_name):
             artist_string = artist["name"]
             artist_id = artist["id"]
+            artist_list_item = ArtistItem(artist_string, artist_id)
+            self._artists.append(artist_list_item)
             for album in sorted(artist["albums"], key=self.get_artist_name):
                 album_string = album["name"]
                 album_id = album["id"]
@@ -222,6 +236,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_item = QueueItem(song_string, song_id, album_id, artist_id)
                     self._songs.append([artist_string, album_string, song_string, song_item])
         print(f"we have {len(self._songs)} songs")
+
+        print(f"We have {len(self._artists)} artists")
 
         # Trick the UI to redraw, no redraw call works
         # I am clearly doing something wrong here!
@@ -349,6 +365,28 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
             self._queue.insert(insert_index+1, song_item)
+
+
+    ##################
+    # Artist Sidebar #
+    ##################
+
+    def _setup_artist_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        """Generate UI"""
+        list_item.props.child = Gtk.Label()
+
+
+    def _bind_artist_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        artist_list_item = list_item.props.item
+        artist_label = list_item.props.child
+        artist_label.set_label(artist_list_item.artist)
+
+    def artist_clicked(event, artist_list_id, other):
+        print(f"Clicked on artist {artist_list_id}")
 
     ##############
     # Queue View #

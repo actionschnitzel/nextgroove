@@ -33,6 +33,7 @@ nextgroove_sources = [
   'controls.py',
   'main.py',
   'models/albumlistitem.py',
+  'models/artist.py',
   'models/playlist.py',
   'models/queueitem.py',
   'mpris.py',
