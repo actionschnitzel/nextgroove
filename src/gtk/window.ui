@@ -68,6 +68,39 @@
               </object>
             </child>
             <child>
+              <object class="AdwViewStackPage" id="artist_stack">
+                <property name="name">artist</property>
+                <property name="title">Artist</property>
+                <property name="visible">True</property>
+                <property name="icon-name">view-list-bullet-symbolic</property>
+                <property name="child">
+                  <object class="AdwNavigationSplitView" id="split_view">
+                    <property name="sidebar">
+                      <object class="AdwNavigationPage">
+                        <property name="title" translatable="yes">Sidebar</property>
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Side</property>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                    <property name="content">
+                      <object class="AdwNavigationPage">
+                        <property name="title" translatable="yes">Content</property>
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">content</property>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                  </object>
+
+                </property>
+              </object>
+            </child>
+            <child>
               <object class="AdwViewStackPage" id="collection_stack">
                 <property name="name">collection</property>
                 <property name="title">Collection</property>
