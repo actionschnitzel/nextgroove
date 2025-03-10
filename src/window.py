@@ -41,6 +41,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     collection_view = Gtk.Template.Child("collectionview")
     album_view = Gtk.Template.Child("albumview")
     artist_sidebar = Gtk.Template.Child("artist_sidebar")
+    album_sidebar = Gtk.Template.Child("album_sidebar")
     artist_content = Gtk.Template.Child("artist_content")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
@@ -78,6 +79,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._media = Gtk.MediaFile.new()
         self._artists = Gio.ListStore()
         self._selected_artist_content = Gio.ListStore()
+        self._artist_albums = Gio.ListStore()
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -124,6 +126,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         selection_model = Gtk.MultiSelection.new(self._artists)
         self.artist_sidebar.props.model = selection_model
         self.artist_sidebar.connect("activate", self.artist_clicked)
+        # Selected artist Album content
+        album_sidebar_factory = Gtk.SignalListItemFactory()
+        album_sidebar_factory.connect("setup", self._setup_album_sidebar_list_item)
+        album_sidebar_factory.connect("bind", self._bind_album_sidebar_list_item)
+        self.album_sidebar.props.factory = album_sidebar_factory
+        selection_model = Gtk.MultiSelection.new(self._artist_albums)
+        self.album_sidebar.props.model = selection_model
+        self.album_sidebar.connect("activate", self.album_sidebar_clicked)
         # Artist Coontent
         artist_content_factory = Gtk.SignalListItemFactory()
         artist_content_factory.connect("setup", self._setup_artist_content_list_item)
@@ -403,7 +413,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def artist_clicked(self, artist_list_id, list_number):
         artist = self._artists[list_number]
         print(f"Clicked on artist {artist.artist}")
-        self._selected_artist_content.remove_all()
+        self._artist_albums.remove_all()
         artist_collection = self._client.artist_details(artist)
         print(f"got {artist_collection}")
         for album in artist_collection['albums']:
@@ -412,7 +422,27 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     artist.artist, album['name'], album['cover'], album['id']
             )
             album_list_item.set_collection(album)
-            self._selected_artist_content.append(album_list_item)
+            self._artist_albums.append(album_list_item)
+
+
+    def _setup_album_sidebar_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        """Generate UI"""
+        list_item.props.child = Gtk.Label()
+
+
+    def _bind_album_sidebar_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        album_list_item = list_item.props.item
+        album_label = list_item.props.child
+        album_label.set_label(album_list_item.album)
+        album_label.set_halign(Gtk.Align.START)
+
+    def album_sidebar_clicked(self, artist_list_id, list_number):
+        print("clicked album sidebar")
+
 
 
     def _setup_artist_content_list_item(

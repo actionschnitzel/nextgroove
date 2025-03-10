@@ -68,6 +68,7 @@
               </object>
             </child>
             <child>
+
               <object class="AdwViewStackPage" id="artist_stack">
                 <property name="name">artist</property>
                 <property name="title">Artist</property>
@@ -75,17 +76,44 @@
                 <property name="icon-name">view-list-bullet-symbolic</property>
                 <property name="child">
                   <object class="AdwNavigationSplitView" id="split_view">
+                              <property name="max-sidebar-width">360</property>
+                              <property name="sidebar-width-fraction">0.47</property>
                     <property name="sidebar">
                       <object class="AdwNavigationPage">
                         <property name="title" translatable="yes">Artists</property>
                         <property name="child">
-                          <object class="GtkScrolledWindow">
-                            <child>
-                              <object class="GtkListView" id="artist_sidebar">
-                                <property name="single-click-activate">True</property>
-                              </object>
-                            </child>
-                          </object>
+                            <object class="AdwNavigationSplitView" >
+                              <property name="max-sidebar-width">260</property>
+                              <property name="sidebar-width-fraction">0.38</property>
+                              <property name="sidebar">
+                                <object class="AdwNavigationPage">
+                                  <property name="title" translatable="yes">Content</property>
+                                  <property name="child">
+                                    <object class="GtkScrolledWindow">
+                                      <child>
+                                        <object class="GtkListView" id="artist_sidebar">
+                                          <property name="single-click-activate">True</property>
+                                        </object>
+                                      </child>
+                                    </object>
+                                  </property>
+                                </object>
+                              </property>
+                              <property name="content">
+                                <object class="AdwNavigationPage">
+                                  <property name="title" translatable="yes">Content</property>
+                                  <property name="child">
+                                    <object class="GtkScrolledWindow">
+                                      <child>
+                                        <object class="GtkListView" id="album_sidebar">
+                                          <property name="single-click-activate">True</property>
+                                        </object>
+                                      </child>
+                                    </object>
+                                  </property>
+                                </object>
+                              </property>
+                            </object>
                         </property>
                       </object>
                     </property>
