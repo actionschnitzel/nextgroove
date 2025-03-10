@@ -123,7 +123,7 @@
                         <property name="child">
                           <object class="GtkScrolledWindow">
                             <child>
-                              <object class="GtkListView" id="artist_content">
+                              <object class="AlbumHeader" id="album_details_content">
                               </object>
                             </child>
                           </object>

@@ -42,7 +42,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_view = Gtk.Template.Child("albumview")
     artist_sidebar = Gtk.Template.Child("artist_sidebar")
     album_sidebar = Gtk.Template.Child("album_sidebar")
-    artist_content = Gtk.Template.Child("artist_content")
+    album_details_content = Gtk.Template.Child("album_details_content")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
@@ -135,13 +135,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_sidebar.props.model = selection_model
         self.album_sidebar.connect("activate", self.album_sidebar_clicked)
         # Artist Coontent
-        artist_content_factory = Gtk.SignalListItemFactory()
-        artist_content_factory.connect("setup", self._setup_artist_content_list_item)
-        artist_content_factory.connect("bind", self._bind_artist_content_list_item)
-        self.artist_content.props.factory = artist_content_factory
-        selection_model = Gtk.NoSelection.new(self._selected_artist_content)
-        self.artist_content.props.model = selection_model
-        #self.artist_content.connect("activate", self.artist_content_clicked)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -440,10 +433,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_label.set_label(album_list_item.album)
         album_label.set_halign(Gtk.Align.START)
 
-    def album_sidebar_clicked(self, artist_list_id, list_number):
+    def album_sidebar_clicked(self, artistalbum_list_id, list_number):
         print("clicked album sidebar")
-
-
+        album = self._artist_albums[list_number]
+        print(f"Clicked on album {album.album}")
+        self.album_details_content.set_album(album)
+        self.album_details_content.set_cover(self._client.get_cover(album))
+        self.album_details_content.set_tracks(album.tracks)
 
     def _setup_artist_content_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
