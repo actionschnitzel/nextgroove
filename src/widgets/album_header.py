@@ -23,6 +23,7 @@ from typing import Optional
 
 from gi.repository import GObject, Gtk
 from .albumlistitem import AlbumListItem
+from .song_row import SongRow
 from html import escape
 
 
@@ -34,15 +35,34 @@ class AlbumHeader(Gtk.Box):
 
     _album_label = Gtk.Template.Child()
     _cover_image = Gtk.Template.Child()
+    _album_year_label = Gtk.Template.Child()
+    _song_container = Gtk.Template.Child()
+    play_button = Gtk.Template.Child("play_button")
+
+    _track_elements = None
 
     def __init__(self):
         super().__init__()
         self._album = None
         self._cover_image.set_size_request(128, 128)
+        self._track_elements = []
 
     def set_album(self, album):
         self._album = album
         self._album_label.set_markup(f"<span size=\"x-large\">{escape(album.album)}</span>")
+        self._album_year_label.set_text(f"Released {album.year}")
 
     def set_cover(self, cover_file):
         self._cover_image.set_from_file(cover_file)
+
+    def set_tracks(self, tracks):
+        # Remove if there already are songs (this may be called multiple times)
+        for oldtrack in self._track_elements:
+            oldtrack.unparent()
+        self._track_elements = []
+        # Add tracks
+        for track in tracks:
+            song_label = SongRow(track)
+            song_label.set_parent(self._song_container)
+            self._track_elements.append(song_label)
+

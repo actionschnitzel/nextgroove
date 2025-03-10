@@ -39,6 +39,7 @@ nextgroove_sources = [
   'mpris.py',
   'settings.py',
   'widgets/album_header.py',
+  'widgets/song_row.py',
   'window.py'
 ]
 

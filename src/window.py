@@ -129,9 +129,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_content_factory.connect("setup", self._setup_artist_content_list_item)
         artist_content_factory.connect("bind", self._bind_artist_content_list_item)
         self.artist_content.props.factory = artist_content_factory
-        selection_model = Gtk.MultiSelection.new(self._selected_artist_content)
+        selection_model = Gtk.NoSelection.new(self._selected_artist_content)
         self.artist_content.props.model = selection_model
-        self.artist_content.connect("activate", self.artist_content_clicked)
+        #self.artist_content.connect("activate", self.artist_content_clicked)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -429,13 +429,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_header = list_item.props.child
         album_header.set_album(album_list_item)
         album_header.set_cover(self._client.get_cover(album_list_item))
-        for track in album_list_item.tracks:
-            # TODO adda  random box here, hopefully I can dynamically add stuff
-            pass
+        album_header.set_tracks(album_list_item.tracks)
+        album_header.play_button.connect("clicked", self.artist_album_play_clicked)
 
-    def artist_content_clicked(self, artist_list_id, list_number):
-        artist = self._artists[list_number]
-        print(f"Clicked on artist {artist.artist}")
+    def artist_album_play_clicked(self, what):
+        print(f"Clicked play on album {what}")
 
 
     ##############

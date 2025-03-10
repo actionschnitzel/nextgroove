@@ -47,6 +47,5 @@ class AlbumListItem(GObject.Object):
         """Idea is to pass in the json details for the album, then we extract what we can"""
         self.year = collection.get("year", 0)
         for track in collection.get("tracks", []):
-            print(f"Adding {track['title']} to album")
             song_id = list(track['files'].values())[0]
             self.tracks.append(QueueItem(track['title'], song_id, self.album_id, track['artistId']))

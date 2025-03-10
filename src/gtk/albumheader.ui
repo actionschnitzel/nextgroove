@@ -22,7 +22,7 @@
           <child>
             <object class="GtkBox">
               <property name="has_tooltip">True</property>
-              <property name="valign">start</property>
+              <property name="valign">center</property>
               <property name="orientation">vertical</property>
               <child>
                 <object class="GtkLabel" id="_album_label">
@@ -33,8 +33,30 @@
                   <property name="lines">1</property>
                 </object>
               </child>
+              <child>
+                <object class="GtkLabel" id="_album_year_label">
+                  <property name="halign">start</property>
+                  <property name="wrap">True</property>
+                  <property name="ellipsize">end</property>
+                  <property name="max_width_chars">40</property>
+                  <property name="lines">1</property>
+                </object>
+              </child>
             </object>
           </child>
+        </object>
+      </child>
+      <child>
+        <object class="GtkButton" id="play_button">
+          <property name="halign">end</property>
+          <property name="label">Play</property>
+          <property name="icon-name">media-playback-start-symbolic</property>
+        </object>
+      </child>
+      <child>
+        <object class="GtkBox" id="_song_container">
+          <property name="valign">start</property>
+          <property name="orientation">vertical</property>
         </object>
       </child>
 
