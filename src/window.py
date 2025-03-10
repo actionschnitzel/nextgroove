@@ -441,27 +441,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_details_content.set_cover(self._client.get_cover(album))
         self.album_details_content.set_tracks(album.tracks)
 
-    def _setup_artist_content_list_item(
-        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
-    ) -> None:
-        """Generate UI"""
-        list_item.props.child = AlbumHeader()
-
-
-    def _bind_artist_content_list_item(
-        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
-    ) -> None:
-        album_list_item = list_item.props.item
-        album_header = list_item.props.child
-        album_header.set_album(album_list_item)
-        album_header.set_cover(self._client.get_cover(album_list_item))
-        album_header.set_tracks(album_list_item.tracks)
-        album_header.play_button.connect("clicked", self.artist_album_play_clicked)
-
-    def artist_album_play_clicked(self, what):
-        print(f"Clicked play on album {what}")
-
-
     ##############
     # Queue View #
     ##############
