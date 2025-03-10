@@ -6,5 +6,6 @@
     <file preprocess="xml-stripblanks">gtk/albumtile.ui</file>
     <file preprocess="xml-stripblanks">gtk/settings.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">gtk/albumheader.ui</file>
   </gresource>
 </gresources>

@@ -73,6 +73,11 @@ class NextcloudMusicClient(GObject.Object):
         print("ERROR client.album_details could not find an album")
         return None
 
+    def artist_details(self, desired_artist):
+        for artist in self.collection:
+            if artist['id'] == desired_artist.artist_id:
+                return artist
+
     def get_track_from_id(self, track_id):
         for artist in self.collection:
             for album in artist['albums']:

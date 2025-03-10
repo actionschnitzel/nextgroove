@@ -27,6 +27,8 @@ from .albumtile import AlbumTile
 from .queueitem import QueueItem
 from .controls import Controls
 from .artist import ArtistItem
+from .album_header import AlbumHeader
+from .albumlistitem import AlbumListItem
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -39,6 +41,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     collection_view = Gtk.Template.Child("collectionview")
     album_view = Gtk.Template.Child("albumview")
     artist_sidebar = Gtk.Template.Child("artist_sidebar")
+    artist_content = Gtk.Template.Child("artist_content")
     queue_view = Gtk.Template.Child("queueview")
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
@@ -50,6 +53,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     collection_stack = Gtk.Template.Child("collection_stack")
     playlist_stack = Gtk.Template.Child("playlist_stack")
     queue_stack = Gtk.Template.Child("queue_stack")
+    artist_stack = Gtk.Template.Child("artist_stack")
 
     collection_play = Gtk.Template.Child("collection_play")
     collection_append_queue = Gtk.Template.Child("collection_append_queue")
@@ -73,6 +77,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
         self._artists = Gio.ListStore()
+        self._selected_artist_content = Gio.ListStore()
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -113,12 +118,20 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         # Artist Sidebar
         artist_sidebar_factory = Gtk.SignalListItemFactory()
-        artist_sidebar_factory.connect("setup", self._setup_artist_list_item)
-        artist_sidebar_factory.connect("bind", self._bind_artist_list_item)
+        artist_sidebar_factory.connect("setup", self._setup_artist_sidebar_list_item)
+        artist_sidebar_factory.connect("bind", self._bind_artist_sidebar_list_item)
         self.artist_sidebar.props.factory = artist_sidebar_factory
         selection_model = Gtk.MultiSelection.new(self._artists)
         self.artist_sidebar.props.model = selection_model
         self.artist_sidebar.connect("activate", self.artist_clicked)
+        # Artist Coontent
+        artist_content_factory = Gtk.SignalListItemFactory()
+        artist_content_factory.connect("setup", self._setup_artist_content_list_item)
+        artist_content_factory.connect("bind", self._bind_artist_content_list_item)
+        self.artist_content.props.factory = artist_content_factory
+        selection_model = Gtk.MultiSelection.new(self._selected_artist_content)
+        self.artist_content.props.model = selection_model
+        self.artist_content.connect("activate", self.artist_content_clicked)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -215,6 +228,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.playlist_stack.props.visible = True
         self.collection_stack.props.visible = True
         self.queue_stack.props.visible = True
+        self.artist_stack.props.visible = True
         self.stack.props.visible_child_name = "albums"
         if collection is None:
             print("Collection is none atm, come back later")
@@ -371,14 +385,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     # Artist Sidebar #
     ##################
 
-    def _setup_artist_list_item(
+    def _setup_artist_sidebar_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         """Generate UI"""
         list_item.props.child = Gtk.Label()
 
 
-    def _bind_artist_list_item(
+    def _bind_artist_sidebar_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         artist_list_item = list_item.props.item
@@ -387,6 +401,39 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_label.set_halign(Gtk.Align.START)
 
     def artist_clicked(self, artist_list_id, list_number):
+        artist = self._artists[list_number]
+        print(f"Clicked on artist {artist.artist}")
+        self._selected_artist_content.remove_all()
+        artist_collection = self._client.artist_details(artist)
+        print(f"got {artist_collection}")
+        for album in artist_collection['albums']:
+            # TODO retrieve this? I'm sure I left one of these lying around somewhere
+            album_list_item = AlbumListItem(
+                    artist.artist, album['name'], album['cover'], album['id']
+            )
+            album_list_item.set_collection(album)
+            self._selected_artist_content.append(album_list_item)
+
+
+    def _setup_artist_content_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        """Generate UI"""
+        list_item.props.child = AlbumHeader()
+
+
+    def _bind_artist_content_list_item(
+        self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
+    ) -> None:
+        album_list_item = list_item.props.item
+        album_header = list_item.props.child
+        album_header.set_album(album_list_item)
+        album_header.set_cover(self._client.get_cover(album_list_item))
+        for track in album_list_item.tracks:
+            # TODO adda  random box here, hopefully I can dynamically add stuff
+            pass
+
+    def artist_content_clicked(self, artist_list_id, list_number):
         artist = self._artists[list_number]
         print(f"Clicked on artist {artist.artist}")
 

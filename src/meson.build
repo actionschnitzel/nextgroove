@@ -38,6 +38,7 @@ nextgroove_sources = [
   'models/queueitem.py',
   'mpris.py',
   'settings.py',
+  'widgets/album_header.py',
   'window.py'
 ]
 
