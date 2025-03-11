@@ -73,7 +73,7 @@
                 <property name="name">artist</property>
                 <property name="title">Artist</property>
                 <property name="visible">False</property>
-                <property name="icon-name">view-list-bullet-symbolic</property>
+                <property name="icon-name">system-users</property>
                 <property name="child">
                   <object class="AdwNavigationSplitView" id="split_view">
                               <property name="max-sidebar-width">360</property>
