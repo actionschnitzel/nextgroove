@@ -38,7 +38,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     __gtype_name__ = "NextcloudmusicWindow"
 
     # Widgets
-    collection_view = Gtk.Template.Child("collectionview")
     album_view = Gtk.Template.Child("albumview")
     artist_sidebar = Gtk.Template.Child("artist_sidebar")
     album_sidebar = Gtk.Template.Child("album_sidebar")
@@ -51,14 +50,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     stack = Gtk.Template.Child("stack")
     album_stack = Gtk.Template.Child("album_stack")
-    collection_stack = Gtk.Template.Child("collection_stack")
     playlist_stack = Gtk.Template.Child("playlist_stack")
     queue_stack = Gtk.Template.Child("queue_stack")
     artist_stack = Gtk.Template.Child("artist_stack")
-
-    collection_play = Gtk.Template.Child("collection_play")
-    collection_append_queue = Gtk.Template.Child("collection_append_queue")
-    collection_insert_queue = Gtk.Template.Child("collection_insert_queue")
 
     # Data objects
     _settings = None
@@ -113,13 +107,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.queue_view.props.model = selection_model
         self.queue_view.connect("activate", self.queue_clicked)
 
-        # Collection page
-        self.collection_view.props.model = self._songs
-        self.collection_view.connect("row-activated", self.collection_clicked)
-        self.collection_play.connect("clicked", self.collection_play_clicked)
-        self.collection_append_queue.connect("clicked", self.collection_append_queue_clicked)
-        self.collection_insert_queue.connect("clicked", self.collection_insert_queue_clicked)
-
         # Artist Sidebar
         artist_sidebar_factory = Gtk.SignalListItemFactory()
         artist_sidebar_factory.connect("setup", self._setup_artist_sidebar_list_item)
@@ -156,74 +143,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def settings(self):
         return self._settings
 
-    ############################
-    # Collection view (hidden) #
-    ############################
-
-    def collection_play_clicked(self, thing):
-        print(f"hi from clicked play on collection, we have {thing}")
-        selection = self.collection_view.get_selection().get_selected_rows()[1]
-        print(f"we have {len(selection)} items in selection")
-        if len(selection) == 0:
-            print("Can't play if nothing selected")
-            return
-
-        self._queue.remove_all()
-        first_song = self._songs[selection[0]]
-        first_song[3].set_now_playing(True)
-        for row in selection:
-            artist, album, song, queue_item = self._songs[row]
-            self._queue.append(queue_item)
-
-        self._client.get_song_async(first_song[3].get_song_id(), first_song[3].title, self.song_file_returned)
-
-    def collection_append_queue_clicked(self, thing):
-        print(f"hi from clicked append to queue on collection, we have {thing}")
-        selection = self.collection_view.get_selection().get_selected_rows()[1]
-        print(f"we have {len(selection)} items in selection")
-        if len(selection) == 0:
-            print("Can't play if nothing selected")
-            return
-        if len(self._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
-            self.collection_play_clicked(thing)
-            return
-
-        for row in selection:
-            artist, album, song, queue_item = self._songs[row]
-            self._queue.append(queue_item)
-
-    def collection_insert_queue_clicked(self, thing):
-        print(f"hi from clicked append to queue on collection, we have {thing}")
-        selection = self.collection_view.get_selection().get_selected_rows()[1]
-        print(f"we have {len(selection)} items in selection")
-        if len(selection) == 0:
-            print("Can't play if nothing selected")
-            return
-        if len(self._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
-            self.collection_play_clicked(thing)
-            return
-
-        insert_index = 0
-        for queue_song in self._queue:
-            if queue_song.is_now_playing():
-                break
-            insert_index += 1
-
-        for row in reversed(selection):
-            artist, album, song, queue_item = self._songs[row]
-            self._queue.insert(insert_index+1 , queue_item)
-
-    def collection_clicked(self, treeview, row, column):
-        artist_name, album_name, song_title, queue_item = self._songs[row]
-        self._queue.remove_all()
-        queue_item.set_now_playing(True)
-        self._queue.append(queue_item)
-
-        self._client.get_song_async(queue_item.get_song_id(), song_title, self.song_file_returned)
-
-
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
         """
@@ -233,7 +152,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
-        self.collection_stack.props.visible = True
         self.queue_stack.props.visible = True
         self.artist_stack.props.visible = True
         self.stack.props.visible_child_name = "albums"
