@@ -135,6 +135,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_sidebar.props.model = selection_model
         self.album_sidebar.connect("activate", self.album_sidebar_clicked)
         # Artist Coontent
+        self.album_details_content.play_button.connect("clicked", self.artist_album_play_clicked)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -441,6 +442,29 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_details_content.set_cover(self._client.get_cover(album))
         self.album_details_content.set_tracks(album.tracks)
 
+    def artist_album_play_clicked(self, _):
+        album = self.album_details_content.album
+        album_details = self._client.album_details(album)
+        album_id = album_details['id']
+        artist_id = self._client.get_artist_id_for_album_list_item(album)
+
+        # Tracks are not ordered in the json output
+        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+
+        # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
+        # we need that file ID, which makes this look quite ugly
+        song_id = list(sorted_tracks[0]["files"].values())[0]
+        song_name = sorted_tracks[0]["title"]
+        self._queue.remove_all()
+        for song in sorted_tracks:
+            queued_song_id = list(song["files"].values())[0]
+            song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            if queued_song_id == song_id:
+                song_item.set_now_playing(True)
+            self._queue.append(song_item)
+
+        self._client.get_song_async(song_id, song_name, self.song_file_returned)
+
     ##############
     # Queue View #
     ##############
@@ -473,7 +497,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         albumartist_widget = song_widget.get_next_sibling()
 
         if queue_list_item.album_id not in self._client.album_name_by_id:
-            # We are repopulating during a client refreh, try again soon
+            # We are repopulating during a client refresh, try again soon
             return
         album_str = self._client.album_name_by_id[queue_list_item.album_id]
         if queue_list_item.artist_id not in self._client.artist_name_by_id:

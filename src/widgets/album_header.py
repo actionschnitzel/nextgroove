@@ -48,7 +48,7 @@ class AlbumHeader(Gtk.Box):
         self._track_elements = []
 
     def set_album(self, album):
-        self._album = album
+        self.album = album
         self._album_label.set_markup(f"<span size=\"x-large\">{escape(album.album)}</span>")
         self._album_year_label.set_text(f"Released {album.year}")
         self.play_button.set_visible(True)
