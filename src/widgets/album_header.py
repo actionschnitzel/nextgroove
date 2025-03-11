@@ -21,7 +21,7 @@
 from __future__ import annotations
 from typing import Optional
 
-from gi.repository import GObject, Gtk
+from gi.repository import GObject, Gtk, Gio
 from .albumlistitem import AlbumListItem
 from .song_row import SongRow
 from html import escape
@@ -36,16 +36,24 @@ class AlbumHeader(Gtk.Box):
     _album_label = Gtk.Template.Child()
     _cover_image = Gtk.Template.Child()
     _album_year_label = Gtk.Template.Child()
-    _song_container = Gtk.Template.Child()
+    _songlist = Gtk.Template.Child("songlist")
     play_button = Gtk.Template.Child("play_button")
 
-    _track_elements = None
+    _track_elements = Gio.ListStore()
+
 
     def __init__(self):
         super().__init__()
         self._album = None
         self._cover_image.set_size_request(128, 128)
-        self._track_elements = []
+
+        song_item_factory = Gtk.SignalListItemFactory()
+        song_item_factory.connect("setup", self._setup_song_list_item)
+        song_item_factory.connect("bind", self._bind_song_list_item)
+        self._songlist.props.factory = song_item_factory
+        song_selection_model = Gtk.SingleSelection.new(self._track_elements)
+        self._songlist.props.model = song_selection_model
+        self._songlist.connect("activate", self.song_clicked)
 
     def set_album(self, album):
         self.album = album
@@ -57,13 +65,18 @@ class AlbumHeader(Gtk.Box):
         self._cover_image.set_from_file(cover_file)
 
     def set_tracks(self, tracks):
-        # Remove if there already are songs (this may be called multiple times)
-        for oldtrack in self._track_elements:
-            oldtrack.unparent()
-        self._track_elements = []
+        self._track_elements.remove_all()
         # Add tracks
         for track in tracks:
-            song_label = SongRow(track)
-            song_label.set_parent(self._song_container)
-            self._track_elements.append(song_label)
+            self._track_elements.append(track)
 
+    def _setup_song_list_item(self, factory, list_item):
+        list_item.props.child = SongRow()
+
+    def _bind_song_list_item(self, factory, list_item):
+        song_item = list_item.props.item
+        song_row = list_item.props.child
+        song_row.set_queue_item(song_item)
+
+    def song_clicked(self, event, song_id):
+        print(f"Clicked on song {song_id}")

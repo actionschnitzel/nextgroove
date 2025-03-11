@@ -55,9 +55,7 @@
         </object>
       </child>
       <child>
-        <object class="GtkBox" id="_song_container">
-          <property name="valign">start</property>
-          <property name="orientation">vertical</property>
+        <object class="GtkListView" id="songlist">
         </object>
       </child>
 

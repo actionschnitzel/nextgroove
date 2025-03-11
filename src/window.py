@@ -102,6 +102,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self.album_view.props.model = selection_model
             self.album_view.connect("activate", self.album_clicked)
 
+        # TODO ok this is too much, split out each tab into a separate class
+
         # Queue page
         queue_item_factory = Gtk.SignalListItemFactory()
         queue_item_factory.connect("setup", self._setup_queue_list_item)

@@ -36,9 +36,11 @@ class SongRow(Gtk.Box):
 
     queue_item = None
 
-    def __init__(self, queue_item):
+    def __init__(self):
         super().__init__()
+
+
+    def set_queue_item(self, queue_item):
         self.queue_item = queue_item
         self._song_title.set_label(queue_item.title)
-
 
