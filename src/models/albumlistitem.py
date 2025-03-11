@@ -46,6 +46,11 @@ class AlbumListItem(GObject.Object):
     def set_collection(self, collection):
         """Idea is to pass in the json details for the album, then we extract what we can"""
         self.year = collection.get("year", 0)
-        for track in collection.get("tracks", []):
+        for track in sorted(collection.get("tracks", []), key=self.get_track_number):
             song_id = list(track['files'].values())[0]
             self.tracks.append(QueueItem(track['title'], song_id, self.album_id, track['artistId']))
+
+    def get_track_number(self, thing):
+        disk = thing.get('disk', 1)
+        number = thing.get('number', 1)
+        return f"{disk:02d}_{number:02d}"

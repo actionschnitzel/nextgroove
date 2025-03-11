@@ -267,11 +267,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue.remove(0)
 
     def get_artist_name(self, thing):
-        return thing['name']
+        return thing['name'].lower()
     def get_track_number(self, thing):
-        disk = thing.get('disk', 1)
-        number = thing.get('number', 1)
-        return f"{disk}_{number}"
+        disk = thing.get('disk', 1) or 1
+        number = thing.get('number', 1) or 1
+        return f"{disk:02d}_{number:02d}"
 
 
     ##############
