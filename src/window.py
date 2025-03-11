@@ -442,8 +442,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album = self._artist_albums[list_number]
         print(f"Clicked on album {album.album}")
         self.album_details_content.set_album(album)
-        self.album_details_content.set_cover(self._client.get_cover(album))
+
         self.album_details_content.set_tracks(album.tracks)
+        cover = self._client.get_cover(album)
+        if cover and os.path.exists(cover):
+            self.album_details_content.set_cover(self._client.get_cover(album))
+        else:
+            self._client.download_cover_async(
+                album.album_id, album.cover_url, self.album_details_content
+            )
 
     def artist_album_play_clicked(self, _):
         album = self.album_details_content.album
