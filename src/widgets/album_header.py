@@ -38,8 +38,11 @@ class AlbumHeader(Gtk.Box):
     _album_year_label = Gtk.Template.Child()
     _songlist = Gtk.Template.Child("songlist")
     play_button = Gtk.Template.Child("play_button")
+    song_click_menu = Gtk.Template.Child("song_click_menu")
 
     _track_elements = Gio.ListStore()
+    clicked_song = None
+    window = None
 
 
     def __init__(self):
@@ -54,6 +57,9 @@ class AlbumHeader(Gtk.Box):
         song_selection_model = Gtk.SingleSelection.new(self._track_elements)
         self._songlist.props.model = song_selection_model
         self._songlist.connect("activate", self.song_clicked)
+
+    def set_window(self, window):
+        self.window = window
 
     def set_album(self, album):
         self.album = album
@@ -77,6 +83,43 @@ class AlbumHeader(Gtk.Box):
         song_item = list_item.props.item
         song_row = list_item.props.child
         song_row.set_queue_item(song_item)
+        song_item.set_widget(song_row)
 
     def song_clicked(self, event, song_id):
-        print(f"Clicked on song {song_id}")
+        song_thing = self._track_elements[song_id]
+        popover = Gtk.PopoverMenu.new_from_model(self.song_click_menu)
+        popover.set_parent(song_thing.widget)
+        popover.popup()
+        self.clicked_song = song_thing
+
+    def song_play_clicked(self, event, _):
+        print(f"Let's play {self.clicked_song.title}")
+        self.window._queue.remove_all()
+        self.clicked_song.set_now_playing(True)
+        self.window._queue.append(self.clicked_song)
+
+        self.window._client.get_song_async(self.clicked_song.get_song_id(), self.clicked_song.title, self.window.song_file_returned)
+
+    def song_queue_add_end_clicked(self, event, _):
+        if len(self.window._queue) == 0:
+            print("Same as play if the queue is empty, redirecting")
+            self.song_play_clicked(None, None)
+            return
+
+        self.window._queue.append(self.clicked_song)
+
+    def song_queue_add_next_clicked(self, event, _):
+        if len(self.window._queue) == 0:
+            print("Same as play if the queue is empty, redirecting")
+            self.song_play_clicked(None, None)
+            return
+
+        insert_index = 0
+        for queue_song in self.window._queue:
+            if queue_song.is_now_playing():
+                break
+            insert_index += 1
+
+        self.window._queue.insert(insert_index+1 , self.clicked_song)
+
+

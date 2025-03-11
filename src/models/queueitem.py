@@ -27,6 +27,7 @@ class QueueItem(GObject.Object):
     now_playing = None
     album_id = None
     artist_id = None
+    widget = None
 
     def __init__(self, title, song_id, album_id, artist_id):
         super().__init__()
@@ -52,3 +53,6 @@ class QueueItem(GObject.Object):
     )
     def song_title(self):
         return self.title
+
+    def set_widget(self, widget):
+        self.widget = widget
