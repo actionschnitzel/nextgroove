@@ -245,6 +245,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         album_index = self._album_selected
         album = self._client.albums[album_index]
+        self.album_play_clicked_generic(album)
+
+    def album_play_clicked_generic(self, album):
         album_id = album.album_id
         print(f"Clicked play on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
@@ -287,12 +290,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_navigation.push(self.album_tab_details)
 
     def album_queue_add_end_clicked(self, event, something):
-        if len(self._queue) == 0:
-            print("Add to end of queue is identical to play when no queue: rerouting...")
-            self.album_play_clicked(event, something)
-            return
         album_index = self._album_selected
         album = self._client.albums[album_index]
+        self.album_queue_add_end_clicked_generic(album)
+
+    def album_queue_add_end_clicked_generic(self, album):
+        if len(self._queue) == 0:
+            print("Add to end of queue is identical to play when no queue: rerouting...")
+            self.album_play_clicked_generic(album)
+            return
+
         album_id = album.album_id
         print(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
@@ -309,13 +316,17 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self._queue.append(song_item)
 
     def album_queue_add_next_clicked(self, event, something):
-        if len(self._queue) == 0:
-            print("Add to next in queue is identical to play when no queue: rerouting...")
-            self.album_play_clicked(event, something)
-            return
         album_index = self._album_selected
         album = self._client.albums[album_index]
+        self.album_queue_play_next_generic(album)
+
+    def album_queue_play_next_generic(self, album):
         album_id = album.album_id
+        if len(self._queue) == 0:
+            print("Add to next in queue is identical to play when no queue: rerouting...")
+            self.album_play_clicked_generic(album)
+            return
+
         print(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
@@ -431,7 +442,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
-
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
 
     ##############
