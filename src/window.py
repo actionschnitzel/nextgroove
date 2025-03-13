@@ -48,11 +48,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     playlist_view = Gtk.Template.Child("playlistview")
     welcome_view = Gtk.Template.Child("welcomepage")
 
-    artist_nav_1 = Gtk.Template.Child("artist_nav_1")
+    #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
     artist_nav_2 = Gtk.Template.Child("artist_nav_2")
     artist_nav_3 = Gtk.Template.Child("artist_nav_3")
     outer_artist_split = Gtk.Template.Child("outer_artist_split")
-    inner_artist_split = Gtk.Template.Child("inner_artist_split")
+    #inner_artist_split = Gtk.Template.Child("inner_artist_split")
 
     stack = Gtk.Template.Child("stack")
     album_stack = Gtk.Template.Child("album_stack")
@@ -345,7 +345,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             album_list_item.set_collection(album)
             self._artist_albums.append(album_list_item)
         #help(self.outer_artist_split)
-        print(f"visible page is {self.outer_artist_split.props.visible_page}")
+        self.outer_artist_split.push(self.artist_nav_2)
 
 
     def _setup_album_sidebar_list_item(
@@ -377,6 +377,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self._client.download_cover_async(
                 album.album_id, album.cover_url, self.album_details_content
             )
+        self.outer_artist_split.push(self.artist_nav_3)
 
     def artist_album_play_clicked(self, _):
         album = self.album_details_content.album

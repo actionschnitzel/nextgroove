@@ -40,6 +40,7 @@ class SongRow(Gtk.Box):
 
     def __init__(self):
         super().__init__()
+        self._song_title.set_hexpand(True)
 
 
     def set_queue_item(self, queue_item):

@@ -13,21 +13,6 @@
           <setter object="header_bar" property="title-widget"/>
         </object>
     </child>
-    <child>
-      <object class="AdwBreakpoint">
-        <condition>max-width: 680sp</condition>
-        <setter object="outer_artist_split" property="collapsed">True</setter>
-        <setter object="inner_artist_split" property="sidebar-width-fraction">0.33</setter>
-      </object>
-    </child>
-    <child>
-      <object class="AdwBreakpoint">
-        <condition>max-width: 500sp</condition>
-        <setter object="outer_artist_split" property="collapsed">True</setter>
-        <setter object="inner_artist_split" property="sidebar-width-fraction">0.33</setter>
-        <setter object="inner_artist_split" property="collapsed">True</setter>
-      </object>
-    </child>
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
@@ -56,7 +41,7 @@
                 <property name="title">Welcome</property>
                 <property name="icon-name">user-home-symbolic</property>
                 <property name="child">
- <object class="AdwStatusPage" >
+ <object class="AdwStatusPage">
                     <property name="title">Welcome</property>
                     <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
                   </object>
@@ -83,74 +68,83 @@
               </object>
             </child>
             <child>
-
               <object class="AdwViewStackPage" id="artist_stack">
                 <property name="name">artist</property>
                 <property name="title">Artist</property>
                 <property name="visible">False</property>
                 <property name="icon-name">system-users</property>
                 <property name="child">
-                  <object class="AdwNavigationSplitView" id="outer_artist_split">
-                    <property name="min-sidebar-width">200</property>
-                    <property name="max-sidebar-width">500</property>
-                    <property name="sidebar-width-fraction">0.37</property>
-                    <property name="sidebar">
+                  <object class="AdwNavigationView" id="outer_artist_split">
+                    <child>
                       <object class="AdwNavigationPage" id="artist_nav_1">
                         <property name="title" translatable="yes">Artists</property>
-                        <property name="tag">artist_list</property>
-                        <property name="child">
-                            <object class="AdwNavigationSplitView" id="inner_artist_split" >
-                              <property name="max-sidebar-width">200</property>
-                              <property name="sidebar-width-fraction">0.38</property>
-                              <property name="sidebar">
-                                <object class="AdwNavigationPage" id="artist_nav_2">
-                                  <property name="title" translatable="yes">Content</property>
-                                  <property name="tag">album_list</property>
-                                  <property name="child">
-                                    <object class="GtkScrolledWindow">
-                                      <child>
-                                        <object class="GtkListView" id="artist_sidebar">
-                                          <property name="single-click-activate">True</property>
-                                        </object>
-                                      </child>
-                                    </object>
-                                  </property>
-                                </object>
-                              </property>
-                              <property name="content">
-                                <object class="AdwNavigationPage" id="artist_nav_3">
-                                  <property name="title" translatable="yes">Content</property>
-                                  <property name="tag">album_details</property>
-                                  <property name="child">
-                                    <object class="GtkScrolledWindow">
-                                      <child>
-                                        <object class="GtkListView" id="album_sidebar">
-                                          <property name="single-click-activate">True</property>
-                                        </object>
-                                      </child>
-                                    </object>
-                                  </property>
-                                </object>
-                              </property>
-                            </object>
-                        </property>
-                      </object>
-                    </property>
-                    <property name="content">
-                      <object class="AdwNavigationPage">
-                        <property name="title" translatable="yes">Content</property>
                         <property name="child">
                           <object class="GtkScrolledWindow">
                             <child>
-                              <object class="AlbumHeader" id="album_details_content">
+                              <object class="GtkListView" id="artist_sidebar">
+                                <property name="single-click-activate">True</property>
                               </object>
                             </child>
                           </object>
                         </property>
                       </object>
-                    </property>
+                    </child>
+                    <child>
+                      <object class="AdwNavigationPage" id="artist_nav_2">
+                        <property name="title" translatable="yes">Albums</property>
+                        <property name="tag">album_list</property>
+                        <property name="child">
+                          <object class="AdwToolbarView">
+                            <child type="top">
+                              <object class="AdwHeaderBar">
+                                <property name="title-widget">
+                                  <object class="AdwWindowTitle" id="_page_title"/>
+                                </property>
+                                <property name="show-end-title-buttons">false</property>
+                                <property name="show-start-title-buttons">false</property>
+                              </object>
+                            </child>
+                            <property name="content">
+                              <object class="GtkScrolledWindow">
+                                <child>
+                                  <object class="GtkListView" id="album_sidebar">
+                                    <property name="single-click-activate">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwNavigationPage" id="artist_nav_3">
+                        <property name="title" translatable="yes">Content</property>
+                        <property name="child">
+                          <object class="AdwToolbarView">
+                            <child type="top">
+                              <object class="AdwHeaderBar">
+                                <property name="title-widget">
+                                  <object class="AdwWindowTitle" id="_page_title2"/>
+                                </property>
+                                <property name="show-end-title-buttons">false</property>
+                                <property name="show-start-title-buttons">false</property>
+                              </object>
+                            </child>
+                            <property name="content">
+                              <object class="GtkScrolledWindow">
+                                <child>
+                                  <object class="AlbumHeader" id="album_details_content">
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
                   </object>
-                </property>
+                </property>>
               </object>
             </child>
             <child>

@@ -51,6 +51,6 @@ class AlbumListItem(GObject.Object):
             self.tracks.append(QueueItem(track['title'], song_id, self.album_id, track['artistId']))
 
     def get_track_number(self, thing):
-        disk = thing.get('disk', 1)
-        number = thing.get('number', 1)
+        disk = thing.get('disk', 1) or 0
+        number = thing.get('number', 1) or 0
         return f"{disk:02d}_{number:02d}"
