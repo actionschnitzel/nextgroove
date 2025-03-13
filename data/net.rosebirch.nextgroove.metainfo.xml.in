@@ -47,7 +47,19 @@
   </screenshots>
 
   <releases>
-    <release version="0.1.0" date="2024-01-22">
+    <release version="0.1.1" date="2025-03-13">
+      <!--url type="details">https://example.org/changelog.html#version_1.0.1</url-->
+      <description translate="no">
+        <p>Reworking collection view</p>
+        <p>Collection view is now under the Artists tab. Instead of a table format
+          this is now in a structured format under artists/albums, leading to a
+          more detailed album view.
+        </p>
+        <p>The same album details view can be accessed from the albums tab.</p>
+        <p>Also should work slightly better on a mobile format.</p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2025-01-22">
       <!--url type="details">https://example.org/changelog.html#version_1.0.1</url-->
       <description translate="no">
         <p>Initial release</p>
