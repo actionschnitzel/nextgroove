@@ -33,6 +33,8 @@ class SongRow(Gtk.Box):
     __gtype_name__ = "SongRow"
 
     _song_title = Gtk.Template.Child("title_label")
+    _song_number = Gtk.Template.Child("song_number")
+    _song_duration = Gtk.Template.Child("song_duration")
 
     queue_item = None
 
@@ -42,5 +44,7 @@ class SongRow(Gtk.Box):
 
     def set_queue_item(self, queue_item):
         self.queue_item = queue_item
-        self._song_title.set_label(queue_item.title)
+        self._song_title.set_markup(f"<span size=\"large\">{escape(queue_item.title)}</span>")
+        self._song_number.set_label("1")
+        self._song_duration.set_label("1:00")
 

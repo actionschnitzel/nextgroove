@@ -13,6 +13,21 @@
           <setter object="header_bar" property="title-widget"/>
         </object>
     </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 680sp</condition>
+        <setter object="outer_artist_split" property="collapsed">True</setter>
+        <setter object="inner_artist_split" property="sidebar-width-fraction">0.33</setter>
+      </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 500sp</condition>
+        <setter object="outer_artist_split" property="collapsed">True</setter>
+        <setter object="inner_artist_split" property="sidebar-width-fraction">0.33</setter>
+        <setter object="inner_artist_split" property="collapsed">True</setter>
+      </object>
+    </child>
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
@@ -75,19 +90,22 @@
                 <property name="visible">False</property>
                 <property name="icon-name">system-users</property>
                 <property name="child">
-                  <object class="AdwNavigationSplitView" id="split_view">
-                              <property name="max-sidebar-width">360</property>
-                              <property name="sidebar-width-fraction">0.47</property>
+                  <object class="AdwNavigationSplitView" id="outer_artist_split">
+                    <property name="min-sidebar-width">200</property>
+                    <property name="max-sidebar-width">500</property>
+                    <property name="sidebar-width-fraction">0.37</property>
                     <property name="sidebar">
-                      <object class="AdwNavigationPage">
+                      <object class="AdwNavigationPage" id="artist_nav_1">
                         <property name="title" translatable="yes">Artists</property>
+                        <property name="tag">artist_list</property>
                         <property name="child">
-                            <object class="AdwNavigationSplitView" >
-                              <property name="max-sidebar-width">260</property>
+                            <object class="AdwNavigationSplitView" id="inner_artist_split" >
+                              <property name="max-sidebar-width">200</property>
                               <property name="sidebar-width-fraction">0.38</property>
                               <property name="sidebar">
-                                <object class="AdwNavigationPage">
+                                <object class="AdwNavigationPage" id="artist_nav_2">
                                   <property name="title" translatable="yes">Content</property>
+                                  <property name="tag">album_list</property>
                                   <property name="child">
                                     <object class="GtkScrolledWindow">
                                       <child>
@@ -100,8 +118,9 @@
                                 </object>
                               </property>
                               <property name="content">
-                                <object class="AdwNavigationPage">
+                                <object class="AdwNavigationPage" id="artist_nav_3">
                                   <property name="title" translatable="yes">Content</property>
+                                  <property name="tag">album_details</property>
                                   <property name="child">
                                     <object class="GtkScrolledWindow">
                                       <child>
