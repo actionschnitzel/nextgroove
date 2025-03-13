@@ -3,8 +3,6 @@
   <requires lib="gtk" version="4.0"/>
   <template class="SongRow" parent="GtkBox">
     <property name="has_tooltip">True</property>
-    <!--<property name="valign">start</property>
-    <property name="halign">start</property> -->
     <property name="hexpand">true</property>
     <property name="hexpand-set">true</property>
     <property name="orientation">horizontal</property>
@@ -19,7 +17,7 @@
     </child>
     <child>
       <object class="GtkLabel" id="title_label">
-        <property name="hexpand">true</property><!-- Y U NO EXPAND -->
+        <property name="hexpand">true</property>
         <property name="halign">start</property>
       </object>
     </child>

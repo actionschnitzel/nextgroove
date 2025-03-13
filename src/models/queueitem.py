@@ -46,6 +46,8 @@ class QueueItem(GObject.Object):
         self.duration = duration
 
     def duration_string(self):
+        if not self.duration:
+            return "-"
         time_string = str(datetime.timedelta(seconds=self.duration))
         index=0
         for char in time_string:

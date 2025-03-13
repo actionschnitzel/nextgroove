@@ -133,8 +133,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_sidebar.props.model = selection_model
         self.album_sidebar.connect("activate", self.album_sidebar_clicked)
         # Artist Coontent
-        self.album_details_content.play_button.connect("clicked", self.artist_album_play_clicked)
+        self.album_details_content.play_button.connect("clicked", self.artist_album_play_clicked_artist_view)
         self.album_details_content.set_window(self)
+        self.album_tab_details_content.play_button.connect("clicked", self.artist_album_play_clicked_album_view)
+        self.album_tab_details_content.set_window(self)
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
@@ -401,14 +403,21 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             )
         self.outer_artist_split.push(self.artist_nav_3)
 
-    def artist_album_play_clicked(self, _):
+    def artist_album_play_clicked_artist_view(self, _):
         album = self.album_details_content.album
+        return self.artist_album_play_clicked(album)
+
+    def artist_album_play_clicked_album_view(self, _):
+        album = self.album_tab_details_content.album
+        return self.artist_album_play_clicked(album)
+
+    def artist_album_play_clicked(self, album):
         album_details = self._client.album_details(album)
         album_id = album_details['id']
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"] or -1)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly

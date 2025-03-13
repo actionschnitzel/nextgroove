@@ -51,9 +51,13 @@
       <child>
         <object class="GtkButton" id="play_button">
           <property name="visible">False</property>
-          <property name="halign">end</property>
+          <property name="halign">start</property>
           <property name="label">Play</property>
           <property name="icon-name">media-playback-start-symbolic</property>
+          <property name="margin-start">20</property>
+          <property name="margin-end">20</property>
+          <property name="margin-top">20</property>
+          <property name="margin-bottom">20</property>
         </object>
       </child>
       <child>
