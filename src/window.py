@@ -53,6 +53,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     artist_nav_3 = Gtk.Template.Child("artist_nav_3")
     outer_artist_split = Gtk.Template.Child("outer_artist_split")
     #inner_artist_split = Gtk.Template.Child("inner_artist_split")
+    album_navigation = Gtk.Template.Child("album_navigation")
+    album_tab_details = Gtk.Template.Child("album_tab_details")
+    album_tab_details_content = Gtk.Template.Child("album_tab_details_content")
 
     stack = Gtk.Template.Child("stack")
     album_stack = Gtk.Template.Child("album_stack")
@@ -260,6 +263,25 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self._queue.append(song_item)
 
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
+
+
+    def album_view_details_clicked(self, event, something):
+        album_index = self._album_selected
+        album = self._client.albums[album_index]
+        album_id = album.album_id
+        print(f"Clicked on album {album.album}")
+        self.album_tab_details_content.set_album(album)
+
+        self.album_tab_details_content.set_tracks(album.tracks)
+        cover = self._client.get_cover(album)
+        if cover and os.path.exists(cover):
+            self.album_tab_details_content.set_cover(self._client.get_cover(album))
+        else:
+            self._client.download_cover_async(
+                album.album_id, album.cover_url, self.album_tab_details_content
+            )
+        # FIXME actually probably want this as a page inside the album cover to make the nav work
+        self.album_navigation.push(self.album_tab_details)
 
     def album_queue_add_end_clicked(self, event, something):
         if len(self._queue) == 0:
