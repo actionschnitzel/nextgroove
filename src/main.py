@@ -62,6 +62,9 @@ class NextcloudmusicApplication(Adw.Application):
             self.create_action("song_play_clicked", win.album_details_content.song_play_clicked)
             self.create_action("song_queue_add_end_clicked", win.album_details_content.song_queue_add_end_clicked)
             self.create_action("song_queue_add_next_clicked", win.album_details_content.song_queue_add_next_clicked)
+            self.create_action("song_play_clicked_album_view", win.album_tab_details_content.song_play_clicked)
+            self.create_action("song_queue_add_end_clicked_album_view", win.album_tab_details_content.song_queue_add_end_clicked)
+            self.create_action("song_queue_add_next_clicked_album_view", win.album_tab_details_content.song_queue_add_next_clicked)
             self.mpris = MPRIS(self)
             win.set_mpris(self.mpris)
 

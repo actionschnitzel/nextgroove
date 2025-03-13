@@ -82,4 +82,20 @@
         </item>
       </section>
     </menu>
+    <menu id="song_click_menu_album_view">
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Play</attribute>
+          <attribute name="action">app.song_play_clicked_album_view</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Add to queue</attribute>
+          <attribute name="action">app.song_queue_add_end_clicked_album_view</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Add to queue (play next)</attribute>
+          <attribute name="action">app.song_queue_add_next_clicked_album_view</attribute>
+        </item>
+      </section>
+    </menu>
   </interface>

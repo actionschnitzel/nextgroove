@@ -137,6 +137,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_details_content.set_window(self)
         self.album_tab_details_content.play_button.connect("clicked", self.artist_album_play_clicked_album_view)
         self.album_tab_details_content.set_window(self)
+        self.album_tab_details_content.set_album_view()
 
         # Playlist page
         playlist_item_factory = Gtk.SignalListItemFactory()
