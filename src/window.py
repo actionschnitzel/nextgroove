@@ -134,8 +134,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_sidebar.connect("activate", self.album_sidebar_clicked)
         # Artist Coontent
         self.album_details_content.play_button.connect("clicked", self.artist_album_play_clicked_artist_view)
+        self.album_details_content.append_button.connect("clicked", self.artist_album_append_clicked_artist_view)
+        self.album_details_content.append_next_button.connect("clicked", self.artist_album_append_next_clicked_artist_view)
         self.album_details_content.set_window(self)
         self.album_tab_details_content.play_button.connect("clicked", self.artist_album_play_clicked_album_view)
+        self.album_tab_details_content.append_button.connect("clicked", self.artist_album_append_clicked_album_view)
+        self.album_tab_details_content.append_next_button.connect("clicked", self.artist_album_append_next_clicked_album_view)
         self.album_tab_details_content.set_window(self)
         self.album_tab_details_content.set_album_view()
 
@@ -443,6 +447,23 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
+
+    def artist_album_append_clicked_artist_view(self, _):
+        album = self.album_details_content.album
+        self.album_queue_add_end_clicked_generic(album)
+
+    def artist_album_append_clicked_album_view(self, _):
+        album = self.album_tab_details_content.album
+        self.album_queue_add_end_clicked_generic(album)
+
+    def artist_album_append_next_clicked_artist_view(self, _):
+        album = self.album_details_content.album
+        self.album_queue_play_next_generic(album)
+
+    def artist_album_append_next_clicked_album_view(self, _):
+        album = self.album_tab_details_content.album
+        self.album_queue_play_next_generic(album)
+
 
     ##############
     # Queue View #

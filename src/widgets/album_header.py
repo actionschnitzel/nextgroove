@@ -40,6 +40,8 @@ class AlbumHeader(Gtk.Box):
     play_button = Gtk.Template.Child("play_button")
     song_click_menu = Gtk.Template.Child("song_click_menu")
     song_click_menu_album_view = Gtk.Template.Child("song_click_menu_album_view")
+    append_button = Gtk.Template.Child("append_button")
+    append_next_button = Gtk.Template.Child("append_next_button")
 
 
 
