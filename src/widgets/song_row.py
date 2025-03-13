@@ -46,6 +46,7 @@ class SongRow(Gtk.Box):
     def set_queue_item(self, queue_item):
         self.queue_item = queue_item
         self._song_title.set_markup(f"<span size=\"large\">{escape(queue_item.title)}</span>")
-        self._song_number.set_label("1")
-        self._song_duration.set_label("1:00")
+        if queue_item.track_number:
+            self._song_number.set_markup(f"<span size=\"small\">{queue_item.track_number}</span>")
+        self._song_duration.set_label(queue_item.duration_string())
 

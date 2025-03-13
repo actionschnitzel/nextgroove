@@ -135,6 +135,7 @@ class NextcloudMusicClient(GObject.Object):
                 album_item = AlbumListItem(
                     artist_string, album_string, album_cover, album_id
                 )
+                album_item.set_collection(album)
                 self.albums_before_sorting.append(album_item)
 
         print(f"Retrieved albums and we have {len(self.albums_before_sorting)} albums")

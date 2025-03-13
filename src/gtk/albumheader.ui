@@ -28,7 +28,7 @@
               <property name="orientation">vertical</property>
               <child>
                 <object class="GtkLabel" id="_album_label">
-                  <property name="justify">center</property>
+                  <property name="halign">start</property>
                   <property name="wrap">True</property>
                   <property name="ellipsize">end</property>
                   <property name="max_width_chars">40</property>

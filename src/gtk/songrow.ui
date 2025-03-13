@@ -11,8 +11,10 @@
     <child>
       <object class="GtkLabel" id="song_number">
         <property name="halign">start</property>
+        <property name="valign">center</property>
         <property name="hexpand">false</property>
         <property name="margin-end">10</property>
+        <property name="width-chars">3</property>
       </object>
     </child>
     <child>

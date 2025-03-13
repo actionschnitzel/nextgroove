@@ -48,7 +48,10 @@ class AlbumListItem(GObject.Object):
         self.year = collection.get("year", 0)
         for track in sorted(collection.get("tracks", []), key=self.get_track_number):
             song_id = list(track['files'].values())[0]
-            self.tracks.append(QueueItem(track['title'], song_id, self.album_id, track['artistId']))
+            song_item = QueueItem(track['title'], song_id, self.album_id, track['artistId'])
+            song_item.set_track_number(track['number'])
+            song_item.set_duration(track['length'])
+            self.tracks.append(song_item)
 
     def get_track_number(self, thing):
         disk = thing.get('disk', 1) or 0
