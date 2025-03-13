@@ -40,13 +40,14 @@ class AlbumHeader(Gtk.Box):
     play_button = Gtk.Template.Child("play_button")
     song_click_menu = Gtk.Template.Child("song_click_menu")
 
-    _track_elements = Gio.ListStore()
+
     clicked_song = None
     window = None
 
 
     def __init__(self):
         super().__init__()
+        self._track_elements = Gio.ListStore()
         self._album = None
         self._cover_image.set_size_request(128, 128)
 
