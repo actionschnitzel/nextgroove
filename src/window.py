@@ -158,6 +158,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist_selection_model = Gtk.MultiSelection.new(client.playlists)
         self.playlist_view.props.model = playlist_selection_model
         self.playlist_view.connect("activate", self.playlist_clicked)
+        self.playlistdetails.play_button.connect("clicked", self.playlist_play_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
@@ -557,6 +558,36 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         print(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
 
+        #self._queue.remove_all()
+
+        #if len(track_ids)==0:
+        #    print("empty playlist")
+        #    return
+
+        #for track in track_ids:
+        #    queue_item = self._client.get_track_from_id(track)
+        #    self._queue.append(queue_item)
+
+        #first_song = self._queue[0]
+        #first_song.set_now_playing(True)
+        #self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
+
+        self.playlistdetails.set_playlist(playlist)
+        self.playlistdetails.set_window(self)
+        tracks = []
+        for track in track_ids:
+            tracks.append(self._client.get_track_from_id(track))
+        self.playlistdetails.set_tracks(tracks)
+        self._client.download_playlist_cover_async(playlist.playlist_id, playlist.cover, self.playlistdetails)
+        #self.playlistdetails.set_cover(self._client.get_playlist_cover(playlist))
+        self.playlist_nav_view.push(self.playlist_details_page)
+
+    def playlist_play_clicked(self, event):
+        playlist = self.playlistdetails.playlist
+        playlist_name = playlist.playlist_name
+        print(f"Clicked playlist {playlist_name}")
+        track_ids = playlist.track_ids
+
         self._queue.remove_all()
 
         if len(track_ids)==0:
@@ -570,14 +601,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         first_song = self._queue[0]
         first_song.set_now_playing(True)
         self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
-
-        self.playlistdetails.set_playlist(playlist)
-        self.playlistdetails.set_window(self)
-        tracks = []
-        for track in track_ids:
-            tracks.append(self._client.get_track_from_id(track))
-        self.playlistdetails.set_tracks(tracks)
-        self.playlist_nav_view.push(self.playlist_details_page)
 
     def update_playlists(self, event, foo, bar):
         pass

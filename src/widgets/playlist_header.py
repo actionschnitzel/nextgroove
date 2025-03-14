@@ -34,10 +34,7 @@ class PlaylistHeader(Gtk.Box):
     __gtype_name__ = "PlaylistHeader"
 
     playlist_name = Gtk.Template.Child()
-    _cover_image1 = Gtk.Template.Child()
-    _cover_image2 = Gtk.Template.Child()
-    _cover_image3 = Gtk.Template.Child()
-    _cover_image4 = Gtk.Template.Child()
+    _cover_image = Gtk.Template.Child()
 
     _songlist = Gtk.Template.Child("songlist")
     play_button = Gtk.Template.Child("play_button")
@@ -51,10 +48,7 @@ class PlaylistHeader(Gtk.Box):
         super().__init__()
         self._track_elements = Gio.ListStore()
         self._album = None
-        self._cover_image1.set_size_request(32, 32)
-        self._cover_image2.set_size_request(32, 32)
-        self._cover_image3.set_size_request(32, 32)
-        self._cover_image4.set_size_request(32, 32)
+        self._cover_image.set_size_request(128, 128)
         self.clicked_song = None
 
         song_item_factory = Gtk.SignalListItemFactory()
@@ -73,12 +67,8 @@ class PlaylistHeader(Gtk.Box):
         self.playlist = playlist
         self.playlist_name.set_markup(f"<span size=\"xx-large\">{escape(playlist.playlist_name)}</span>")
 
-    def set_covers(self, cover_files):
-        file1, file2, file3, file4 = files
-        self._cover_image1.set_from_file(file1)
-        self._cover_image2.set_from_file(file2)
-        self._cover_image3.set_from_file(file3)
-        self._cover_image4.set_from_file(file4)
+    def set_cover(self, cover_file):
+        self._cover_image.set_from_file(cover_file)
 
     def set_tracks(self, tracks):
         self._track_elements.remove_all()

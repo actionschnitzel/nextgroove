@@ -168,7 +168,7 @@ class NextcloudMusicClient(GObject.Object):
 
         return latest_id
 
-    def download_cover(self, album_id, cover_url):
+    def download_cover(self, save_file, cover_url):
         cover_url_full = f"{self._server}{cover_url}"
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
@@ -179,7 +179,7 @@ class NextcloudMusicClient(GObject.Object):
             except FileExistsError:
                 pass  # Expected to be possible, this is called from multiple threads
         with open(
-            f"/tmp/net.rosebirch.nextgroove/cover_{album_id}", "wb"
+            f"/tmp/net.rosebirch.nextgroove/cover_{save_file}", "wb"
         ) as cover_file:
             cover_file.write(response.content)
 
@@ -213,6 +213,36 @@ class NextcloudMusicClient(GObject.Object):
     def cover_downloaded(self, album_tile, task, baz):
         album_id = task.get_task_data()
         album_tile.set_cover(f"/tmp/net.rosebirch.nextgroove/cover_{album_id}")
+
+#########################
+
+
+    def download_playlist_cover_async(self, playlist_id, cover_url, widget):
+        task = Gio.Task.new(widget, None, self.playlist_cover_downloaded, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(playlist_id)
+        task.run_in_thread(self.download_playlist_cover_sync)
+
+    def download_playlist_cover_sync(self, task, source_object, task_data, cancellable):
+        playlist_id = task.get_task_data()
+        cover_url = None
+        for playlist in self.playlists:
+            if playlist.playlist_id == playlist_id:
+                cover_url = playlist.cover
+
+        if not cover_url:
+            task.return_value(False)
+            return
+
+        self.download_cover(f"playlist_{playlist_id}", cover_url)
+        task.return_value(playlist_id)
+
+    def get_playlist_cover(self, playlist_id):
+        return f"/tmp/net.rosebirch.nextgroove/cover_playlist_{playlist_id}"
+
+    def playlist_cover_downloaded(self, requesting_widget, task, baz):
+        playlist_id = task.get_task_data()
+        requesting_widget.set_cover(self.get_playlist_cover(playlist_id))
 
     def collection_async(self, callback):
         print("Starting async call")

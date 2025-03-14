@@ -200,6 +200,7 @@
                           <object class="GtkScrolledWindow">
                             <child>
                               <object class="GtkListView" id="playlistview">
+                                <property name="single-click-activate">True</property>
                               </object>
                             </child>
                           </object>
