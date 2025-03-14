@@ -24,6 +24,7 @@
     <child>
       <object class="GtkLabel" id="song_duration">
         <property name="halign">end</property>
+        <property name="margin-end">10</property>
       </object>
     </child>
   </template>

@@ -3,22 +3,33 @@
   <requires lib="gtk" version="4.0"/>
   <template class="Controls" parent="GtkActionBar">
     <child type="start">
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
+      <object class="GtkScrolledWindow">
+        <property name="hexpand">true</property>
+
         <child>
-          <object class="GtkLabel" id="nowplaying">
-            <property name="label"/>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
             <property name="halign">start</property>
-            <property name="hexpand">False</property>
+            <property name="hexpand">true</property>
+            <child>
+              <object class="GtkLabel" id="nowplaying">
+                <property name="halign">start</property>
+                <property name="hexpand">true</property>
+                <property name="ellipsize">true</property>
+                <property name="max-width-chars">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="current_album_artist">
+                <property name="halign">start</property>
+                <property name="hexpand">true</property>
+                <property name="ellipsize">true</property>
+                <property name="max-width-chars">1</property>
+              </object>
+            </child>
           </object>
         </child>
-        <child>
-          <object class="GtkLabel" id="current_album_artist">
-            <property name="label"/>
-            <property name="halign">start</property>
-            <property name="hexpand">False</property>
-          </object>
-        </child>
+
       </object>
     </child>
     <child type="center">

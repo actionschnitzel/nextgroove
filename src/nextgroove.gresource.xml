@@ -8,5 +8,6 @@
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
     <file preprocess="xml-stripblanks">gtk/albumheader.ui</file>
     <file preprocess="xml-stripblanks">gtk/songrow.ui</file>
+    <file preprocess="xml-stripblanks">gtk/playlistrow.ui</file>
   </gresource>
 </gresources>

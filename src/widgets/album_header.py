@@ -73,7 +73,6 @@ class AlbumHeader(Gtk.Box):
         self._album_label.set_markup(f"<span size=\"xx-large\">{escape(album.album)}</span>")
         self._artist_label.set_markup(f"<span size=\"x-large\">{escape(album.artist)}</span>")
         self._album_year_label.set_text(f"Released {album.year}")
-        self.play_button.set_visible(True)
 
     def set_cover(self, cover_file):
         self._cover_image.set_from_file(cover_file)

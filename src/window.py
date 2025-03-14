@@ -29,6 +29,7 @@ from .controls import Controls
 from .artist import ArtistItem
 from .album_header import AlbumHeader
 from .albumlistitem import AlbumListItem
+from .playlist_row import PlaylistRow
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -376,7 +377,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         print(f"Clicked on artist {artist.artist}")
         self._artist_albums.remove_all()
         artist_collection = self._client.artist_details(artist)
-        print(f"got {artist_collection}")
         for album in artist_collection['albums']:
             # TODO retrieve this? I'm sure I left one of these lying around somewhere
             album_list_item = AlbumListItem(
@@ -533,7 +533,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         """Creates UI elements for album view"""
-        list_item.props.child = Gtk.Label()  # TODO make a ui element
+        list_item.props.child = PlaylistRow()
 
     def _bind_playlist_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -543,7 +543,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         playlist_list_item = list_item.props.item
         playlist_widget = list_item.props.child
-        playlist_widget.set_label(playlist_list_item.playlist_name)
+        playlist_widget.set_playlist(playlist_list_item)
 
     def playlist_clicked(self, event, playlist_id):
         playlist = self._client.playlists[playlist_id]
