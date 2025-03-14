@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="PlaylistHeader" parent="GtkBox">
+    <property name="has_tooltip">True</property>
+    <property name="valign">start</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkBox">
+        <property name="valign">start</property>
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkBox">
+            <property name="valign">start</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkImage" id="_cover_image1">
+                <property name="vexpand">True</property>
+                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="tile-image"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="_cover_image2">
+                <property name="vexpand">True</property>
+                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="tile-image"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="valign">start</property>
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkBox">
+            <property name="valign">start</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkImage" id="_cover_image3">
+                <property name="vexpand">True</property>
+                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="tile-image"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="_cover_image4">
+                <property name="vexpand">True</property>
+                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="tile-image"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="has_tooltip">True</property>
+        <property name="valign">center</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="playlist_name">
+            <property name="halign">start</property>
+            <property name="wrap">True</property>
+            <property name="ellipsize">end</property>
+            <property name="max_width_chars">40</property>
+            <property name="lines">1</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="has_tooltip">True</property>
+        <property name="valign">center</property>
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkButton" id="play_button">
+            <property name="halign">start</property>
+            <property name="label">Play</property>
+            <property name="icon-name">media-playback-start-symbolic</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="tooltip-text">Play</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="append_button">
+            <property name="halign">start</property>
+            <property name="label">Append to queue</property>
+            <property name="icon-name">go-bottom-symbolic</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="tooltip-text">Add to queue</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="append_next_button">
+            <property name="halign">start</property>
+            <property name="label">Append to queue (play next)</property>
+            <property name="icon-name">go-top-symbolic</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="tooltip-text">Add to queue (play next)</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkListView" id="songlist">
+        </object>
+    </child>
+  </template>
+  <menu id="song_click_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Play</attribute>
+        <attribute name="action">app.song_play_clicked</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Add to queue</attribute>
+        <attribute name="action">app.song_queue_add_end_clicked</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Add to queue (play next)</attribute>
+        <attribute name="action">app.song_queue_add_next_clicked</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

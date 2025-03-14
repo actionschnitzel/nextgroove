@@ -30,6 +30,7 @@ from .artist import ArtistItem
 from .album_header import AlbumHeader
 from .albumlistitem import AlbumListItem
 from .playlist_row import PlaylistRow
+from .playlist_header import PlaylistHeader
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -57,6 +58,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_navigation = Gtk.Template.Child("album_navigation")
     album_tab_details = Gtk.Template.Child("album_tab_details")
     album_tab_details_content = Gtk.Template.Child("album_tab_details_content")
+
+
+    playlist_nav_view = Gtk.Template.Child()
+    playlist_details_page = Gtk.Template.Child()
+    playlistdetails = Gtk.Template.Child()
 
     stack = Gtk.Template.Child("stack")
     album_stack = Gtk.Template.Child("album_stack")
@@ -564,6 +570,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         first_song = self._queue[0]
         first_song.set_now_playing(True)
         self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
+
+        self.playlistdetails.set_playlist(playlist)
+        self.playlistdetails.set_window(self)
+        tracks = []
+        for track in track_ids:
+            tracks.append(self._client.get_track_from_id(track))
+        self.playlistdetails.set_tracks(tracks)
+        self.playlist_nav_view.push(self.playlist_details_page)
 
     def update_playlists(self, event, foo, bar):
         pass

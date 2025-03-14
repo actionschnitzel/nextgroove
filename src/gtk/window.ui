@@ -192,9 +192,44 @@
                 <property name="icon-name">view-list-ordered-symbolic</property>
                 <property name="visible">False</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow">
+                  <object class="AdwNavigationView" id="playlist_nav_view">
                     <child>
-                      <object class="GtkListView" id="playlistview">
+                      <object class="AdwNavigationPage" id="playlist_list_page">
+                        <property name="title" translatable="yes">Playlists</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListView" id="playlistview">
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwNavigationPage" id="playlist_details_page">
+                        <property name="title" translatable="yes">Playlist Details</property>
+                        <property name="child">
+                          <object class="AdwToolbarView">
+                            <child type="top">
+                              <object class="AdwHeaderBar">
+                                <property name="title-widget">
+                                  <object class="AdwWindowTitle"/>
+                                </property>
+                                <property name="show-end-title-buttons">false</property>
+                                <property name="show-start-title-buttons">false</property>
+                              </object>
+                            </child>
+                            <property name="content">
+                              <object class="GtkScrolledWindow">
+                                <child>
+                                  <object class="PlaylistHeader" id="playlistdetails">
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
                       </object>
                     </child>
                   </object>
