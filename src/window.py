@@ -371,6 +371,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     ) -> None:
         """Generate UI"""
         list_item.props.child = Gtk.Label()
+        list_item.props.child.set_margin_start(10)
 
 
     def _bind_artist_sidebar_list_item(
@@ -559,20 +560,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist_name = playlist.playlist_name
         print(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
-
-        #self._queue.remove_all()
-
-        #if len(track_ids)==0:
-        #    print("empty playlist")
-        #    return
-
-        #for track in track_ids:
-        #    queue_item = self._client.get_track_from_id(track)
-        #    self._queue.append(queue_item)
-
-        #first_song = self._queue[0]
-        #first_song.set_now_playing(True)
-        #self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
 
         self.playlistdetails.set_playlist(playlist)
         self.playlistdetails.set_window(self)
