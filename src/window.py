@@ -581,7 +581,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             tracks.append(self._client.get_track_from_id(track))
         self.playlistdetails.set_tracks(tracks)
         self._client.download_playlist_cover_async(playlist.playlist_id, playlist.cover, self.playlistdetails)
-        #self.playlistdetails.set_cover(self._client.get_playlist_cover(playlist))
         self.playlist_nav_view.push(self.playlist_details_page)
 
     def playlist_play_clicked(self, event):

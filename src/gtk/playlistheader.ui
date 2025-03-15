@@ -81,19 +81,19 @@
         </object>
     </child>
   </template>
-  <menu id="song_click_menu">
+  <menu id="song_click_menu_playlist">
     <section>
       <item>
         <attribute name="label" translatable="yes">_Play</attribute>
-        <attribute name="action">app.playlist_song_play_clicked</attribute>
+        <attribute name="action">app.song_play_clicked_playlist</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Add to queue</attribute>
-        <attribute name="action">app.playlist_song_queue_add_end_clicked</attribute>
+        <attribute name="action">app.song_queue_add_end_clicked_playlist</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Add to queue (play next)</attribute>
-        <attribute name="action">app.playlist_song_queue_add_next_clicked</attribute>
+        <attribute name="action">app.song_queue_add_next_clicked_playlist</attribute>
       </item>
     </section>
   </menu>

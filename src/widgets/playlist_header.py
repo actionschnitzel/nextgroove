@@ -38,7 +38,7 @@ class PlaylistHeader(Gtk.Box):
 
     _songlist = Gtk.Template.Child("songlist")
     play_button = Gtk.Template.Child("play_button")
-    song_click_menu = Gtk.Template.Child("song_click_menu")
+    song_click_menu_playlist = Gtk.Template.Child("song_click_menu_playlist")
     append_button = Gtk.Template.Child("append_button")
     append_next_button = Gtk.Template.Child("append_next_button")
 
@@ -58,7 +58,6 @@ class PlaylistHeader(Gtk.Box):
         song_selection_model = Gtk.SingleSelection.new(self._track_elements)
         self._songlist.props.model = song_selection_model
         self._songlist.connect("activate", self.song_clicked)
-        self.menu = self.song_click_menu
 
     def set_window(self, window):
         self.window = window
@@ -87,7 +86,7 @@ class PlaylistHeader(Gtk.Box):
 
     def song_clicked(self, event, song_id):
         song_thing = self._track_elements[song_id]
-        popover = Gtk.PopoverMenu.new_from_model(self.menu)
+        popover = Gtk.PopoverMenu.new_from_model(self.song_click_menu_playlist)
         popover.set_parent(song_thing.widget)
         popover.popup()
         self.clicked_song = song_thing
