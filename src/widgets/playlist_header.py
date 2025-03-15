@@ -77,6 +77,8 @@ class PlaylistHeader(Gtk.Box):
 
     def _setup_song_list_item(self, factory, list_item):
         list_item.props.child = SongRow()
+        list_item.props.child.show_artist()
+        list_item.props.child.set_window(self.window)
 
     def _bind_song_list_item(self, factory, list_item):
         song_item = list_item.props.item

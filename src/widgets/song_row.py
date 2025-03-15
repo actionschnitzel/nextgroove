@@ -33,6 +33,7 @@ class SongRow(Gtk.Box):
     __gtype_name__ = "SongRow"
 
     _song_title = Gtk.Template.Child("title_label")
+    _artist_title = Gtk.Template.Child("artist_label")
     _song_number = Gtk.Template.Child("song_number")
     _song_duration = Gtk.Template.Child("song_duration")
 
@@ -42,12 +43,23 @@ class SongRow(Gtk.Box):
         super().__init__()
         self._song_title.set_hexpand(True)
 
+    def show_artist(self):
+        self._artist_title.set_visible(True)
+
+    def set_window(self, window):
+        self.window = window
 
     def set_queue_item(self, queue_item):
+        weight = "normal"
         self.queue_item = queue_item
-        self._song_title.set_markup(f"<span size=\"large\">{escape(queue_item.title)}</span>")
+        if queue_item.is_now_playing():
+            weight = "bold"
+        self._song_title.set_markup(f"<span weight=\"{weight}\" size=\"large\">{escape(queue_item.title)}</span>")
         if queue_item.track_number and queue_item.track_number != -1:
-            self._song_number.set_markup(f"<span size=\"small\">{queue_item.track_number}</span>")
+            self._song_number.set_markup(f"<span weight=\"{weight}\" size=\"small\">{queue_item.track_number}</span>")
         if queue_item.duration and queue_item.duration != -1:
-            self._song_duration.set_label(queue_item.duration_string())
+            self._song_duration.set_markup(f"<span weight=\"{weight}\">{queue_item.duration_string()}</span>")
+        if self._artist_title.is_visible():
+            artist_label = self.window._client.artist_name_by_id[queue_item.artist_id]
+            self._artist_title.set_markup(f"<span weight=\"{weight}\" size=\"small\">{escape(artist_label)}</span>")
 
