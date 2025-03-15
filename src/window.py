@@ -159,6 +159,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.playlist_view.props.model = playlist_selection_model
         self.playlist_view.connect("activate", self.playlist_clicked)
         self.playlistdetails.play_button.connect("clicked", self.playlist_play_clicked)
+        self.playlistdetails.append_button.connect("clicked", self.playlist_append_clicked)
+        self.playlistdetails.append_next_button.connect("clicked", self.playlist_append_next_clicked)
 
         # Controls (next, previous, play/pause, now playing etc)
         self.controls.connections(self._client, self._media, self._queue, self)
@@ -602,6 +604,48 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         first_song.set_now_playing(True)
         self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
 
+    def playlist_append_clicked(self, event):
+        playlist = self.playlistdetails.playlist
+        playlist_name = playlist.playlist_name
+        print(f"Clicked playlist {playlist_name}")
+        track_ids = playlist.track_ids
+
+        if len(self._queue) == 0:
+            self.playlist_play_clicked(event)
+            return
+
+        if len(track_ids)==0:
+            print("empty playlist")
+            return
+
+        for track in track_ids:
+            queue_item = self._client.get_track_from_id(track)
+            self._queue.append(queue_item)
+
+    def playlist_append_next_clicked(self, event):
+        playlist = self.playlistdetails.playlist
+        playlist_name = playlist.playlist_name
+        print(f"Clicked playlist {playlist_name}")
+        track_ids = playlist.track_ids
+
+        if len(self._queue) == 0:
+            self.playlist_play_clicked(event)
+            return
+
+        if len(track_ids)==0:
+            print("empty playlist")
+            return
+
+        insert_index = 0
+        for queue_song in self._queue:
+            if queue_song.is_now_playing():
+                break
+            insert_index += 1
+
+        for track in reversed(track_ids):
+            queue_item = self._client.get_track_from_id(track)
+            self._queue.insert(insert_index+1, queue_item)
+
     def update_playlists(self, event, foo, bar):
         pass
 
@@ -638,6 +682,5 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def song_file_returned(self, source_object, result, user_data):
         song_file = result.propagate_value().value
-        print(f"Got a file: {song_file}  from callback")
         self.play_song(song_file, self._client.song_title_last_callback)
 
