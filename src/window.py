@@ -31,6 +31,7 @@ from .album_header import AlbumHeader
 from .albumlistitem import AlbumListItem
 from .playlist_row import PlaylistRow
 from .playlist_header import PlaylistHeader
+from .song_row import SongRow
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -403,6 +404,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     ) -> None:
         """Generate UI"""
         list_item.props.child = Gtk.Label()
+        list_item.props.child.set_margin_start(10)
 
 
     def _bind_album_sidebar_list_item(
@@ -483,14 +485,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         """Generate UI element"""
-        list_item.props.child = Gtk.Box()
-        song_label = Gtk.Label()
-        song_label.set_halign(1)
-        song_label.set_hexpand(True)
-        song_label.set_parent(list_item.props.child)
-        albumartist_label = Gtk.Label()
-        albumartist_label.set_halign(2)
-        albumartist_label.set_parent(list_item.props.child)
+        list_item.props.child = SongRow()
+        list_item.props.child.show_artist()
+        list_item.props.child.set_window(self)
 
     def _bind_queue_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -503,8 +500,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             # This is being called with a fake value to redraw the others, ignore this
             return
 
-        song_widget = list_item.props.child.get_first_child()
-        albumartist_widget = song_widget.get_next_sibling()
+        song_widget = list_item.props.child
 
         if queue_list_item.album_id not in self._client.album_name_by_id:
             # We are repopulating during a client refresh, try again soon
@@ -515,12 +511,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             return
         artist_str = self._client.artist_name_by_id[queue_list_item.artist_id]
 
-        if queue_list_item.is_now_playing():
-            song_widget.set_markup(f"<b>{queue_list_item.get_title()}</b>")
-            albumartist_widget.set_markup(f"<b>{escape(artist_str)}  <i>{escape(album_str)}</i></b>")
-        else:
-            albumartist_widget.set_markup(f"{escape(artist_str)}  <i>{escape(album_str)}</i>")
-            song_widget.set_text(queue_list_item.get_title())
+        song_widget.set_queue_item(queue_list_item)
 
     def queue_clicked(self, event, queue_id):
         """When (double) clicked on the queue item, play it!"""
