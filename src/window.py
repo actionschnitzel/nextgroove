@@ -175,6 +175,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         collection = result.propagate_value().value
 
+        if collection is None:
+            print("Collection is none atm, come back later")
+            return
         # Hide welcome view
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
@@ -182,9 +185,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.queue_stack.props.visible = True
         self.artist_stack.props.visible = True
         self.stack.props.visible_child_name = "albums"
-        if collection is None:
-            print("Collection is none atm, come back later")
-            return
+
 
         self._songs.clear()
 

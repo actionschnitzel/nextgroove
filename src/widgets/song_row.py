@@ -60,6 +60,7 @@ class SongRow(Gtk.Box):
         if queue_item.duration and queue_item.duration != -1:
             self._song_duration.set_markup(f"<span weight=\"{weight}\">{queue_item.duration_string()}</span>")
         if self._artist_title.is_visible():
+            self._song_number.set_label("")
             artist_label = self.window._client.artist_name_by_id[queue_item.artist_id]
             self._artist_title.set_markup(f"<span weight=\"{weight}\" size=\"small\">{escape(artist_label)}</span>")
 
