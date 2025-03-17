@@ -34,7 +34,7 @@
           {
             "type" : "git",
             "url" : "https://gitlab.gnome.org/dean36963/nextgroove",
-            "branch": "main"
+	    "tag": "0.1.2"
           }
         ]
       }
