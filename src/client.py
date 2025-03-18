@@ -20,6 +20,7 @@
 import requests
 import json
 import os
+from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio, GLib
 from .albumlistitem import AlbumListItem
@@ -168,11 +169,16 @@ class NextcloudMusicClient(GObject.Object):
 
         return latest_id
 
-    def download_cover(self, save_file, cover_url):
-        cover_url_full = f"{self._server}{cover_url}"
+    def download_cover(self, save_file, cover_url, url_is_absolute=False):
+        server=self._server
+        # If the url is absolute, take urls off the server
+        if url_is_absolute:
+            url_parts = urlparse(self._server)
+            server = f"{url_parts.scheme}://{url_parts.netloc}"
+        cover_url_full = f"{server}{cover_url}"
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
-            print("Could not download cover at url code {response.status_code}")
+            print(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
                 os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
@@ -234,7 +240,7 @@ class NextcloudMusicClient(GObject.Object):
             task.return_value(False)
             return
 
-        self.download_cover(f"playlist_{playlist_id}", cover_url)
+        self.download_cover(f"playlist_{playlist_id}", cover_url, url_is_absolute=True)
         task.return_value(playlist_id)
 
     def get_playlist_cover(self, playlist_id):

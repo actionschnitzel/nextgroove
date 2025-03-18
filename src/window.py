@@ -655,8 +655,19 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Trick the UI to redraw, no redraw call works
         # I am clearly doing something wrong here!
         fake_item = QueueItem("FAKE", -1, -1, -1)
+        fake_item.set_fake()
         self._queue.insert(0, fake_item)
         self._queue.remove(0)
+        # Also get other views with a song row to update
+        current_song = self.current_song()
+        for playlist_song in self.playlistdetails._track_elements:
+            if playlist_song.song_id == current_song.song_id:
+                playlist_song.set_now_playing(True)
+            else:
+                playlist_song.set_now_playing(False)
+        self.playlistdetails._track_elements.insert(0, fake_item)
+        self.playlistdetails._track_elements.remove(0)
+
 
     def song_file_returned(self, source_object, result, user_data):
         song_file = result.propagate_value().value

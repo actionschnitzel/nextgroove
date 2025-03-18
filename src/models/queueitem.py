@@ -38,12 +38,17 @@ class QueueItem(GObject.Object):
         self.album_id = album_id
         self.track_number = -1
         self.duration = -1
+        self.fake = False
 
     def set_track_number(self, number):
         self.track_number = number
 
     def set_duration(self, duration):
         self.duration = duration
+
+    def set_fake(self):
+        # So we don't bother rendering
+        self.fake = True
 
     def duration_string(self):
         if not self.duration:

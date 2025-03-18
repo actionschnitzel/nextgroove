@@ -52,6 +52,8 @@ class SongRow(Gtk.Box):
     def set_queue_item(self, queue_item):
         weight = "normal"
         self.queue_item = queue_item
+        if queue_item.fake:
+            return
         if queue_item.is_now_playing():
             weight = "bold"
         self._song_title.set_markup(f"<span weight=\"{weight}\" size=\"large\">{escape(queue_item.title)}</span>")
