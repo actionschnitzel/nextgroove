@@ -79,8 +79,11 @@ class AlbumHeader(Gtk.Box):
 
     def set_tracks(self, tracks):
         self._track_elements.remove_all()
+        current_song = self.window.current_song()
         # Add tracks
         for track in tracks:
+            if current_song and track.song_id == current_song.song_id:
+                track.set_now_playing(True)
             self._track_elements.append(track)
 
     def _setup_song_list_item(self, factory, list_item):

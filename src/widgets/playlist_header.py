@@ -50,6 +50,7 @@ class PlaylistHeader(Gtk.Box):
         self._album = None
         self._cover_image.set_size_request(128, 128)
         self.clicked_song = None
+        self.window = None
 
         song_item_factory = Gtk.SignalListItemFactory()
         song_item_factory.connect("setup", self._setup_song_list_item)
@@ -81,7 +82,9 @@ class PlaylistHeader(Gtk.Box):
     def _setup_song_list_item(self, factory, list_item):
         list_item.props.child = SongRow()
         list_item.props.child.show_artist()
-        list_item.props.child.set_window(self.window)
+        if self.window:
+            list_item.props.child.set_window(self.window)
+
 
     def _bind_song_list_item(self, factory, list_item):
         song_item = list_item.props.item

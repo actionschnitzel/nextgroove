@@ -659,15 +659,24 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._queue.insert(0, fake_item)
         self._queue.remove(0)
         # Also get other views with a song row to update
-        current_song = self.current_song()
-        for playlist_song in self.playlistdetails._track_elements:
-            if playlist_song.song_id == current_song.song_id:
-                playlist_song.set_now_playing(True)
-            else:
-                playlist_song.set_now_playing(False)
-        self.playlistdetails._track_elements.insert(0, fake_item)
-        self.playlistdetails._track_elements.remove(0)
+        for view in [
+                self.playlistdetails,
+                self.album_tab_details_content,
+                self.album_details_content
+            ]:
+            self.update_now_playing_in_song_rows(view)
 
+    def update_now_playing_in_song_rows(self, header_object):
+        current_song = self.current_song()
+        fake_item = QueueItem("FAKE", -1, -1, -1)
+        fake_item.set_fake()
+        for song in header_object._track_elements:
+            if song.song_id == current_song.song_id:
+                song.set_now_playing(True)
+            else:
+                song.set_now_playing(False)
+        header_object._track_elements.insert(0, fake_item)
+        header_object._track_elements.remove(0)
 
     def song_file_returned(self, source_object, result, user_data):
         song_file = result.propagate_value().value
