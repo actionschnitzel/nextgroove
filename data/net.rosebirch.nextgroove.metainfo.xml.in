@@ -8,10 +8,10 @@
   <name>NextGroove</name>
   <summary>Linux client for Nextcloud Music</summary>
   <description>
-    <p>Linux client for Nextcloud Music.</p>
+    <p>Nextgroove lets you browse and play songs from your Nextcloud instance (with Nextcloud Music installed).</p>
     <p>Features: </p>
     <ul>
-      <li>Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the <a href="https://github.com/owncloud/music?tab=readme-ov-file#api">Nextcloud ones</a></li>
+      <li>Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the Nextcloud ones</li>
       <li>Can select music from an album view (most recent first), a full list of songs in the collection, or playlists.</li>
       <li>Can select albums, playlists or individual songs from either to the queue.</li>
       <li>Basic MPRIS support allowing to be controlled via common controls and shortcuts.</li>
@@ -54,15 +54,15 @@
   </branding>
 
   <screenshots>
-    <screenshot type="source">
+    <screenshot type="default">
       <image>https://gitlab.gnome.org/dean36963/NextGroove/-/raw/main/screenshots/screenshot1.png</image>
       <caption>Screenshot of the album view of NextGroove</caption>
     </screenshot>
-    <screenshot type="source">
+    <screenshot>
       <image>https://gitlab.gnome.org/dean36963/NextGroove/-/raw/main/screenshots/screenshot2.png</image>
       <caption>Album details view of NextGroove</caption>
     </screenshot>
-    <screenshot type="source">
+    <screenshot>
       <image>https://gitlab.gnome.org/dean36963/NextGroove/-/raw/main/screenshots/screenshot3.png</image>
       <caption>Viewing a playlist in NextGroove</caption>
     </screenshot>

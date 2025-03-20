@@ -97,13 +97,16 @@ class NextcloudmusicApplication(Adw.Application):
             application_icon="net.rosebirch.nextgroove",
             comments="Linux client for Nextcloud Music",
             developer_name="Dean Birch",
-            version="0.1.0",
-            developers=["Dean Birch"],
-            copyright="© 2024 Dean Birch",
+            version="0.1.3",
+            copyright="© Dean Birch\
+            \
+\n\nThis application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details.",
         )
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
         about.set_translator_credits(_("translator-credits"))
+        about.set_issue_url("https://gitlab.gnome.org/dean36963/nextgroove/-/issues")
         about.present(self.props.active_window)
+
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""

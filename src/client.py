@@ -205,7 +205,7 @@ class NextcloudMusicClient(GObject.Object):
             task.return_value(False)
             return
 
-        self.download_cover(album_id, cover_url)
+        self.download_cover(album_id, cover_url, url_is_absolute=True)
         task.return_value(album_id)
 
     def get_cover(self, album_list_item):
