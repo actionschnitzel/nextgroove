@@ -141,7 +141,7 @@ class MPRIS(Server):
 
     __MPRIS_IFACE = "org.mpris.MediaPlayer2"
     __MPRIS_PLAYER_IFACE = "org.mpris.MediaPlayer2.Player"
-    __MPRIS_NEXTGROOVE = "org.mpris.MediaPlayer2.nextgroove"
+    __MPRIS_NEXTGROOVE = "org.mpris.MediaPlayer2.net.rosebirch.nextgroove"
     __MPRIS_PATH = "/org/mpris/MediaPlayer2"
 
     def __init__(self, app):

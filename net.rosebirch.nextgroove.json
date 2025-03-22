@@ -10,8 +10,7 @@
         "--socket=fallback-x11",
         "--device=dri",
         "--socket=wayland",
-        "--socket=pulseaudio",
-        "--own-name=org.mpris.MediaPlayer2.nextgroove"
+        "--socket=pulseaudio"
     ],
     "cleanup" : [
         "/include",
