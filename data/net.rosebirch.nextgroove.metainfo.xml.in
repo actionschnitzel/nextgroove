@@ -54,20 +54,25 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.4/screenshots/screenshot1.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot1.png</image>
       <caption>Screenshot of the album view of NextGroove</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.4/screenshots/screenshot2.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot2.png</image>
       <caption>Album details view of NextGroove</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.4/screenshots/screenshot3.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot3.png</image>
       <caption>Viewing a playlist in NextGroove</caption>
     </screenshot>
   </screenshots>
 
   <releases>
+    <release version="0.1.5" date="2025-03-23">
+      <description translate="no">
+        <p>Updating icons</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2025-03-22">
       <description translate="no">
         <p>Initial flatpak release</p>
