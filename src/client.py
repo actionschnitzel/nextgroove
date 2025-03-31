@@ -111,14 +111,15 @@ class NextcloudMusicClient(GObject.Object):
             response = self._collection()
             if response.status_code != 200:
                 print(f"return code was {response.status_code}")
-                return None
+                # Send errors back for toast on welcome page
+                return f"Error: got HTTP status code {response.status_code} when checking collection"
             self.collection = json.loads(response.text)
             self.update_albums()
             return self.collection
         except requests.exceptions.RequestException as e:
-            # TODO better error handling and user messaging
+            # Send errors back for toast on welcome page
             print(f"Exception in updating collection {e}")
-            return None
+            return f"Error: Got exception {e}"
 
     def update_albums(self):
         for artist in self.collection:
@@ -281,7 +282,9 @@ class NextcloudMusicClient(GObject.Object):
             self.parse_playlist_json(playlists)
             return self.playlists
         except requests.exceptions.RequestException as e:
-            # TODO better error handling and user messaging
+            # Updating playlists occurs at same time as collection is updated.
+            # As the error is thrown back for display, ignore this error
+            # as _likely_ it will be the same error as collection error.
             print(f"Exception in updating collection {e}")
             return None
 

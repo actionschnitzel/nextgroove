@@ -41,9 +41,13 @@
                 <property name="title">Welcome</property>
                 <property name="icon-name">user-home-symbolic</property>
                 <property name="child">
- <object class="AdwStatusPage">
-                    <property name="title">Welcome</property>
-                    <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
+                  <object class="AdwToastOverlay" id="status_toast">
+                    <property name="child">
+                      <object class="AdwStatusPage">
+                        <property name="title">Welcome</property>
+                        <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
+                      </object>
+                    </property>
                   </object>
                 </property>
               </object>

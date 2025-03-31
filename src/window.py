@@ -50,6 +50,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_click_menu = Gtk.Template.Child("album_click_menu")
     playlist_view = Gtk.Template.Child("playlistview")
     welcome_view = Gtk.Template.Child("welcomepage")
+    status_toast = Gtk.Template.Child("status_toast")
 
     #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
     artist_nav_2 = Gtk.Template.Child("artist_nav_2")
@@ -175,9 +176,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         collection = result.propagate_value().value
 
-        if collection is None:
-            print("Collection is none atm, come back later")
+        if isinstance(collection, str) and collection.startswith("Error"):
+            # We encountered an error, and we've been handed the error not the collection
+            self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
             return
+
         # Hide welcome view
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
