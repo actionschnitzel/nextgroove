@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gio, GObject
+from gi.repository import Gio, GObject, GLib
 from html import escape
 from .albumtile import AlbumTile
 from .queueitem import QueueItem
@@ -39,6 +39,8 @@ class Controls(Gtk.ActionBar):
     volumebutton = Gtk.Template.Child("volumebutton")
     volumepopover = Gtk.Template.Child("volumepopover")
     volumescale = Gtk.Template.Child("volumescale")
+    # Duration
+    duration_label = Gtk.Template.Child("duration_label")
 
     # Data refs
     _client = None
@@ -59,6 +61,7 @@ class Controls(Gtk.ActionBar):
         self.volumescale.set_increments(5,10)
         self.volumescale.set_size_request(150, 30)
         self.volumescale.connect("value-changed", self.volume_changed)
+        self.queue_item = None
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -91,6 +94,7 @@ class Controls(Gtk.ActionBar):
         self._client = client
         self._queue = queue
         self._window = window
+        self.timeout = None
 
         if self._media.get_playing():
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
@@ -169,6 +173,23 @@ class Controls(Gtk.ActionBar):
         self.now_playing_label.set_text(song_title)
         self.current_album_artist.set_markup(f"{escape(artist_title)}: <i>{escape(album_title)}</i>")
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
+        # Duration
+        if not self.timeout:
+            self.timeout = GLib.timeout_add(1000, self.update_duration, None)
+        self.queue_item = queue_item
+
+    def update_duration(self, thing):
+        # Get current timestamp in MICROseconds
+        current_duration = self._media.get_timestamp()
+        current_duration_seconds = int(current_duration / 1000000)
+        time_string = QueueItem.duration_string_util(current_duration_seconds)
+        full_duration_string = QueueItem.duration_string_util(self.queue_item.duration  )
+        if self.queue_item:
+            self.duration_label.set_text(f"{time_string} / {full_duration_string}")
+        else:
+            self.duration_label.set_text("")
+
+        return True
 
     def song_ended(self, foo, bar):
         print("Song ended")

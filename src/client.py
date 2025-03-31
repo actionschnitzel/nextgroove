@@ -87,6 +87,7 @@ class NextcloudMusicClient(GObject.Object):
                         # We have a match
                         song_id = list(song['files'].values())[0]
                         queue_item = QueueItem(song['title'], song_id, album['id'], artist['id'])
+                        queue_item.set_duration(song['length'])
                         return queue_item
         print(f"get_track_from_id: Could not find track_id {track_id}")
         return None

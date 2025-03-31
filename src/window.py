@@ -201,6 +201,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_string = song["title"]
                     song_id = list(song["files"].values())[0]
                     song_item = QueueItem(song_string, song_id, album_id, artist_id)
+                    song_item.set_duration(song['length'])
                     self._songs.append([artist_string, album_string, song_string, song_item])
         print(f"we have {len(self._songs)} songs")
 
@@ -280,6 +281,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         for song in sorted_tracks:
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            song_item.set_duration(song['length'])
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
@@ -329,6 +331,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         for song in sorted_tracks:
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            song_item.set_duration(song['length'])
             self._queue.append(song_item)
 
     def album_queue_add_next_clicked(self, event, something):
@@ -361,6 +364,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         for song in reversed(sorted_tracks):
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            song_item.set_duration(song['length'])
             self._queue.insert(insert_index+1, song_item)
 
 
@@ -456,6 +460,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         for song in sorted_tracks:
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
+            song_item.set_duration(song['length'])
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)

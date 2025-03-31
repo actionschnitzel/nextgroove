@@ -23,6 +23,12 @@
                 <property name="hexpand">true</property>
               </object>
             </child>
+            <child>
+              <object class="GtkLabel" id="duration_label">
+                <property name="halign">start</property>
+                <property name="label"></property>
+              </object>
+            </child>
           </object>
         </child>
 

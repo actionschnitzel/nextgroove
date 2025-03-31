@@ -50,16 +50,19 @@ class QueueItem(GObject.Object):
         # So we don't bother rendering
         self.fake = True
 
-    def duration_string(self):
-        if not self.duration:
+    def duration_string_util(duration):
+        if not duration:
             return "-"
-        time_string = str(datetime.timedelta(seconds=self.duration))
+        time_string = str(datetime.timedelta(seconds=duration))
         index=0
         for char in time_string:
             if char not in [":", "0"]:
                 break
             index+=1
         return time_string[index:]
+
+    def duration_string(self):
+        return QueueItem.duration_string_util(self.duration)
 
     def get_title(self):
         return self.title
