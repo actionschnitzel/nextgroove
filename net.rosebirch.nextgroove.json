@@ -1,7 +1,7 @@
 {
     "id" : "net.rosebirch.nextgroove",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "47",
+    "runtime-version" : "48",
     "sdk" : "org.gnome.Sdk",
     "command" : "nextgroove",
     "finish-args" : [
@@ -33,7 +33,7 @@
           {
             "type" : "git",
             "url" : "https://gitlab.gnome.org/dean36963/nextgroove",
-            "tag": "0.1.5"
+            "tag": "0.1.6"
           }
         ]
       }
