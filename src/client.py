@@ -303,9 +303,9 @@ class NextcloudMusicClient(GObject.Object):
     def get_song(self, song_id):
         # TODO check if already exists and use a cache dir
         # TODO also add some method to clear cache cos could get big
-        print(f"Attempting to call {self._base_url}/file/{song_id}/download")
+        print(f"Attempting to call {self._base_url}/files/{song_id}/download")
         response = requests.get(
-            f"{self._base_url}/file/{song_id}/download", auth=self._auth
+            f"{self._base_url}/files/{song_id}/download", auth=self._auth
         )
         if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
