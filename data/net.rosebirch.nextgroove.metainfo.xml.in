@@ -68,6 +68,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.6" date="2025-04-12">
+      <description translate="no">
+        <p>Updating to work with newer versions of the Nextcloud Music API. This is not backwards compatible though.</p>
+        <p>Added a text view showing duration.</p>
+      </description>
+    </release>
     <release version="0.1.5" date="2025-03-23">
       <description translate="no">
         <p>Updating icons</p>
