@@ -79,17 +79,17 @@ class NextcloudMusicClient(GObject.Object):
             if artist['id'] == desired_artist.artist_id:
                 return artist
 
-    def get_track_from_id(self, track_id):
+    def get_track_from_id(self, song_id):
         for artist in self.collection:
             for album in artist['albums']:
                 for song in album['tracks']:
-                    if song['id'] == track_id:
+                    if song['id'] == song_id:
                         # We have a match
                         song_id = list(song['files'].values())[0]
                         queue_item = QueueItem(song['title'], song_id, album['id'], artist['id'])
                         queue_item.set_duration(song['length'])
                         return queue_item
-        print(f"get_track_from_id: Could not find track_id {track_id}")
+        print(f"get_track_from_id: Could not find track_id {song_id}")
         return None
 
     def get_artist_id_for_album_list_item(self, album_list_item):
@@ -292,11 +292,15 @@ class NextcloudMusicClient(GObject.Object):
         for playlist in playlist_json:
             playlist_name = playlist['name']
             playlist_id = playlist['id']
-            updated = playlist['updated']
-            created = playlist['created']
-            cover = playlist['cover']
-            track_ids = playlist['trackIds']
-            item = PlaylistItem(playlist_name, track_ids, playlist_id, cover, created, updated)
+            # Created and Updated and cover seems missing now?
+            #updated = playlist['updated']
+            #created = playlist['created']
+            #cover = playlist['cover']
+            # No longer have track_ids, it's tracks and we now need to get IDs from that object
+            track_ids = []
+            for track in playlist['tracks']:
+                track_ids.append(track['id'])
+            item = PlaylistItem(playlist_name, track_ids, playlist_id, None, None, None)
             self.playlists.append(item)
 
 
