@@ -210,12 +210,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         print(f"We have {len(self._artists)} artists")
 
-        # Trick the UI to redraw, no redraw call works
-        # I am clearly doing something wrong here!
-        fake_item = QueueItem("FAKE", -1, -1, -1)
-        self._queue.insert(0, fake_item)
-        self._queue.remove(0)
-
     def get_artist_name(self, thing):
         return thing['name'].lower()
     def get_track_number(self, thing):
@@ -289,6 +283,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
 
+        self.controls.set_queue_pos(0)
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
 
 
@@ -356,19 +351,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Tracks are not ordered in the json output
         sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
 
-        # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
-        # we need that file ID, which makes this look quite ugly
-        insert_index = 0
-        for queue_song in self._queue:
-            if queue_song.is_now_playing():
-                break
-            insert_index += 1
-        print(f"discovered now playing at queue position {insert_index}")
         for song in reversed(sorted_tracks):
             queued_song_id = list(song["files"].values())[0]
             song_item = QueueItem(song["title"], queued_song_id, album_id, artist_id)
             song_item.set_duration(song['length'])
-            self._queue.insert(insert_index+1, song_item)
+            self._queue.insert(self.controls.queue_pos+1, song_item)
 
 
     ##################
@@ -467,6 +454,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             if queued_song_id == song_id:
                 song_item.set_now_playing(True)
             self._queue.append(song_item)
+        self.controls.set_queue_pos(0)
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
 
     def artist_album_append_clicked_artist_view(self, _):
@@ -531,6 +519,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             _song.set_now_playing(False)
         # Set current song to playing to show in bold
         song.set_now_playing(True)
+        self.controls.set_queue_pos(queue_id)
 
         self._client.get_song_async(song.get_song_id(), song.get_title(), self.song_file_returned)
 
@@ -586,6 +575,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             queue_item = self._client.get_track_from_id(track)
             self._queue.append(queue_item)
 
+        self.controls.set_queue_pos(0)
         first_song = self._queue[0]
         first_song.set_now_playing(True)
         self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
@@ -622,15 +612,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             print("empty playlist")
             return
 
-        insert_index = 0
-        for queue_song in self._queue:
-            if queue_song.is_now_playing():
-                break
-            insert_index += 1
-
         for track in reversed(track_ids):
             queue_item = self._client.get_track_from_id(track)
-            self._queue.insert(insert_index+1, queue_item)
+            self._queue.insert(self.controls.queue_pos+1, queue_item)
 
     def update_playlists(self, event, foo, bar):
         pass
@@ -641,10 +625,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     ################
 
     def current_song(self):
-        for song in self._queue:
-            if song.is_now_playing():
-                return song
-        print("FAILED to get current song")
+        queue_pos = self.controls.queue_pos
+        if len(self._queue)==0:
+            print("Queue not initialized yet")
+            return None
+        return self._queue[queue_pos]
 
     def play_song(self, song_file, song_title):
         """Called from many places, even outside this class.
@@ -660,12 +645,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.controls.set_now_playing(self.current_song())
         self.mpris.new_song()
 
-        # Trick the UI to redraw, no redraw call works
-        # I am clearly doing something wrong here!
-        fake_item = QueueItem("FAKE", -1, -1, -1)
-        fake_item.set_fake()
-        self._queue.insert(0, fake_item)
-        self._queue.remove(0)
         # Also get other views with a song row to update
         for view in [
                 self.playlistdetails,
@@ -673,18 +652,28 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 self.album_details_content
             ]:
             self.update_now_playing_in_song_rows(view)
+        self.update_now_playing_in_queue()
 
-    def update_now_playing_in_song_rows(self, header_object):
+    def update_now_playing_in_queue(self):
         current_song = self.current_song()
-        fake_item = QueueItem("FAKE", -1, -1, -1)
-        fake_item.set_fake()
-        for song in header_object._track_elements:
+        for song in self._queue:
             if song.song_id == current_song.song_id:
                 song.set_now_playing(True)
             else:
                 song.set_now_playing(False)
-        header_object._track_elements.insert(0, fake_item)
-        header_object._track_elements.remove(0)
+            song.notify("now_playing")
+
+
+    def update_now_playing_in_song_rows(self, header_object):
+        current_song = self.current_song()
+        for song in header_object._track_elements:
+            if song.song_id == current_song.song_id:
+                song.set_now_playing(True)
+                song.notify("now_playing")
+            else:
+                song.set_now_playing(False)
+                song.notify("now_playing")
+        header_object.queue_draw()
 
     def song_file_returned(self, source_object, result, user_data):
         song_file = result.propagate_value().value

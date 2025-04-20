@@ -62,6 +62,7 @@ class Controls(Gtk.ActionBar):
         self.volumescale.set_size_request(150, 30)
         self.volumescale.connect("value-changed", self.volume_changed)
         self.queue_item = None
+        self.queue_pos = -1
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -123,38 +124,36 @@ class Controls(Gtk.ActionBar):
             print("Queue empty, ignoring previous button")
             return
         print("Previous button pressed")
-        last_song = None
-        current_song = None
-        for song in self._queue:
-            if song.is_now_playing():
-                current_song = song
-                break
-            last_song = song
-        if not last_song:
+        if self.queue_pos == 0:
             print("No previous song, just replay the same one")
             song_file = self._client.get_song(current_song.get_song_id())
             self._window.play_song(song_file, current_song.get_title())
-        else:
-            last_song.set_now_playing(True)
-            current_song.set_now_playing(False)
-            print(f"Try and play {last_song.get_title()}")
-            song_file = self._client.get_song(last_song.get_song_id())
-            self._window.play_song(song_file, last_song.get_title())
+            return
+
+        current_song_queue_item = self._queue[self.queue_pos]
+        previous_song_queue_item = self._queue[self.queue_pos - 1]
+
+        previous_song_queue_item.set_now_playing(True)
+        previous_song_queue_item.notify("now_playing")
+        current_song_queue_item.set_now_playing(False)
+        current_song_queue_item.notify("now_playing")
+        print(f"Try and play {previous_song_queue_item.get_title()}")
+        song_file = self._client.get_song(previous_song_queue_item.get_song_id())
+
+        self.increment_queue_pos(-1)
+        self._window.play_song(song_file, previous_song_queue_item.get_title())
 
     def on_next_button_pressed(self, event):
         if len(self._queue) == 0:
             print("Queue empty, ignoring next button")
             return
-        next_song = False
+
+        current_song_queue_item = self._queue[self.queue_pos]
+        next_song_index = self.queue_pos + 1
+
         song_queue_item = None
-        current_song_queue_item = None
-        for song in self._queue:
-            if next_song:
-                song_queue_item = song
-                break
-            if song.is_now_playing():
-                current_song_queue_item = song
-                next_song = True
+        if next_song_index < len(self._queue):  # Then this is valid
+            song_queue_item = self._queue[next_song_index]
 
         if not song_queue_item:
             print("Reached end of queue, not playing new song.")
@@ -162,11 +161,16 @@ class Controls(Gtk.ActionBar):
             return
 
         current_song_queue_item.set_now_playing(False)
+        current_song_queue_item.notify("now_playing")
         song_queue_item.set_now_playing(True)
+        song_queue_item.notify("now_playing")
         song_file = self._client.get_song(song_queue_item.get_song_id())
+
+        self.increment_queue_pos()
         self._window.play_song(song_file, song_queue_item.get_title())
 
     def set_now_playing(self, queue_item):
+
         song_title = queue_item.title
         artist_title = self._client.artist_name_by_id[queue_item.artist_id]
         album_title = self._client.album_name_by_id[queue_item.album_id]
@@ -220,3 +224,12 @@ class Controls(Gtk.ActionBar):
 
     def is_playing(self):
         return self._media.get_playing()
+
+    def set_queue_pos(self, queue_pos):
+        self.queue_pos = queue_pos
+
+    def increment_queue_pos(self, increment=1):
+        if self.queue_pos < 0:
+            print("Not initialized queue_pos yet")
+            return
+        self.queue_pos += increment

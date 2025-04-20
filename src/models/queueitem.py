@@ -25,7 +25,7 @@ class QueueItem(GObject.Object):
 
     title = None
     song_id = None
-    now_playing = None
+    now_playing_prop = None
     album_id = None
     artist_id = None
     widget = None
@@ -38,17 +38,12 @@ class QueueItem(GObject.Object):
         self.album_id = album_id
         self.track_number = -1
         self.duration = -1
-        self.fake = False
 
     def set_track_number(self, number):
         self.track_number = number
 
     def set_duration(self, duration):
         self.duration = duration
-
-    def set_fake(self):
-        # So we don't bother rendering
-        self.fake = True
 
     def duration_string_util(duration):
         if not duration:
@@ -70,11 +65,17 @@ class QueueItem(GObject.Object):
     def get_song_id(self):
         return self.song_id
 
+    @GObject.Property(
+        type=bool, flags=GObject.ParamFlags.READWRITE, default=False
+    )
+    def now_playing(self):
+        return self.is_now_playing()
+
     def is_now_playing(self):
-        return self.now_playing
+        return self.now_playing_prop
 
     def set_now_playing(self, now_playing):
-        self.now_playing = now_playing
+        self.now_playing_prop = now_playing
 
     @GObject.Property(
         type=str, flags=GObject.ParamFlags.READWRITE, default=None

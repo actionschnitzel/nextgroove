@@ -50,11 +50,13 @@ class SongRow(Gtk.Box):
         self.window = window
 
     def set_queue_item(self, queue_item):
-        weight = "normal"
+        queue_item.connect("notify", self.now_playing_changed)
         self.queue_item = queue_item
-        if queue_item.fake:
-            return
-        if queue_item.is_now_playing():
+        self.draw(self.queue_item)
+
+    def draw(self, queue_item):
+        weight = "normal"
+        if queue_item.now_playing:
             weight = "bold"
         self._song_title.set_markup(f"<span weight=\"{weight}\" size=\"large\">{escape(queue_item.title)}</span>")
         if queue_item.track_number and queue_item.track_number != -1:
@@ -65,4 +67,7 @@ class SongRow(Gtk.Box):
             self._song_number.set_label("")
             artist_label = self.window._client.artist_name_by_id[queue_item.artist_id]
             self._artist_title.set_markup(f"<span weight=\"{weight}\" size=\"small\">{escape(artist_label)}</span>")
+
+    def now_playing_changed(self, thing_1, thing_2):
+        self.draw(self.queue_item)
 
