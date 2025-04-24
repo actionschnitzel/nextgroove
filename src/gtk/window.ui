@@ -250,9 +250,7 @@
                 <property name="child">
                   <object class="GtkScrolledWindow" id="_scrolled_window_queue">
                     <child>
-                      <object class="GtkListView" id="queueview">
-                        <!--property name="max-columns">10</property>
-                        <property name="single-click-activate">True</property-->
+                      <object class="QueuePage" id="queuepage">
                       </object>
                     </child>
                   </object>

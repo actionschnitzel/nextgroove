@@ -41,6 +41,7 @@ nextgroove_sources = [
   'widgets/album_header.py',
   'widgets/playlist_header.py',
   'widgets/playlist_row.py',
+  'widgets/queue_page.py',
   'widgets/song_row.py',
   'window.py'
 ]
