@@ -50,6 +50,7 @@ class AlbumListItem(GObject.Object):
             song_id = list(track['files'].values())[0]
             song_item = QueueItem(track['title'], song_id, self.album_id, track['artistId'])
             song_item.set_track_number(track['number'])
+            song_item.set_track_id(track['id'])
             song_item.set_duration(track['length'])
             self.tracks.append(song_item)
 

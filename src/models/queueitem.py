@@ -38,6 +38,7 @@ class QueueItem(GObject.Object):
         self.album_id = album_id
         self.track_number = -1
         self.duration = -1
+        self.track_id = -1
 
     def set_track_number(self, number):
         self.track_number = number
@@ -85,3 +86,8 @@ class QueueItem(GObject.Object):
 
     def set_widget(self, widget):
         self.widget = widget
+
+    def set_track_id(self, track_id):
+        self.track_id = track_id
+    def get_track_id(self):
+        return self.track_id

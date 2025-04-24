@@ -54,6 +54,7 @@ class NextcloudMusicClient(GObject.Object):
         self.artist_name_by_id = {}
         self.album_name_by_id = {}
         self.playlists = Gio.ListStore()
+        self.playlist_save_buffer = []
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth)
@@ -88,6 +89,7 @@ class NextcloudMusicClient(GObject.Object):
                         song_id = list(song['files'].values())[0]
                         queue_item = QueueItem(song['title'], song_id, album['id'], artist['id'])
                         queue_item.set_duration(song['length'])
+                        queue_item.set_track_id(song["id"])
                         return queue_item
         print(f"get_track_from_id: Could not find track_id {song_id}")
         return None
@@ -333,3 +335,42 @@ class NextcloudMusicClient(GObject.Object):
         song_id = task.get_task_data()
         song_file = self.get_song(song_id)
         task.return_value(song_file)
+
+    def create_new_playlist_async(self, playlist_name, songs, callback):
+        print("Starting multistage playlist creation calls")
+        self.playlist_save_buffer = []
+        self.playlist_save_buffer.append({"songs": songs, "name": playlist_name})
+        task = Gio.Task.new(self, None, callback, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(0)
+        task.run_in_thread(self.create_new_playlist_sync)
+
+    def create_new_playlist_sync(self, task, source_object, task_data, cancellable):
+        playlist_index = task.get_task_data()
+        playlist_buffer = self.playlist_save_buffer[playlist_index]
+        playlist_name = playlist_buffer["name"]
+        songs = playlist_buffer["songs"]
+        in_data = {"name": playlist_name}
+        response = requests.post(
+            f"{self._base_url}/playlists", auth=self._auth, json=in_data
+        )
+        if response.status_code != 200:
+            print(f"Got {response.status_code} http status from POST at playlists api endpoint")
+            return
+        # Now need to add song
+        playlist_create_response = json.loads(response.text)
+        if "id" not in playlist_create_response:
+            print("Unexpected response from /api/playlists POST")
+            return
+        new_playlist_id = playlist_create_response["id"]
+        track_ids = []
+        for song in songs:
+            print(f"song {song} and id {song.get_track_id()}")
+            track_ids.append(str(song.get_track_id()))
+        tracks_csv = ",".join(track_ids)
+        print(f"from {track_ids} we got {tracks_csv}")
+        track_data = {"track": tracks_csv}
+        response = requests.post(
+            f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data
+        )
+        # TODO check output
