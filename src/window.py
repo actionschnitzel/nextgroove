@@ -249,9 +249,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def album_clicked(self, event, album_id):
         self._album_selected = album_id
         album_tile = event.get_model()[album_id].widget
-        popover = Gtk.PopoverMenu.new_from_model(self.album_click_menu)
-        popover.set_parent(album_tile)
-        popover.popup()
+        album_details = self._client.album_details(album_tile.album)
+        self.album_view_details_clicked(None, None)
 
     def album_play_clicked(self, event, something):
         """Connected to activate signal from AlbumTile.
