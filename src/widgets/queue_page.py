@@ -20,7 +20,7 @@
 from __future__ import annotations
 from typing import Optional
 
-from gi.repository import GObject, Gtk
+from gi.repository import GObject, Gtk, Gdk
 from .song_row import SongRow
 
 
@@ -37,8 +37,11 @@ class QueuePage(Gtk.Box):
         super().__init__()
         self._queue = None
         self._client = None
+        self.controls = None
+        self.window = None
         self._save_queue_as_playlist_button.set_sensitive(False)
         self._save_queue_as_playlist_button.connect("clicked", self.save_queue_button_clicked)
+        self._rows = set()
 
 
     def set_client(self, client):
@@ -57,6 +60,12 @@ class QueuePage(Gtk.Box):
         self.queueview.props.model = selection_model
         self.queueview.connect("activate", self.queue_clicked)
 
+    def set_controls(self, controls):
+        self.controls = controls
+
+    def set_window(self, window):
+        self.window = window
+
 
     ##############
     # Queue View #
@@ -69,6 +78,7 @@ class QueuePage(Gtk.Box):
         list_item.props.child = SongRow()
         list_item.props.child.show_artist()
         list_item.props.child.set_window(self)
+        list_item.props.child.setup_drag(self)
 
     def _bind_queue_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -82,6 +92,10 @@ class QueuePage(Gtk.Box):
             return
 
         song_widget = list_item.props.child
+        song_widget.set_index(list_item.get_position())
+        song_widget.set_window(self.window)
+        song_widget.set_list_item(list_item)
+        self._rows.add(song_widget)
 
         if queue_list_item.album_id not in self._client.album_name_by_id:
             # We are repopulating during a client refresh, try again soon
@@ -105,7 +119,7 @@ class QueuePage(Gtk.Box):
         song.set_now_playing(True)
         self.controls.set_queue_pos(queue_id)
 
-        self._client.get_song_async(song.get_song_id(), song.get_title(), self.song_file_returned)
+        self._client.get_song_async(song.get_song_id(), song.get_title(), self.window.song_file_returned)
 
     def save_queue_button_clicked(self, event):
         # First time, show the text field
@@ -130,3 +144,7 @@ class QueuePage(Gtk.Box):
             self._save_queue_as_playlist_button.set_sensitive(False)
         else:
             self._save_queue_as_playlist_button.set_sensitive(True)
+
+    def queue_reorder(self):
+        for row in self._rows:
+            row.set_index(row.list_item.get_position())

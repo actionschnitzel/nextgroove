@@ -365,10 +365,9 @@ class NextcloudMusicClient(GObject.Object):
         new_playlist_id = playlist_create_response["id"]
         track_ids = []
         for song in songs:
-            print(f"song {song} and id {song.get_track_id()}")
+            print(f"Adding song {song.title} and id {song.get_track_id()} to playlist")
             track_ids.append(str(song.get_track_id()))
         tracks_csv = ",".join(track_ids)
-        print(f"from {track_ids} we got {tracks_csv}")
         track_data = {"track": tracks_csv}
         response = requests.post(
             f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data

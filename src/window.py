@@ -120,6 +120,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Queue page
         self.queue_page.set_client(self._client)
         self.queue_page.set_queue(self._queue)
+        self.queue_page.set_controls(self.controls)
+        self.queue_page.set_window(self)
 
         # Artist Sidebar
         artist_sidebar_factory = Gtk.SignalListItemFactory()
@@ -628,4 +630,32 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def song_file_returned(self, source_object, result, user_data):
         song_file = result.propagate_value().value
         self.play_song(song_file, self._client.song_title_last_callback)
+
+    def reorder_queue(self, from_index, to_index):
+        # Dragging should drop below the drop target song
+
+        if from_index == to_index:
+            # No change
+            return
+        if from_index < to_index:
+            # Removing the from index will decrement this
+            to_index -= 1
+
+        item = self._queue.get_item(from_index)
+        self._queue.remove(from_index)
+
+        if to_index+1 == self._queue.get_n_items():
+            # We cannot insert, we want it to go at the end
+            self._queue.append(item)
+        else:
+            self._queue.insert(to_index+1, item)
+
+        # Also if the we move the currently played song, move the queue position
+        if from_index == self.controls.queue_pos:
+            self.controls.set_queue_pos(to_index+1)
+
+        # Store updated indexes on songRow
+        self.queue_page.queue_reorder()
+
+
 

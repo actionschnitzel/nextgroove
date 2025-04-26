@@ -21,7 +21,7 @@
 from __future__ import annotations
 from typing import Optional
 
-from gi.repository import GObject, Gtk
+from gi.repository import GObject, Gtk, Gdk
 from .albumlistitem import AlbumListItem
 from html import escape
 
@@ -42,6 +42,19 @@ class SongRow(Gtk.Box):
     def __init__(self):
         super().__init__()
         self._song_title.set_hexpand(True)
+        self.parent = None
+        self.index = -1
+        self.window = None
+        self.list_item = None
+
+    def set_index(self, index):
+        self.index = index
+
+    def set_window(self, window):
+        self.window = window
+
+    def set_list_item(self, list_item):
+        self.list_item = list_item
 
     def show_artist(self):
         self._artist_title.set_visible(True)
@@ -53,6 +66,9 @@ class SongRow(Gtk.Box):
         queue_item.connect("notify", self.now_playing_changed)
         self.queue_item = queue_item
         self.draw(self.queue_item)
+        if self.parent:
+            # That means we want drag
+            self.setup_drag(self.parent)
 
     def draw(self, queue_item):
         weight = "normal"
@@ -71,3 +87,25 @@ class SongRow(Gtk.Box):
     def now_playing_changed(self, thing_1, thing_2):
         self.draw(self.queue_item)
 
+    def setup_drag(self, parent):
+        # Called once before we have a queue_item
+        self.parent = parent
+        if self.queue_item == None:
+            return
+        # Called again if we have set parent
+        source = Gtk.DragSource.new()
+        source.set_actions(Gdk.DragAction.MOVE)
+        source.set_content(Gdk.ContentProvider.new_for_value(self))
+        content_type = source.get_content().ref_formats().get_gtypes()[0]
+
+        self.add_controller(source)
+
+        target = Gtk.DropTarget.new(content_type ,Gdk.DragAction.MOVE)
+        target.connect("drop", self.on_drag_drop)
+        self.add_controller(target)
+
+
+    def on_drag_drop(self, drop_target, source, x, y):
+        print(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
+        print(f"That's moving index {source.index} to {self.index}")
+        self.window.reorder_queue(source.index, self.index)
