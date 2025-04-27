@@ -135,9 +135,10 @@ class QueuePage(Gtk.Box):
         # Reset text and hide for next time
         self._queue_name_entry.set_text("")
         self._queue_name_entry.set_visible(False)
-        self._client.create_new_playlist_async(playlist_name, self._queue, None)
+        self._client.create_new_playlist_async(playlist_name, self._queue, self.call_update_playlist)
 
-
+    def call_update_playlist(self, one, two, three):
+        self._client.playlist_async(None)
 
     def queue_items_changed(self, position, removed, added, user_data):
         if self._queue.get_n_items() == 0:

@@ -291,6 +291,7 @@ class NextcloudMusicClient(GObject.Object):
             return None
 
     def parse_playlist_json(self, playlist_json):
+        self.playlists.remove_all()
         for playlist in playlist_json:
             playlist_name = playlist['name']
             playlist_id = playlist['id']
