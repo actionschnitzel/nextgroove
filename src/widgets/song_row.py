@@ -36,6 +36,7 @@ class SongRow(Gtk.Box):
     _artist_title = Gtk.Template.Child("artist_label")
     _song_number = Gtk.Template.Child("song_number")
     _song_duration = Gtk.Template.Child("song_duration")
+    cover = Gtk.Template.Child()
 
     queue_item = None
 
@@ -46,6 +47,7 @@ class SongRow(Gtk.Box):
         self.index = -1
         self.window = None
         self.list_item = None
+        self.album_id = None
 
     def set_index(self, index):
         self.index = index
@@ -86,6 +88,12 @@ class SongRow(Gtk.Box):
 
     def now_playing_changed(self, thing_1, thing_2):
         self.draw(self.queue_item)
+
+    def set_album_id(self, album_id):
+        self.album_id = album_id
+
+    def set_cover_callback(self, foo, bar, baz):
+        self.cover.set_from_file(f"/tmp/net.rosebirch.nextgroove/cover_{self.album_id}")
 
     def setup_drag(self, parent):
         # Called once before we have a queue_item

@@ -96,6 +96,9 @@ class PlaylistHeader(Gtk.Box):
         song_row = list_item.props.child
         song_row.set_queue_item(song_item)
         song_item.set_widget(song_row)
+        cover_url, album_id = self.window._client.get_album_cover_url_from_song_id(song_item.track_id)
+        song_row.set_album_id(album_id)
+        self.window._client.download_cover_async_generic(album_id, cover_url, self, song_row.set_cover_callback)
 
     def song_clicked(self, event, song_id):
         song_thing = self._track_elements[song_id]

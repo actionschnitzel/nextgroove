@@ -75,6 +75,15 @@ class NextcloudMusicClient(GObject.Object):
         print("ERROR client.album_details could not find an album")
         return None
 
+    def get_album_cover_url_from_song_id(self, song_id):
+        for artist in self.collection:
+            for album in artist['albums']:
+                for song in album['tracks']:
+                    if song['id'] == song_id:
+                        cover = album['cover']
+                        album_id = album['id']
+                        return cover, album_id
+
     def artist_details(self, desired_artist):
         for artist in self.collection:
             if artist['id'] == desired_artist.artist_id:
@@ -193,11 +202,14 @@ class NextcloudMusicClient(GObject.Object):
         ) as cover_file:
             cover_file.write(response.content)
 
-    def download_cover_async(self, album_id, cover_url, widget):
-        task = Gio.Task.new(widget, None, self.cover_downloaded, None)
+    def download_cover_async_generic(self, album_id, cover_url, widget, callback):
+        task = Gio.Task.new(widget, None, callback, None)
         task.set_return_on_cancel(False)
         task.set_task_data(album_id)
         task.run_in_thread(self.download_cover_sync)
+
+    def download_cover_async(self, album_id, cover_url, widget):
+        self.download_cover_async_generic(album_id, cover_url, widget, self.cover_downloaded)
 
     def download_cover_sync(self, task, source_object, task_data, cancellable):
         album_id = task.get_task_data()
