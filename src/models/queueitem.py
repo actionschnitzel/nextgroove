@@ -50,12 +50,12 @@ class QueueItem(GObject.Object):
         if not duration:
             return "-"
         time_string = str(datetime.timedelta(seconds=duration))
-        index=0
-        for char in time_string:
-            if char not in [":", "0"]:
-                break
-            index+=1
-        return time_string[index:]
+        # This is currently in the format H:MM:SS
+        if not time_string.startswith("0:"):
+            # Ok wow something longer than an hour
+            return time_string
+        # Strip off 'H:', so we're left with 'MM:SS'
+        return time_string[time_string.find(":")+1:]
 
     def duration_string(self):
         return QueueItem.duration_string_util(self.duration)
