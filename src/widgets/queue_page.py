@@ -95,6 +95,9 @@ class QueuePage(Gtk.Box):
         song_widget.set_index(list_item.get_position())
         song_widget.set_window(self.window)
         song_widget.set_list_item(list_item)
+        cover_url, album_id = self.window._client.get_album_cover_url_from_song_id(queue_list_item.track_id)
+        song_widget.set_album_id(album_id)
+        self.window._client.download_cover_async_generic(album_id, cover_url, self, song_widget.set_cover_callback)
         self._rows.add(song_widget)
 
         if queue_list_item.album_id not in self._client.album_name_by_id:
