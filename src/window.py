@@ -65,6 +65,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     playlist_nav_view = Gtk.Template.Child()
     playlist_details_page = Gtk.Template.Child()
+    playlist_list_page = Gtk.Template.Child()
     playlistdetails = Gtk.Template.Child()
 
     stack = Gtk.Template.Child("stack")

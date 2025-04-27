@@ -41,6 +41,7 @@ class PlaylistHeader(Gtk.Box):
     song_click_menu_playlist = Gtk.Template.Child("song_click_menu_playlist")
     append_button = Gtk.Template.Child("append_button")
     append_next_button = Gtk.Template.Child("append_next_button")
+    delete_playlist = Gtk.Template.Child("delete_playlist")
 
 
 
@@ -51,6 +52,7 @@ class PlaylistHeader(Gtk.Box):
         self._cover_image.set_size_request(128, 128)
         self.clicked_song = None
         self.window = None
+        self.playlist_to_delete = None
 
         song_item_factory = Gtk.SignalListItemFactory()
         song_item_factory.connect("setup", self._setup_song_list_item)
@@ -59,6 +61,9 @@ class PlaylistHeader(Gtk.Box):
         song_selection_model = Gtk.SingleSelection.new(self._track_elements)
         self._songlist.props.model = song_selection_model
         self._songlist.connect("activate", self.song_clicked)
+
+        # Header buttons (some done in window.py)
+        self.delete_playlist.connect("clicked", self.delete_playlist_clicked)
 
     def set_window(self, window):
         self.window = window
@@ -129,4 +134,25 @@ class PlaylistHeader(Gtk.Box):
 
         self.window._queue.insert(insert_index+1 , self.clicked_song)
 
+    def delete_playlist_clicked(self, event):
+        playlist_name = escape(self.playlist.playlist_name)
+        print(f"Confirm whether to delete {playlist_name} (ID {self.playlist.playlist_id})")
+        self.playlist_to_delete = self.playlist.playlist_id
+
+        dialog = Gtk.AlertDialog()
+        dialog.set_detail(f"Are you sure you want to delete playlist: '{playlist_name}'")
+        dialog.set_buttons(["Cancel", "Delete"])
+        dialog.set_cancel_button(0)
+        dialog.set_default_button(0)
+        dialog.choose(self.window, None, self.confirm_result, None)
+
+    def confirm_result(self, dialog, task, _):
+        result = dialog.choose_finish(task)
+        if result == 0:
+            # Chose to cancel
+            return
+        print(f"Delete playlist {self.playlist.playlist_id}")
+
+        self.window.playlist_nav_view.pop()
+        self.window._client.delete_playlist_async(self.playlist.playlist_id)
 

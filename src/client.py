@@ -374,3 +374,23 @@ class NextcloudMusicClient(GObject.Object):
             f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data
         )
         # TODO check output
+
+
+    def delete_playlist_async(self, playlist_id):
+        print(f"Deleting playlist with ID {playlist_id}")
+        task = Gio.Task.new(self, None, self.call_update_playlist, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(playlist_id)
+        task.run_in_thread(self.delete_playlist_sync)
+
+    def delete_playlist_sync(self, task, source_object, task_data, cancellable):
+        playlist_id = task.get_task_data()
+        response = requests.delete(
+            f"{self._base_url}/playlists/{playlist_id}", auth=self._auth
+        )
+        if response.status_code != 200:
+            print(f"Got {response.status_code} http status from POST at playlists api endpoint")
+            return
+
+    def call_update_playlist(self, one, two, three):
+        self.playlist_async(None)

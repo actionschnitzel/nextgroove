@@ -74,6 +74,18 @@
             <property name="tooltip-text">Add to queue (play next)</property>
           </object>
         </child>
+        <child>
+          <object class="GtkButton" id="delete_playlist">
+            <property name="halign">start</property>
+            <property name="label">Delete playlist</property>
+            <property name="icon-name">user-trash-symbolic</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-bottom">20</property>
+            <property name="tooltip-text">Delete playlist</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
