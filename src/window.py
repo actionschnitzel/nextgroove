@@ -266,7 +266,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
@@ -321,7 +321,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
@@ -349,7 +349,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"])
+        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
 
         for song in reversed(sorted_tracks):
             queued_song_id = list(song["files"].values())[0]
@@ -441,7 +441,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=lambda item: item["number"] or -1)
+        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
