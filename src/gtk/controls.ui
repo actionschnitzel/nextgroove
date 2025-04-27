@@ -40,9 +40,27 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="duration_label">
-                    <property name="halign">start</property>
-                    <property name="label"></property>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <child>
+                      <object class="GtkLabel" id="duration_label">
+                        <property name="halign">start</property>
+                        <property name="label"></property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLevelBar" id="duration_scale">
+                        <property name="visible">false</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-end">5</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="max_duration_label">
+                        <property name="halign">start</property>
+                        <property name="label"></property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

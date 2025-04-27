@@ -41,7 +41,9 @@ class Controls(Gtk.ActionBar):
     volumescale = Gtk.Template.Child("volumescale")
     # Duration
     duration_label = Gtk.Template.Child("duration_label")
+    max_duration_label = Gtk.Template.Child()
     cover = Gtk.Template.Child()
+    duration_scale = Gtk.Template.Child()
 
     # Data refs
     _client = None
@@ -64,6 +66,7 @@ class Controls(Gtk.ActionBar):
         self.volumescale.connect("value-changed", self.volume_changed)
         self.queue_item = None
         self.queue_pos = -1
+        self.duration_scale.set_size_request(150,1)
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -183,17 +186,22 @@ class Controls(Gtk.ActionBar):
         if not self.timeout:
             self.timeout = GLib.timeout_add(1000, self.update_duration, None)
         self.queue_item = queue_item
+        self.duration_scale.set_max_value(self.queue_item.duration)
+        self.duration_scale.set_visible(True)
+        full_duration_string = QueueItem.duration_string_util(self.queue_item.duration  )
+        self.max_duration_label.set_text(full_duration_string)
 
     def update_duration(self, thing):
         # Get current timestamp in MICROseconds
         current_duration = self._media.get_timestamp()
         current_duration_seconds = int(current_duration / 1000000)
         time_string = QueueItem.duration_string_util(current_duration_seconds)
-        full_duration_string = QueueItem.duration_string_util(self.queue_item.duration  )
+
         if self.queue_item:
-            self.duration_label.set_text(f"{time_string} / {full_duration_string}")
+            self.duration_label.set_text(time_string)
         else:
             self.duration_label.set_text("")
+        self.duration_scale.set_value(current_duration_seconds)
 
         return True
 
