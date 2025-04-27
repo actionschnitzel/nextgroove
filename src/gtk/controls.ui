@@ -5,32 +5,51 @@
     <child type="start">
       <object class="GtkScrolledWindow">
         <property name="hexpand">true</property>
-
         <child>
           <object class="GtkBox">
-            <property name="orientation">vertical</property>
+            <property name="orientation">horizontal</property>
             <property name="halign">start</property>
             <property name="hexpand">true</property>
             <child>
-              <object class="GtkLabel" id="nowplaying">
+              <object class="GtkImage" id="cover">
                 <property name="halign">start</property>
-                <property name="hexpand">true</property>
+                <property name="valign">center</property>
+                <property name="hexpand">false</property>
+                <property name="vexpand">false</property>
+                <property name="height-request">40</property>
+                <property name="width-request">40</property>
+                <property name="visible">true</property>
+                <property name="margin-end">10</property>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="current_album_artist">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
                 <property name="halign">start</property>
                 <property name="hexpand">true</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="duration_label">
-                <property name="halign">start</property>
-                <property name="label"></property>
+                <child>
+                  <object class="GtkLabel" id="nowplaying">
+                    <property name="halign">start</property>
+                    <property name="hexpand">true</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="current_album_artist">
+                    <property name="halign">start</property>
+                    <property name="hexpand">true</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="duration_label">
+                    <property name="halign">start</property>
+                    <property name="label"></property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
+
 
       </object>
     </child>

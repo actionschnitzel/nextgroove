@@ -41,6 +41,7 @@ class Controls(Gtk.ActionBar):
     volumescale = Gtk.Template.Child("volumescale")
     # Duration
     duration_label = Gtk.Template.Child("duration_label")
+    cover = Gtk.Template.Child()
 
     # Data refs
     _client = None
@@ -174,6 +175,7 @@ class Controls(Gtk.ActionBar):
         song_title = queue_item.title
         artist_title = self._client.artist_name_by_id[queue_item.artist_id]
         album_title = self._client.album_name_by_id[queue_item.album_id]
+        self.cover.set_from_file(f"/tmp/net.rosebirch.nextgroove/cover_{queue_item.album_id}")
         self.now_playing_label.set_text(song_title)
         self.current_album_artist.set_markup(f"{escape(artist_title)}: <i>{escape(album_title)}</i>")
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
