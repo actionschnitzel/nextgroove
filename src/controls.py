@@ -104,6 +104,9 @@ class Controls(Gtk.ActionBar):
         if self._media.get_playing():
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
+        # Restore it to it's saved position
+        self.volume_changed(self.volumescale)
+
     def on_play_pause_button_pressed(self, event):
         if not self._media:
             print("Not playing yet, ignoring play/pause")
