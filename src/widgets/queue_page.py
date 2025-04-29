@@ -32,6 +32,7 @@ class QueuePage(Gtk.Box):
     queueview = Gtk.Template.Child()
     _save_queue_as_playlist_button = Gtk.Template.Child()
     _queue_name_entry = Gtk.Template.Child()
+    _hide_playlist_save = Gtk.Template.Child()
 
     def __init__(self):
         super().__init__()
@@ -41,6 +42,7 @@ class QueuePage(Gtk.Box):
         self.window = None
         self._save_queue_as_playlist_button.set_sensitive(False)
         self._save_queue_as_playlist_button.connect("clicked", self.save_queue_button_clicked)
+        self._hide_playlist_save.connect("clicked", self._hide_playlist_save_clicked)
         self._rows = set()
 
 
@@ -124,9 +126,15 @@ class QueuePage(Gtk.Box):
 
         self._client.get_song_async(song.get_song_id(), song.get_title(), self.window.song_file_returned)
 
+    def _hide_playlist_save_clicked(self, event):
+        self._hide_playlist_save.set_visible(False)
+        self._queue_name_entry.set_visible(False)
+        self._queue_name_entry.set_text("")
+
     def save_queue_button_clicked(self, event):
         # First time, show the text field
         if not self._queue_name_entry.is_visible():
+            self._hide_playlist_save.set_visible(True)
             self._queue_name_entry.set_visible(True)
             self._queue_name_entry.grab_focus()
             return

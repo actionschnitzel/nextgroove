@@ -7,8 +7,15 @@
       <property name="orientation">vertical</property>
       <child>
         <object class="GtkBox">
+          <property name="halign">end</property>
           <property name="valign">end</property>
           <property name="orientation">horizontal</property>
+          <child>
+            <object class="GtkButton" id="_save_queue_as_playlist_button">
+              <property name="icon-name">document-save</property>
+              <property name="tooltip-text">Save current queue as playlist</property>
+            </object>
+          </child>
           <child>
             <object class="GtkEntry" id="_queue_name_entry">
               <property name="visible">False</property>
@@ -16,9 +23,10 @@
             </object>
           </child>
           <child>
-            <object class="GtkButton" id="_save_queue_as_playlist_button">
-              <property name="icon-name">document-save</property>
-              <property name="tooltip-text">Save current queue as playlist</property>
+            <object class="GtkButton" id="_hide_playlist_save">
+              <property name="icon-name">window-close-symbolic</property>
+              <property name="visible">False</property>
+              <property name="tooltip-text">Cancel save as playlist</property>
             </object>
           </child>
         </object>
@@ -28,16 +36,4 @@
         </object>
       </child>
     </template>
-    <!--<menu id="queue_song_click_menu">
-      <section>
-        <item>
-          <attribute name="label" translatable="yes">_Play</attribute>
-          <attribute name="action">app.queue_song_play_clicked</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">_Remove_from_queue</attribute>
-          <attribute name="action">app.song_queue_add_end_clicked</attribute>
-        </item>
-      </section>
-    </menu>-->
   </interface>
