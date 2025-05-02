@@ -142,10 +142,8 @@ class QueuePage(Gtk.Box):
         # Second time, take the text field value
         playlist_name = self._queue_name_entry.get_text()
         print(f"Asked to save to a playlist named {playlist_name}")
-        # TODO check name is valid and bomb out and warn if it's not
-        # Reset text and hide for next time
-        self._queue_name_entry.set_text("")
-        self._queue_name_entry.set_visible(False)
+        # No need to check for existing playlist, this always creates a new one
+        self._hide_playlist_save_clicked(None)
         self._client.create_new_playlist_async(playlist_name, self._queue, self.call_update_playlist)
 
     def call_update_playlist(self, one, two, three):
