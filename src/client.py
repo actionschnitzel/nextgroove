@@ -192,14 +192,12 @@ class NextcloudMusicClient(GObject.Object):
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
-        if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
+        if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
             try:
-                os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
+                os.makedirs(NextcloudMusicClient.get_cache_dir())
             except FileExistsError:
                 pass  # Expected to be possible, this is called from multiple threads
-        with open(
-            f"/tmp/net.rosebirch.nextgroove/cover_{save_file}", "wb"
-        ) as cover_file:
+        with open(NextcloudMusicClient.get_cover_from_album_id(save_file), "wb") as cover_file:
             cover_file.write(response.content)
 
     def download_cover_async_generic(self, album_id, cover_url, widget, callback):
@@ -230,11 +228,11 @@ class NextcloudMusicClient(GObject.Object):
             # FIXME if album_details doesn't return, why is that
             return "🤷"  # Well that's not a path
         album_id = album_details["id"]
-        return f"/tmp/net.rosebirch.nextgroove/cover_{album_id}"
+        return NextcloudMusicClient.get_cover_from_album_id(album_id)
 
     def cover_downloaded(self, album_tile, task, baz):
         album_id = task.get_task_data()
-        album_tile.set_cover(f"/tmp/net.rosebirch.nextgroove/cover_{album_id}")
+        album_tile.set_cover(NextcloudMusicClient.get_cover_from_album_id(album_id))
 
 #########################
 
@@ -260,6 +258,7 @@ class NextcloudMusicClient(GObject.Object):
         task.return_value(playlist_id)
 
     def get_playlist_cover(self, playlist_id):
+        # TODO I guess remove these, they aren't coming back
         return f"/tmp/net.rosebirch.nextgroove/cover_playlist_{playlist_id}"
 
     def playlist_cover_downloaded(self, requesting_widget, task, baz):
@@ -406,3 +405,13 @@ class NextcloudMusicClient(GObject.Object):
 
     def call_update_playlist(self, one, two, three):
         self.playlist_async(None)
+
+    def get_cache_dir():
+        if 'XDG_CACHE_HOME' in os.environ:
+            return os.environ['XDG_CACHE_HOME']
+        else:
+            return "/tmp/net.rosebirch.nextgroove/"
+
+    def get_cover_from_album_id(album_id):
+        cache_dir = NextcloudMusicClient.get_cache_dir()
+        return f"{cache_dir}/cover_{album_id}"

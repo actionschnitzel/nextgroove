@@ -23,6 +23,7 @@ from typing import Optional
 
 from gi.repository import GObject, Gtk, Gdk
 from .albumlistitem import AlbumListItem
+from .client import NextcloudMusicClient
 from html import escape
 
 
@@ -93,7 +94,7 @@ class SongRow(Gtk.Box):
         self.album_id = album_id
 
     def set_cover_callback(self, foo, bar, baz):
-        self.cover.set_from_file(f"/tmp/net.rosebirch.nextgroove/cover_{self.album_id}")
+        self.cover.set_from_file(NextcloudMusicClient.get_cover_from_album_id(self.album_id))
 
     def setup_drag(self, parent):
         # Called once before we have a queue_item

@@ -11,6 +11,7 @@
 
 from gettext import gettext as _
 from gi.repository import Gio, GLib, Gdk
+from .client import NextcloudMusicClient
 
 from random import randint
 
@@ -312,6 +313,7 @@ class MPRIS(Server):
         song_title = now_playing.title
         artist_title = self.app._window._client.artist_name_by_id[now_playing.artist_id]
         album_title = self.app._window._client.album_name_by_id[now_playing.album_id]
+        art_url = f"file://{NextcloudMusicClient.get_cover_from_album_id(now_playing.album_id)}"
 
         self.__metadata["mpris:trackid"] = GLib.Variant(
             "o", "/org/mpris/MediaPlayer2/TrackList/NoTrack"
@@ -323,6 +325,7 @@ class MPRIS(Server):
             "s", _(album_title)
         )
         self.__metadata["xesam:artist"] = GLib.Variant("as", [_(artist_title)])
+        self.__metadata["mpris:artUrl"] = GLib.Variant('s', art_url)
         changed_properties = {
           "Metadata": GLib.Variant("a{sv}", self.__metadata),
           "CanGoNext": GLib.Variant("b", True),
@@ -330,7 +333,7 @@ class MPRIS(Server):
           "CanControl": GLib.Variant("b", True),
           "PlaybackStatus": GLib.Variant("s", self._get_status()),
           "CanPlay": GLib.Variant("b", True),
-          "CanPause": GLib.Variant("b", True),
+          "CanPause": GLib.Variant("b", True)
         }
 
         self.PropertiesChanged(self.__MPRIS_PLAYER_IFACE, changed_properties, [])
