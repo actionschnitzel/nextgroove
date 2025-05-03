@@ -183,12 +183,16 @@ class NextcloudMusicClient(GObject.Object):
         return latest_id
 
     def download_cover(self, save_file, cover_url, url_is_absolute=False):
+        if os.path.exists(NextcloudMusicClient.get_cover_from_album_id(save_file)):
+            # Skipping download, cover already exists
+            return
         server=self._server
         # If the url is absolute, take urls off the server
         if url_is_absolute:
             url_parts = urlparse(self._server)
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
+        print(f"Downloading cover at {cover_url_full}")
         response = requests.get(cover_url_full, auth=self._auth)
         if response.status_code != 200:
             print(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
@@ -321,7 +325,7 @@ class NextcloudMusicClient(GObject.Object):
     def get_song(self, song_id):
         # TODO check if already exists and use a cache dir
         # TODO also add some method to clear cache cos could get big
-        print(f"Attempting to call {self._base_url}/files/{song_id}/download")
+        print(f"Downloading song from {self._base_url}/files/{song_id}/download")
         response = requests.get(
             f"{self._base_url}/files/{song_id}/download", auth=self._auth
         )
