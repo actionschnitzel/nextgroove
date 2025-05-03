@@ -114,6 +114,7 @@ class PlaylistHeader(Gtk.Box):
         self.window._queue.append(self.clicked_song)
 
         self.window._client.get_song_async(self.clicked_song.get_song_id(), self.clicked_song.title, self.window.song_file_returned)
+        self.window.controls.set_queue_pos(0)
 
     def song_queue_add_end_clicked(self, event, _):
         if len(self.window._queue) == 0:
