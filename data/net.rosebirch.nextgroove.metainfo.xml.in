@@ -11,10 +11,12 @@
     <p>Nextgroove lets you browse and play songs from your Nextcloud instance (with Nextcloud Music installed).</p>
     <p>Features: </p>
     <ul>
-      <li>Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the Nextcloud ones</li>
+      <li>Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the Nextcloud ones).</li>
+      <li>Does download album art, images in screenshots are modified for copyright reasons.</li>
       <li>Can select music from an album view (most recent first), a full list of songs in the collection, or playlists.</li>
       <li>Can select albums, playlists or individual songs from either to the queue.</li>
       <li>Basic MPRIS support allowing to be controlled via common controls and shortcuts.</li>
+      <li>Can create playlists from the current play queue.</li>
     </ul>
   </description>
 
@@ -54,20 +56,32 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot1.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot1.png</image>
       <caption>Screenshot of the album view of NextGroove</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot2.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot2.png</image>
       <caption>Album details view of NextGroove</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.1.5/screenshots/screenshot3.png</image>
+      <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot3.png</image>
       <caption>Viewing a playlist in NextGroove</caption>
     </screenshot>
   </screenshots>
 
   <releases>
+    <release version="0.2.0" date="2025-05-05">
+      <description translate="no">
+        <p>Save your current play queue as a playlist. Queue items can be reordered.</p>
+        <p>Album covers should be requested less frequently and are cached.</p>
+        <p>Clicking an album in album view goes straight to details.</p>
+        <p>Covers now displayed in playlist and queue view alongside each song and in the now playing area.</p>
+        <p>Covers now displayed via MPRIS in the now playing area.</p>
+        <p>Time formats now displayed in MM:SS format (or H:MM:SS if long enough), rather than truncated to just the seconds if short enough.</p>
+        <p>Duration can be viewed more visually with a level bar widget. Seeking not yet supported.</p>
+        <p>Moving to GNOME SDK 48.</p>
+      </description>
+    </release>
     <release version="0.1.6" date="2025-04-12">
       <description translate="no">
         <p>Updating to work with newer versions of the Nextcloud Music API. This is not backwards compatible though.</p>
