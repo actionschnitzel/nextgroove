@@ -6,11 +6,17 @@
     <property name="title" translatable="yes">NextGroove</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
+    <property name="adaptive-preview">false</property>
     <child>
-      <object class="AdwBreakpoint">
+      <object class="AdwBreakpoint" id="breaker">
          <condition>max-width: 600sp</condition>
         <setter object="switcher_bar" property="reveal">True</setter>
           <setter object="header_bar" property="title-widget"/>
+        </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint" id="breaker2">
+         <condition>min-width: 599sp</condition>
         </object>
     </child>
     <property name="content">
@@ -52,7 +58,17 @@
                 </property>
               </object>
             </child>
-
+            <child>
+              <object class="AdwViewStackPage" id="fake_stack">
+                <property name="name"></property>
+                <property name="title"></property>
+                <property name="icon-name">media-optical-cd-audio-symbolic</property>
+                <property name="visible">True</property>
+                <property name="child">
+                  <object class="GtkBox"></object>
+                </property>
+              </object>
+            </child>
             <child>
               <object class="AdwViewStackPage" id="album_stack">
                 <property name="name">albums</property>

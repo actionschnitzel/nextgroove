@@ -73,6 +73,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     playlist_stack = Gtk.Template.Child("playlist_stack")
     queue_stack = Gtk.Template.Child("queue_stack")
     artist_stack = Gtk.Template.Child("artist_stack")
+    breaker = Gtk.Template.Child()
+    breaker2 = Gtk.Template.Child()
+    fake_stack = Gtk.Template.Child()
 
     # Data objects
     _settings = None
@@ -94,6 +97,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._artists = Gio.ListStore()
         self._selected_artist_content = Gio.ListStore()
         self._artist_albums = Gio.ListStore()
+        self.breaker.connect("apply", self.apply)
+        self.breaker2.connect("apply", self.apply)
+
+    def apply(self, _):
+        """
+        Need to keep this visible initially so that when the breakpoint is triggered,
+        there is more than one item visible, or the switcher_bar remains hidden forever.
+        Also hooked up to being larger than a certain amount to hide the fake one for the same reason
+        """
+        self.fake_stack.props.visible = False
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -181,6 +194,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             return
 
         # Hide welcome view
+        self.fake_stack.props.visible = False
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
