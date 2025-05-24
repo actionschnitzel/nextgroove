@@ -70,6 +70,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.2.1" date="2025-05-24">
+      <description translate="no">
+        <p>Fix issue where switcher bar wasn't displayed, mostly on mobile devices on startup.</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2025-05-05">
       <description translate="no">
         <p>Save your current play queue as a playlist. Queue items can be reordered.</p>
