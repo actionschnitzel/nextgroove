@@ -44,6 +44,7 @@ class NextcloudmusicApplication(Adw.Application):
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
+        self.cookie = 0
 
 
     def do_activate(self):
@@ -133,6 +134,28 @@ class NextcloudmusicApplication(Adw.Application):
         super().quit()
         # Update any changed settings
         self._window.settings.apply()
+
+    def prevent_suspend(self):
+        if self.cookie != 0:
+            print("Already inhibiting suspend, returning")
+            return
+
+        self.cookie = self.inhibit(
+            self._window,
+            Gtk.ApplicationInhibitFlags.SUSPEND,
+            "playing music"
+        )
+        if self.cookie != 0:
+            print("Successfully inhibited suspend.")
+        else:
+            print("FAILED to inhibit suspend")
+
+    def allow_suspend(self):
+        self.uninhibit(
+            self.cookie
+        )
+        print("Allowing suspend again")
+        self.cookie = 0
 
 
 def main(version):

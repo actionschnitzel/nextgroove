@@ -90,6 +90,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         """Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
+        self.application = kwargs['application']
         self._settings = Gio.Settings.new("net.rosebirch.nextgroove")
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
@@ -111,6 +112,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def set_mpris(self, mpris):
         self.mpris = mpris
         self.controls.set_mpris(mpris)
+        self.controls.set_application(self.application)
 
     def set_client(self, client):
         """Connections created to link everything.
@@ -607,6 +609,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # and then connect the damn signals again
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
+        # Playing music, don't suspend
+        self.application.prevent_suspend()
         self.controls.connections(self._client, self._media, self._queue, self)
         # Get QueueItem from queue to get full details
         self.controls.set_now_playing(self.current_song())

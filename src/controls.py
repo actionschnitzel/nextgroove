@@ -68,6 +68,7 @@ class Controls(Gtk.ActionBar):
         self.queue_item = None
         self.queue_pos = -1
         self.duration_scale.set_size_request(150,1)
+        self.application = None
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -118,10 +119,12 @@ class Controls(Gtk.ActionBar):
         if self._media.get_playing():
             print("Pausing")
             self._media.pause()
+            self.application.allow_suspend()
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
         elif self._media.get_duration() > 0:
             print("Play")
             self._media.play()
+            self.application.prevent_suspend()
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
         else:
             print("Likely no media loaded yet, no action from play/pause")
@@ -154,6 +157,7 @@ class Controls(Gtk.ActionBar):
     def on_next_button_pressed(self, event):
         if len(self._queue) == 0:
             print("Queue empty, ignoring next button")
+            self.application.allow_suspend()
             return
 
         current_song_queue_item = self._queue[self.queue_pos]
@@ -166,6 +170,7 @@ class Controls(Gtk.ActionBar):
         if not song_queue_item:
             print("Reached end of queue, not playing new song.")
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
+            self.application.allow_suspend()
             return
 
         current_song_queue_item.set_now_playing(False)
@@ -247,3 +252,6 @@ class Controls(Gtk.ActionBar):
             print("Not initialized queue_pos yet")
             return
         self.queue_pos += increment
+
+    def set_application(self, application):
+        self.application = application
