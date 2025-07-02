@@ -150,6 +150,7 @@ class QueuePage(Gtk.Box):
         self._client.playlist_async(None)
 
     def queue_items_changed(self, position, removed, added, user_data):
+        self.window.queue_stack.set_badge_number(self._queue.get_n_items())
         if self._queue.get_n_items() == 0:
             self._save_queue_as_playlist_button.set_sensitive(False)
         else:
