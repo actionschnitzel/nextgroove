@@ -301,6 +301,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
         self.controls.set_queue_pos(0)
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
+        self.controls.start_loading()
 
 
     def album_view_details_clicked(self, event, something):
@@ -475,6 +476,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self._queue.append(song_item)
         self.controls.set_queue_pos(0)
         self._client.get_song_async(song_id, song_name, self.song_file_returned)
+        self.controls.start_loading()
 
     def artist_album_append_clicked_artist_view(self, _):
         album = self.album_details_content.album
@@ -548,6 +550,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         first_song = self._queue[0]
         first_song.set_now_playing(True)
         self._client.get_song_async(first_song.song_id, first_song.title, self.song_file_returned)
+        self.controls.start_loading()
 
     def playlist_append_clicked(self, event):
         playlist = self.playlistdetails.playlist
@@ -647,6 +650,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         header_object.queue_draw()
 
     def song_file_returned(self, source_object, result, user_data):
+        self.controls.finished_loading()
+        if result.had_error():
+            print("Had an error, stop")
+            self.controls.play_pause_button.set_icon_name("network-error")
+            return
         song_file = result.propagate_value().value
         self.play_song(song_file, self._client.song_title_last_callback)
 

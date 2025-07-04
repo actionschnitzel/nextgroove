@@ -98,6 +98,13 @@
       <object class="GtkBox">
         <property name="halign">end</property>
         <child>
+          <object class="AdwSpinner" id="loading">
+            <property name="visible">false</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkButton" id="volumebutton">
             <property name="label">vol</property>
             <property name="icon-name">audio-volume-high-symbolic</property>

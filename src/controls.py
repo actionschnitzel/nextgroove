@@ -45,6 +45,7 @@ class Controls(Gtk.ActionBar):
     max_duration_label = Gtk.Template.Child()
     cover = Gtk.Template.Child()
     duration_scale = Gtk.Template.Child()
+    loading = Gtk.Template.Child()
 
     # Data refs
     _client = None
@@ -137,6 +138,7 @@ class Controls(Gtk.ActionBar):
         print("Previous button pressed")
         if self.queue_pos == 0:
             print("No previous song, just replay the same one")
+            current_song = self._queue[self.queue_pos]
             song_file = self._client.get_song(current_song.get_song_id())
             self._window.play_song(song_file, current_song.get_title())
             return
@@ -149,10 +151,19 @@ class Controls(Gtk.ActionBar):
         current_song_queue_item.set_now_playing(False)
         current_song_queue_item.notify("now_playing")
         print(f"Try and play {previous_song_queue_item.get_title()}")
-        song_file = self._client.get_song(previous_song_queue_item.get_song_id())
+        self._client.get_song_async(previous_song_queue_item.get_song_id(), previous_song_queue_item.get_title(), self.prev_song_file_returned)
+        self.start_loading()
 
+    def prev_song_file_returned(self, source_object, result, user_data):
         self.increment_queue_pos(-1)
-        self._window.play_song(song_file, previous_song_queue_item.get_title())
+        self.finished_loading()
+        if result.had_error():
+            print("Had an error, stop")
+            self.play_pause_button.set_icon_name("network-error")
+            return
+        song_file = result.propagate_value().value
+        self._window.play_song(song_file, self._client.song_title_last_callback)
+
 
     def on_next_button_pressed(self, event):
         if len(self._queue) == 0:
@@ -177,10 +188,19 @@ class Controls(Gtk.ActionBar):
         current_song_queue_item.notify("now_playing")
         song_queue_item.set_now_playing(True)
         song_queue_item.notify("now_playing")
-        song_file = self._client.get_song(song_queue_item.get_song_id())
 
+        self._client.get_song_async(song_queue_item.get_song_id(), song_queue_item.get_title(), self.next_song_file_returned)
+        self.start_loading()
+
+    def next_song_file_returned(self, source_object, result, user_data):
         self.increment_queue_pos()
-        self._window.play_song(song_file, song_queue_item.get_title())
+        self.finished_loading()
+        if result.had_error():
+            print("Had an error, stop")
+            self.play_pause_button.set_icon_name("network-error")
+            return
+        song_file = result.propagate_value().value
+        self._window.play_song(song_file, self._client.song_title_last_callback)
 
     def set_now_playing(self, queue_item):
 
@@ -255,3 +275,9 @@ class Controls(Gtk.ActionBar):
 
     def set_application(self, application):
         self.application = application
+
+    def start_loading(self):
+        self.loading.set_visible(True)
+
+    def finished_loading(self):
+        self.loading.set_visible(False)

@@ -57,10 +57,10 @@ class NextcloudMusicClient(GObject.Object):
         self.playlist_save_buffer = []
 
     def _collection(self):
-        return requests.get(f"{self._base_url}/collection", auth=self._auth)
+        return requests.get(f"{self._base_url}/collection", auth=self._auth, timeout=5)
 
     def _playlists(self):
-        return requests.get(f"{self._base_url}/playlists", auth=self._auth)
+        return requests.get(f"{self._base_url}/playlists", auth=self._auth, timeout=5)
 
     def album_details(self, album_list_item):
         if not self.collection:
@@ -193,7 +193,7 @@ class NextcloudMusicClient(GObject.Object):
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
         print(f"Downloading cover at {cover_url_full}")
-        response = requests.get(cover_url_full, auth=self._auth)
+        response = requests.get(cover_url_full, auth=self._auth, timeout=5)
         if response.status_code != 200:
             print(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
@@ -327,7 +327,7 @@ class NextcloudMusicClient(GObject.Object):
         # TODO also add some method to clear cache cos could get big
         print(f"Downloading song from {self._base_url}/files/{song_id}/download")
         response = requests.get(
-            f"{self._base_url}/files/{song_id}/download", auth=self._auth
+            f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
         )
         if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
@@ -349,8 +349,12 @@ class NextcloudMusicClient(GObject.Object):
 
     def get_song_sync(self, task, source_object, task_data, cancellable):
         song_id = task.get_task_data()
-        song_file = self.get_song(song_id)
-        task.return_value(song_file)
+        try:
+            song_file = self.get_song(song_id)
+            task.return_value(song_file)
+        except Exception as e:
+            print(f"Error during song download: {str(e)}")
+            task.return_error(GLib.Error(str(e)))
 
     def create_new_playlist_async(self, playlist_name, songs, callback):
         print("Starting multistage playlist creation calls")
