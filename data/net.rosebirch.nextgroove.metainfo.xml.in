@@ -70,6 +70,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.2.3" date="2025-07-07">
+      <description translate="no">
+        <p>Queue shows a badge number indicating size of the queue, so even if the playback isn't instantaneous, there's some feedback.</p>
+        <p>Also shows a spinner during downloading, again adding feedback for slow network situations.</p>
+        <p>Any stdout is also logged now to a file, this cycles on each run.</p>
+        <p>If there is a network error during song download, a "network disconnect" icon is displayed on the controls, though clicking it doesn't retry yet.</p>
+      </description>
+    </release>
     <release version="0.2.2" date="2025-07-01">
       <description translate="no">
         <p>Prevent automatic suspending during music playback.</p>

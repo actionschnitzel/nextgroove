@@ -101,7 +101,7 @@ class NextcloudmusicApplication(Adw.Application):
             application_icon="net.rosebirch.nextgroove",
             comments="Linux client for Nextcloud Music",
             developer_name="Dean Birch",
-            version="0.2.2",
+            version="0.2.3",
             copyright="© Dean Birch\
             \
 \n\nThis application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details.",
