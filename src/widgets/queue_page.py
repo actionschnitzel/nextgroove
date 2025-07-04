@@ -20,6 +20,10 @@
 from __future__ import annotations
 from typing import Optional
 
+
+import logging
+
+
 from gi.repository import GObject, Gtk, Gdk
 from .song_row import SongRow
 
@@ -116,7 +120,7 @@ class QueuePage(Gtk.Box):
     def queue_clicked(self, event, queue_id):
         """When (double) clicked on the queue item, play it!"""
         song = self._queue[queue_id]
-        print(f"Clicked on song {song.get_title()} from queue")
+        logging.debug(f"Clicked on song {song.get_title()} from queue")
         # Set other( or all until next section) songs in queue to not playing
         for _song in self._queue:
             _song.set_now_playing(False)
@@ -141,7 +145,7 @@ class QueuePage(Gtk.Box):
 
         # Second time, take the text field value
         playlist_name = self._queue_name_entry.get_text()
-        print(f"Asked to save to a playlist named {playlist_name}")
+        logging.info(f"Asked to save to a playlist named {playlist_name}")
         # No need to check for existing playlist, this always creates a new one
         self._hide_playlist_save_clicked(None)
         self._client.create_new_playlist_async(playlist_name, self._queue, self.call_update_playlist)

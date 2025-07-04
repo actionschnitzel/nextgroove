@@ -17,6 +17,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+
 from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gio, GObject, GLib
@@ -112,32 +114,32 @@ class Controls(Gtk.ActionBar):
 
     def on_play_pause_button_pressed(self, event):
         if not self._media:
-            print("Not playing yet, ignoring play/pause")
+            logging.debug("Not playing yet, ignoring play/pause")
             return
-        print(
+        logging.debug(
             f"play/pause pressed"
         )
         if self._media.get_playing():
-            print("Pausing")
+            logging.info("Pausing")
             self._media.pause()
             self.application.allow_suspend()
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
         elif self._media.get_duration() > 0:
-            print("Play")
+            logging.info("Play")
             self._media.play()
             self.application.prevent_suspend()
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
         else:
-            print("Likely no media loaded yet, no action from play/pause")
+            logging.debug("Likely no media loaded yet, no action from play/pause")
         self.mpris._on_playing_changed(None, None)
 
     def on_previous_button_pressed(self, event):
         if len(self._queue) == 0:
-            print("Queue empty, ignoring previous button")
+            logging.debug("Queue empty, ignoring previous button")
             return
-        print("Previous button pressed")
+        logging.debug("Previous button pressed")
         if self.queue_pos == 0:
-            print("No previous song, just replay the same one")
+            logging.info("No previous song, just replay the same one")
             current_song = self._queue[self.queue_pos]
             song_file = self._client.get_song(current_song.get_song_id())
             self._window.play_song(song_file, current_song.get_title())
@@ -150,7 +152,7 @@ class Controls(Gtk.ActionBar):
         previous_song_queue_item.notify("now_playing")
         current_song_queue_item.set_now_playing(False)
         current_song_queue_item.notify("now_playing")
-        print(f"Try and play {previous_song_queue_item.get_title()}")
+        logging.info(f"Try and play {previous_song_queue_item.get_title()}")
         self._client.get_song_async(previous_song_queue_item.get_song_id(), previous_song_queue_item.get_title(), self.prev_song_file_returned)
         self.start_loading()
 
@@ -158,7 +160,7 @@ class Controls(Gtk.ActionBar):
         self.increment_queue_pos(-1)
         self.finished_loading()
         if result.had_error():
-            print("Had an error, stop")
+            logging.error("Had an error, stop")
             self.play_pause_button.set_icon_name("network-error")
             return
         song_file = result.propagate_value().value
@@ -167,7 +169,7 @@ class Controls(Gtk.ActionBar):
 
     def on_next_button_pressed(self, event):
         if len(self._queue) == 0:
-            print("Queue empty, ignoring next button")
+            logging.debug("Queue empty, ignoring next button")
             self.application.allow_suspend()
             return
 
@@ -179,7 +181,7 @@ class Controls(Gtk.ActionBar):
             song_queue_item = self._queue[next_song_index]
 
         if not song_queue_item:
-            print("Reached end of queue, not playing new song.")
+            logging.info("Reached end of queue, not playing new song.")
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
             self.application.allow_suspend()
             return
@@ -196,7 +198,7 @@ class Controls(Gtk.ActionBar):
         self.increment_queue_pos()
         self.finished_loading()
         if result.had_error():
-            print("Had an error, stop")
+            logging.error("Had an error, stop")
             self.play_pause_button.set_icon_name("network-error")
             return
         song_file = result.propagate_value().value
@@ -235,7 +237,7 @@ class Controls(Gtk.ActionBar):
         return True
 
     def song_ended(self, foo, bar):
-        print("Song ended")
+        logging.info("Song ended")
         self.on_next_button_pressed(None)
 
     def volume_clicked(self, event):
@@ -269,7 +271,7 @@ class Controls(Gtk.ActionBar):
 
     def increment_queue_pos(self, increment=1):
         if self.queue_pos < 0:
-            print("Not initialized queue_pos yet")
+            logging.debug("Not initialized queue_pos yet")
             return
         self.queue_pos += increment
 

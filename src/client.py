@@ -17,6 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
 import requests
 import json
 import os
@@ -72,7 +73,7 @@ class NextcloudMusicClient(GObject.Object):
                 for album in artist["albums"]:
                     if album["name"] == album_list_item.album:
                         return album
-        print("ERROR client.album_details could not find an album")
+        logging.error("ERROR client.album_details could not find an album")
         return None
 
     def get_album_cover_url_from_song_id(self, song_id):
@@ -100,14 +101,14 @@ class NextcloudMusicClient(GObject.Object):
                         queue_item.set_duration(song['length'])
                         queue_item.set_track_id(song["id"])
                         return queue_item
-        print(f"get_track_from_id: Could not find track_id {song_id}")
+        logging.error(f"get_track_from_id: Could not find track_id {song_id}")
         return None
 
     def get_artist_id_for_album_list_item(self, album_list_item):
         for artist in self.collection:
             if artist["name"] == album_list_item.artist:
                 return artist["id"]
-        print("ERROR client.get_artist_id_for_album_list_item could not find artist")
+        logging.error("client.get_artist_id_for_album_list_item could not find artist")
         return None
 
     def update_collection(self):
@@ -121,7 +122,7 @@ class NextcloudMusicClient(GObject.Object):
         try:
             response = self._collection()
             if response.status_code != 200:
-                print(f"return code was {response.status_code}")
+                logging.error(f"return code was {response.status_code}")
                 # Send errors back for toast on welcome page
                 return f"Error: got HTTP status code {response.status_code} when checking collection"
             self.collection = json.loads(response.text)
@@ -129,7 +130,7 @@ class NextcloudMusicClient(GObject.Object):
             return self.collection
         except requests.exceptions.RequestException as e:
             # Send errors back for toast on welcome page
-            print(f"Exception in updating collection {e}")
+            logging.error(f"Exception in updating collection {e}")
             return f"Error: Got exception {e}"
 
     def update_albums(self):
@@ -152,7 +153,7 @@ class NextcloudMusicClient(GObject.Object):
                 album_item.set_collection(album)
                 self.albums_before_sorting.append(album_item)
 
-        print(f"Retrieved albums and we have {len(self.albums_before_sorting)} albums")
+        logging.info(f"Retrieved albums and we have {len(self.albums_before_sorting)} albums")
         for album in sorted(
             self.albums_before_sorting,
             key=cmp_to_key(
@@ -162,7 +163,7 @@ class NextcloudMusicClient(GObject.Object):
             reverse=True,
         ):
             self.albums.append(album)
-        print(f"Sorted albums and we have {len(self.albums)} albums")
+        logging.info(f"Sorted albums and we have {len(self.albums)} albums")
         self.albums_before_sorting = None
 
     def latest_song_id_in_album(self, album_list_item):
@@ -192,10 +193,10 @@ class NextcloudMusicClient(GObject.Object):
             url_parts = urlparse(self._server)
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
-        print(f"Downloading cover at {cover_url_full}")
+        logging.info(f"Downloading cover at {cover_url_full}")
         response = requests.get(cover_url_full, auth=self._auth, timeout=5)
         if response.status_code != 200:
-            print(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
+            logging.error(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
             try:
                 os.makedirs(NextcloudMusicClient.get_cache_dir())
@@ -270,7 +271,7 @@ class NextcloudMusicClient(GObject.Object):
         requesting_widget.set_cover(self.get_playlist_cover(playlist_id))
 
     def collection_async(self, callback):
-        print("Starting async call")
+        logging.debug("Starting async call")
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(self.collection_sync)
@@ -280,7 +281,7 @@ class NextcloudMusicClient(GObject.Object):
         task.return_value(collection)
 
     def playlist_async(self, callback):
-        print("Starting async call for playlists")
+        logging.debug("Starting async call for playlists")
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(self.playlist_sync)
@@ -293,7 +294,7 @@ class NextcloudMusicClient(GObject.Object):
         try:
             response = self._playlists()
             if response.status_code != 200:
-                print(f"return code was {response.status_code}")
+                logging.error(f"return code was {response.status_code}")
                 return None
             playlists = json.loads(response.text)
             self.parse_playlist_json(playlists)
@@ -302,7 +303,7 @@ class NextcloudMusicClient(GObject.Object):
             # Updating playlists occurs at same time as collection is updated.
             # As the error is thrown back for display, ignore this error
             # as _likely_ it will be the same error as collection error.
-            print(f"Exception in updating collection {e}")
+            logging.error(f"Exception in updating collection {e}")
             return None
 
     def parse_playlist_json(self, playlist_json):
@@ -325,7 +326,7 @@ class NextcloudMusicClient(GObject.Object):
     def get_song(self, song_id):
         # TODO check if already exists and use a cache dir
         # TODO also add some method to clear cache cos could get big
-        print(f"Downloading song from {self._base_url}/files/{song_id}/download")
+        logging.info(f"Downloading song from {self._base_url}/files/{song_id}/download")
         response = requests.get(
             f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
         )
@@ -340,7 +341,7 @@ class NextcloudMusicClient(GObject.Object):
         return os.path.abspath(song_location)
 
     def get_song_async(self, song_id, song_title, callback):
-        print("Starting async song download call")
+        logging.debug("Starting async song download call")
         self.song_title_last_callback = song_title
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
@@ -353,11 +354,11 @@ class NextcloudMusicClient(GObject.Object):
             song_file = self.get_song(song_id)
             task.return_value(song_file)
         except Exception as e:
-            print(f"Error during song download: {str(e)}")
+            logging.error(f"Error during song download: {str(e)}")
             task.return_error(GLib.Error(str(e)))
 
     def create_new_playlist_async(self, playlist_name, songs, callback):
-        print("Starting multistage playlist creation calls")
+        logging.debug("Starting multistage playlist creation calls")
         self.playlist_save_buffer = []
         self.playlist_save_buffer.append({"songs": songs, "name": playlist_name})
         task = Gio.Task.new(self, None, callback, None)
@@ -375,17 +376,17 @@ class NextcloudMusicClient(GObject.Object):
             f"{self._base_url}/playlists", auth=self._auth, json=in_data
         )
         if response.status_code != 200:
-            print(f"Got {response.status_code} http status from POST at playlists api endpoint")
+            logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
             return
         # Now need to add song
         playlist_create_response = json.loads(response.text)
         if "id" not in playlist_create_response:
-            print("Unexpected response from /api/playlists POST")
+            logging.error("Unexpected response from /api/playlists POST")
             return
         new_playlist_id = playlist_create_response["id"]
         track_ids = []
         for song in songs:
-            print(f"Adding song {song.title} and id {song.get_track_id()} to playlist")
+            logging.info(f"Adding song {song.title} and id {song.get_track_id()} to playlist")
             track_ids.append(str(song.get_track_id()))
         tracks_csv = ",".join(track_ids)
         track_data = {"track": tracks_csv}
@@ -396,7 +397,7 @@ class NextcloudMusicClient(GObject.Object):
 
 
     def delete_playlist_async(self, playlist_id):
-        print(f"Deleting playlist with ID {playlist_id}")
+        logging.info(f"Deleting playlist with ID {playlist_id}")
         task = Gio.Task.new(self, None, self.call_update_playlist, None)
         task.set_return_on_cancel(False)
         task.set_task_data(playlist_id)
@@ -408,7 +409,7 @@ class NextcloudMusicClient(GObject.Object):
             f"{self._base_url}/playlists/{playlist_id}", auth=self._auth
         )
         if response.status_code != 200:
-            print(f"Got {response.status_code} http status from POST at playlists api endpoint")
+            logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
             return
 
     def call_update_playlist(self, one, two, three):

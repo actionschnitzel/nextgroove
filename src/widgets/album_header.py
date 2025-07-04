@@ -17,9 +17,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
 from __future__ import annotations
 from typing import Optional
+
+import logging
 
 from gi.repository import GObject, Gtk, Gio
 from .albumlistitem import AlbumListItem
@@ -103,7 +104,7 @@ class AlbumHeader(Gtk.Box):
         self.clicked_song = song_thing
 
     def song_play_clicked(self, event, _):
-        print(f"Let's play {self.clicked_song.title}")
+        logging.info(f"Let's play {self.clicked_song.title}")
         self.window._queue.remove_all()
         self.clicked_song.set_now_playing(True)
         self.window._queue.append(self.clicked_song)
@@ -113,7 +114,7 @@ class AlbumHeader(Gtk.Box):
 
     def song_queue_add_end_clicked(self, event, _):
         if len(self.window._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
+            logging.debug("Same as play if the queue is empty, redirecting")
             self.song_play_clicked(None, None)
             return
 
@@ -121,7 +122,7 @@ class AlbumHeader(Gtk.Box):
 
     def song_queue_add_next_clicked(self, event, _):
         if len(self.window._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
+            logging.debug("Same as play if the queue is empty, redirecting")
             self.song_play_clicked(None, None)
             return
 

@@ -17,6 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
 import os.path
 from html import escape
 
@@ -118,7 +119,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """Connections created to link everything.
         Touches album view, queue view, media controls"""
         self._client = client
-        print("Setting client")
+        logging.debug("Setting client")
 
         # We like Albums
         if not self.album_view.props.factory:
@@ -222,9 +223,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                     song_item.set_track_id(song['id'])
                     song_item.set_duration(song['length'])
                     self._songs.append([artist_string, album_string, song_string, song_item])
-        print(f"we have {len(self._songs)} songs")
+        logging.info(f"we have {len(self._songs)} songs")
 
-        print(f"We have {len(self._artists)} artists")
+        logging.info(f"We have {len(self._artists)} artists")
 
     def get_artist_name(self, thing):
         return thing['name'].lower()
@@ -278,7 +279,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def album_play_clicked_generic(self, album):
         album_id = album.album_id
-        print(f"Clicked play on album '{album.album}' from artist {album.artist}")
+        logging.info(f"Clicked play on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
@@ -308,7 +309,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_index = self._album_selected
         album = self._client.albums[album_index]
         album_id = album.album_id
-        print(f"Clicked on album {album.album}")
+        logging.info(f"Clicked on album {album.album}")
         self.album_tab_details_content.set_album(album)
 
         self.album_tab_details_content.set_tracks(album.tracks)
@@ -329,12 +330,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def album_queue_add_end_clicked_generic(self, album):
         if len(self._queue) == 0:
-            print("Add to end of queue is identical to play when no queue: rerouting...")
+            logging.debug("Add to end of queue is identical to play when no queue: rerouting...")
             self.album_play_clicked_generic(album)
             return
 
         album_id = album.album_id
-        print(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
+        logging.info(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
@@ -358,11 +359,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def album_queue_play_next_generic(self, album):
         album_id = album.album_id
         if len(self._queue) == 0:
-            print("Add to next in queue is identical to play when no queue: rerouting...")
+            logging.info("Add to next in queue is identical to play when no queue: rerouting...")
             self.album_play_clicked_generic(album)
             return
 
-        print(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
+        logging.info(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
@@ -399,7 +400,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def artist_clicked(self, artist_list_id, list_number):
         artist = self._artists[list_number]
-        print(f"Clicked on artist {artist.artist}")
+        logging.debug(f"Clicked on artist {artist.artist}")
         self._artist_albums.remove_all()
         artist_collection = self._client.artist_details(artist)
         for album in artist_collection['albums']:
@@ -430,9 +431,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_label.set_halign(Gtk.Align.START)
 
     def album_sidebar_clicked(self, artistalbum_list_id, list_number):
-        print("clicked album sidebar")
+        logging.debug("clicked album sidebar")
         album = self._artist_albums[list_number]
-        print(f"Clicked on album {album.album}")
+        logging.debug(f"Clicked on album {album.album}")
         self.album_details_content.set_album(album)
 
         self.album_details_content.set_tracks(album.tracks)
@@ -518,7 +519,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def playlist_clicked(self, event, playlist_id):
         playlist = self._client.playlists[playlist_id]
         playlist_name = playlist.playlist_name
-        print(f"Clicked playlist {playlist_name}")
+        logging.debug(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
 
         self.playlistdetails.set_playlist(playlist)
@@ -533,13 +534,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def playlist_play_clicked(self, event):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
-        print(f"Clicked playlist {playlist_name}")
+        logging.debug(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
 
         self._queue.remove_all()
 
         if len(track_ids)==0:
-            print("empty playlist")
+            logging.debug("empty playlist")
             return
 
         for track in track_ids:
@@ -555,7 +556,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def playlist_append_clicked(self, event):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
-        print(f"Clicked playlist {playlist_name}")
+        logging.debug(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
 
         if len(self._queue) == 0:
@@ -563,7 +564,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             return
 
         if len(track_ids)==0:
-            print("empty playlist")
+            logging.debug("empty playlist")
             return
 
         for track in track_ids:
@@ -573,7 +574,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def playlist_append_next_clicked(self, event):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
-        print(f"Clicked playlist {playlist_name}")
+        logging.debug(f"Clicked playlist {playlist_name}")
         track_ids = playlist.track_ids
 
         if len(self._queue) == 0:
@@ -581,7 +582,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             return
 
         if len(track_ids)==0:
-            print("empty playlist")
+            logging.debug("empty playlist")
             return
 
         for track in reversed(track_ids):
@@ -599,7 +600,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def current_song(self):
         queue_pos = self.controls.queue_pos
         if len(self._queue)==0:
-            print("Queue not initialized yet")
+            logging.warning("Queue not initialized yet")
             return None
         return self._queue[queue_pos]
 
@@ -652,7 +653,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def song_file_returned(self, source_object, result, user_data):
         self.controls.finished_loading()
         if result.had_error():
-            print("Had an error, stop")
+            logging.error("Had an error, stop")
             self.controls.play_pause_button.set_icon_name("network-error")
             return
         song_file = result.propagate_value().value

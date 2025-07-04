@@ -9,6 +9,8 @@
 # Copyright (c) 2020 Rafael Mardojai CM
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+
 from gettext import gettext as _
 from gi.repository import Gio, GLib, Gdk
 from .client import NextcloudMusicClient
@@ -69,7 +71,7 @@ class Server:
             else:
                 invocation.return_value(None)
         except Exception as e:
-            print(e)
+            logging.error(e)
 
 
 class MPRIS(Server):

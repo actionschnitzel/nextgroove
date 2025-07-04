@@ -17,9 +17,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
 from __future__ import annotations
 from typing import Optional
+
+
+import logging
+
 
 from gi.repository import GObject, Gtk, Gdk
 from .albumlistitem import AlbumListItem
@@ -115,6 +118,6 @@ class SongRow(Gtk.Box):
 
 
     def on_drag_drop(self, drop_target, source, x, y):
-        print(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
-        print(f"That's moving index {source.index} to {self.index}")
+        logging.debug(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
+        logging.debug(f"That's moving index {source.index} to {self.index}")
         self.window.reorder_queue(source.index, self.index)

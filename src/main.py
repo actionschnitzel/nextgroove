@@ -17,6 +17,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+import os
 import sys
 import gi
 from .client import NextcloudMusicClient
@@ -28,6 +30,7 @@ from gi.repository import Gtk, Gio, Adw
 from .window import NextcloudmusicWindow
 from .settings import NextcloudmusicSettingsWindow
 from .mpris import MPRIS
+from .client import NextcloudMusicClient
 
 
 class NextcloudmusicApplication(Adw.Application):
@@ -137,7 +140,7 @@ class NextcloudmusicApplication(Adw.Application):
 
     def prevent_suspend(self):
         if self.cookie != 0:
-            print("Already inhibiting suspend, returning")
+            logging.debug("Already inhibiting suspend, returning")
             return
 
         self.cookie = self.inhibit(
@@ -146,19 +149,25 @@ class NextcloudmusicApplication(Adw.Application):
             "playing music"
         )
         if self.cookie != 0:
-            print("Successfully inhibited suspend.")
+            logging.info("Successfully inhibited suspend.")
         else:
-            print("FAILED to inhibit suspend")
+            logging.warning("FAILED to inhibit suspend")
 
     def allow_suspend(self):
         self.uninhibit(
             self.cookie
         )
-        print("Allowing suspend again")
+        logging.info("Allowing suspend again")
         self.cookie = 0
 
 
 def main(version):
     """The application's entry point."""
+    # FIXME remove filemode append and go back to just doing one after work out what's going on
+    logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "nextgroove.log"), filemode='a')
+    logging.getLogger().addHandler(logging.StreamHandler())
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.debug(f"Logging under {NextcloudMusicClient.get_cache_dir()}")
+
     app = NextcloudmusicApplication()
     return app.run(sys.argv)

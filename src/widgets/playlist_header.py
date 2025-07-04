@@ -17,9 +17,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
 from __future__ import annotations
 from typing import Optional
+
+import logging
 
 from gi.repository import GObject, Gtk, Gio
 from .playlist import PlaylistItem
@@ -108,7 +109,7 @@ class PlaylistHeader(Gtk.Box):
         self.clicked_song = song_thing
 
     def song_play_clicked(self, event, _):
-        print(f"Let's play {self.clicked_song.title}")
+        logging.info(f"Let's play {self.clicked_song.title}")
         self.window._queue.remove_all()
         self.clicked_song.set_now_playing(True)
         self.window._queue.append(self.clicked_song)
@@ -118,7 +119,7 @@ class PlaylistHeader(Gtk.Box):
 
     def song_queue_add_end_clicked(self, event, _):
         if len(self.window._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
+            logging.debug("Same as play if the queue is empty, redirecting")
             self.song_play_clicked(None, None)
             return
 
@@ -126,7 +127,7 @@ class PlaylistHeader(Gtk.Box):
 
     def song_queue_add_next_clicked(self, event, _):
         if len(self.window._queue) == 0:
-            print("Same as play if the queue is empty, redirecting")
+            logging.debug("Same as play if the queue is empty, redirecting")
             self.song_play_clicked(None, None)
             return
 
@@ -140,7 +141,7 @@ class PlaylistHeader(Gtk.Box):
 
     def delete_playlist_clicked(self, event):
         playlist_name = escape(self.playlist.playlist_name)
-        print(f"Confirm whether to delete {playlist_name} (ID {self.playlist.playlist_id})")
+        logging.info(f"Confirm whether to delete {playlist_name} (ID {self.playlist.playlist_id})")
         self.playlist_to_delete = self.playlist.playlist_id
 
         dialog = Gtk.AlertDialog()
@@ -155,7 +156,7 @@ class PlaylistHeader(Gtk.Box):
         if result == 0:
             # Chose to cancel
             return
-        print(f"Delete playlist {self.playlist.playlist_id}")
+        logging.info(f"Delete playlist {self.playlist.playlist_id}")
 
         self.window.playlist_nav_view.pop()
         self.window._client.delete_playlist_async(self.playlist.playlist_id)
