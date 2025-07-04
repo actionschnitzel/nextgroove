@@ -163,8 +163,7 @@ class NextcloudmusicApplication(Adw.Application):
 
 def main(version):
     """The application's entry point."""
-    # FIXME remove filemode append and go back to just doing one after work out what's going on
-    logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "nextgroove.log"), filemode='a')
+    logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "nextgroove.log"))
     logging.getLogger().addHandler(logging.StreamHandler())
     logging.getLogger().setLevel(logging.DEBUG)
     logging.debug(f"Logging under {NextcloudMusicClient.get_cache_dir()}")
