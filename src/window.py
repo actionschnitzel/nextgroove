@@ -654,7 +654,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.controls.finished_loading()
         if result.had_error():
             logging.error("Had an error, stop")
-            self.controls.play_pause_button.set_icon_name("network-error")
+            self.controls.network_issue_icon.set_visible(True)
+            self.controls.network_issue_icon.set_tooltip_text(self._client.last_error)
             return
         song_file = result.propagate_value().value
         self.play_song(song_file, self._client.song_title_last_callback)

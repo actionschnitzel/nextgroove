@@ -98,6 +98,13 @@
       <object class="GtkBox">
         <property name="halign">end</property>
         <child>
+          <object class="GtkButton" id="network_issue_icon">
+            <property name="visible">false</property>
+            <property name="icon-name">network-error</property>
+            <property name="sensitive">false</property>
+          </object>
+        </child>
+        <child>
           <object class="AdwSpinner" id="loading">
             <property name="visible">false</property>
             <property name="halign">center</property>

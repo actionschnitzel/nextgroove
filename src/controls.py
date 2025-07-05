@@ -48,6 +48,7 @@ class Controls(Gtk.ActionBar):
     cover = Gtk.Template.Child()
     duration_scale = Gtk.Template.Child()
     loading = Gtk.Template.Child()
+    network_issue_icon = Gtk.Template.Child()
 
     # Data refs
     _client = None
@@ -161,7 +162,8 @@ class Controls(Gtk.ActionBar):
         self.finished_loading()
         if result.had_error():
             logging.error("Had an error, stop")
-            self.play_pause_button.set_icon_name("network-error")
+            self.network_issue_icon.set_visible(True)
+            self.network_issue_icon.set_tooltip_text(self._client.last_error)
             return
         song_file = result.propagate_value().value
         self._window.play_song(song_file, self._client.song_title_last_callback)
@@ -199,7 +201,8 @@ class Controls(Gtk.ActionBar):
         self.finished_loading()
         if result.had_error():
             logging.error("Had an error, stop")
-            self.play_pause_button.set_icon_name("network-error")
+            self.network_issue_icon.set_visible(True)
+            self.network_issue_icon.set_tooltip_text(self._client.last_error)
             return
         song_file = result.propagate_value().value
         self._window.play_song(song_file, self._client.song_title_last_callback)
@@ -280,6 +283,7 @@ class Controls(Gtk.ActionBar):
 
     def start_loading(self):
         self.loading.set_visible(True)
+        self.network_issue_icon.set_visible(False)
 
     def finished_loading(self):
         self.loading.set_visible(False)

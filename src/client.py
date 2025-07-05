@@ -56,6 +56,7 @@ class NextcloudMusicClient(GObject.Object):
         self.album_name_by_id = {}
         self.playlists = Gio.ListStore()
         self.playlist_save_buffer = []
+        self.last_error = ""
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth, timeout=5)
@@ -355,6 +356,7 @@ class NextcloudMusicClient(GObject.Object):
             task.return_value(song_file)
         except Exception as e:
             logging.error(f"Error during song download: {str(e)}")
+            self.last_error = str(e)
             task.return_error(GLib.Error(str(e)))
 
     def create_new_playlist_async(self, playlist_name, songs, callback):
