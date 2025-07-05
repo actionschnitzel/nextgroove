@@ -331,6 +331,8 @@ class NextcloudMusicClient(GObject.Object):
         response = requests.get(
             f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
         )
+        if not response.ok:
+            raise Exception(f"Got status {response.status_code} from downloading song")
         if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
             try:
                 os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
