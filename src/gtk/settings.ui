@@ -23,6 +23,24 @@
               </object>
             </child>
           </object>
+      </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="true">Cache Settings</property>
+            <child>
+              <object class="AdwSwitchRow" id="_cache_row">
+                <property name="title" translatable="true">Use Cache</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwButtonRow" id="_clear_cache_row">
+                <property name="title" translatable="true">Clear Cache</property>
+                  <style>
+                    <class name="destructive-action"/>
+                  </style>
+              </object>
+            </child>
+          </object>
         </child>
       </object>
     </child>

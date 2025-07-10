@@ -86,7 +86,7 @@ class NextcloudmusicApplication(Adw.Application):
     def update_client_credentials(self):
         s = self._window.settings
         self._client = NextcloudMusicClient(
-            s.get_string("server"), s.get_string("user"), s.get_string("token")
+            s.get_string("server"), s.get_string("user"), s.get_string("token"), s.get_boolean("cache")
         )
         self._window.set_client(self._client)
         callback = self._window.update_collection

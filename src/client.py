@@ -32,6 +32,8 @@ from .queueitem import QueueItem
 
 class NextcloudMusicClient(GObject.Object):
 
+    TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
+
     _auth = None
     _base_url = None
     collection = None
@@ -44,7 +46,7 @@ class NextcloudMusicClient(GObject.Object):
     song_title_last_callback = None
     playlists = None
 
-    def __init__(self, server, user, token):
+    def __init__(self, server, user, token, cache):
         super().__init__()
         self._base_url = f"{server}/index.php/apps/music/api"
         self._auth = HTTPBasicAuth(user, token)
@@ -57,6 +59,7 @@ class NextcloudMusicClient(GObject.Object):
         self.playlists = Gio.ListStore()
         self.playlist_save_buffer = []
         self.last_error = ""
+        self.cache = cache
 
     def _collection(self):
         return requests.get(f"{self._base_url}/collection", auth=self._auth, timeout=5)
@@ -325,20 +328,18 @@ class NextcloudMusicClient(GObject.Object):
 
 
     def get_song(self, song_id):
-        # TODO check if already exists and use a cache dir
-        # TODO also add some method to clear cache cos could get big
-        logging.info(f"Downloading song from {self._base_url}/files/{song_id}/download")
+        song_location = self.song_path(song_id)
+        if os.path.exists(song_location):
+            logging.info(f"Using cached song from {song_location}")
+            return os.path.abspath(song_location)
+
+        logging.info(f"Downloading song from {self._base_url}/files/{song_id}/download and saving to {song_location}")
         response = requests.get(
             f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
         )
         if not response.ok:
             raise Exception(f"Got status {response.status_code} from downloading song")
-        if not os.path.exists(f"/tmp/net.rosebirch.nextgroove/"):
-            try:
-                os.makedirs(f"/tmp/net.rosebirch.nextgroove/")
-            except FileExistsError:
-                pass  # Expected to be possible, this is called from multiple threads
-        song_location = f"/tmp/net.rosebirch.nextgroove/{song_id}"
+
         with open(song_location, "wb") as song_file:
             song_file.write(response.content)
         return os.path.abspath(song_location)
@@ -423,7 +424,18 @@ class NextcloudMusicClient(GObject.Object):
         if 'XDG_CACHE_HOME' in os.environ:
             return os.environ['XDG_CACHE_HOME']
         else:
-            return "/tmp/net.rosebirch.nextgroove/"
+            return NextcloudMusicClient.TMP_DIR
+
+    def song_path(self, song_id):
+        base_dir = NextcloudMusicClient.TMP_DIR
+        if self.cache:
+            base_dir = NextcloudMusicClient.get_cache_dir()
+        song_dir = os.path.join(base_dir, "songs")
+        if not os.path.isdir(song_dir):
+            logging.info(f"Making song cache_directory {song_dir}")
+            os.makedirs(song_dir)
+        full_path = os.path.join(song_dir, str(song_id))
+        return full_path
 
     def get_cover_from_album_id(album_id):
         cache_dir = NextcloudMusicClient.get_cache_dir()

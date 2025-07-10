@@ -20,6 +20,9 @@
 from gi.repository import Adw
 from gi.repository import Gtk
 
+import logging
+import os
+
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/settings.ui")
 class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
@@ -28,6 +31,8 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
     _server_row = Gtk.Template.Child()
     _user_row = Gtk.Template.Child()
     _token_row = Gtk.Template.Child()
+    _cache_row = Gtk.Template.Child()
+    _clear_cache_row = Gtk.Template.Child()
 
     _settings = None
 
@@ -44,6 +49,9 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
         self._user_row.set_text(self._settings.get_string("user"))
         self._token_row.connect("changed", self._update_token)
         self._token_row.set_text(self._settings.get_string("token"))
+        self._cache_row.connect("notify::active", self._update_use_cache)
+        self._cache_row.set_active(self._settings.get_boolean("cache"))
+        self._clear_cache_row.connect("activated", self._clear_cache)
         super().present(window)
 
     def _update_server(self, server_row):
@@ -54,3 +62,18 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
 
     def _update_token(self, token_row):
         self._settings.set_string("token", token_row.get_text())
+
+    def _update_use_cache(self, cache_row, thing):
+        logging.info(f"Now set cache to {cache_row.get_active()}")
+        self._settings.set_boolean("cache", cache_row.get_active())
+
+    def _clear_cache(self, cache_button):
+        if 'XDG_CACHE_HOME' not in os.environ:
+            return
+        song_cache_dir = os.path.join(os.environ['XDG_CACHE_HOME'], "songs")
+        logging.warning(f"About to clear cache under {song_cache_dir}")
+        with os.scandir(song_cache_dir) as it:
+            for entry in it:
+                if entry.is_file():
+                    logging.warn(f"Removing {entry.path}")
+                    os.remove(entry.path)

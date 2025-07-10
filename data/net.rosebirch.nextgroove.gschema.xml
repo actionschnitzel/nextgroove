@@ -13,5 +13,8 @@
 	  <key name="volume" type="i">
       <default>100</default>
     </key>
+	  <key name="cache" type="b">
+      <default>false</default>
+    </key>
 	</schema>
 </schemalist>
