@@ -186,6 +186,7 @@ class Controls(Gtk.ActionBar):
             logging.info("Reached end of queue, not playing new song.")
             self.play_pause_button.set_icon_name("media-playback-start-symbolic")
             self.application.allow_suspend()
+            self.mpris._on_playing_changed(None, None)
             return
 
         current_song_queue_item.set_now_playing(False)
