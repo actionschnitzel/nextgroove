@@ -46,6 +46,7 @@
             <property name="hexpand">true</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
+            <property name="ellipsize">end</property>
           </object>
         </child>
         <child>
@@ -54,6 +55,7 @@
             <property name="hexpand">true</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
+            <property name="ellipsize">end</property>
           </object>
         </child>
       </object>
