@@ -41,6 +41,7 @@ class SongRow(Gtk.Box):
     _song_number = Gtk.Template.Child("song_number")
     _song_duration = Gtk.Template.Child("song_duration")
     cover = Gtk.Template.Child()
+    drag_source = Gtk.Template.Child()
 
     queue_item = None
 
@@ -110,7 +111,8 @@ class SongRow(Gtk.Box):
         source.set_content(Gdk.ContentProvider.new_for_value(self))
         content_type = source.get_content().ref_formats().get_gtypes()[0]
 
-        self.add_controller(source)
+        self.drag_source.add_controller(source)
+        self.drag_source.set_visible(True)
 
         target = Gtk.DropTarget.new(content_type ,Gdk.DragAction.MOVE)
         target.connect("drop", self.on_drag_drop)

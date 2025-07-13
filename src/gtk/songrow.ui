@@ -16,6 +16,16 @@
       </object>
     </child>
     <child>
+      <object class="GtkButton" id="drag_source">
+        <property name="icon-name">list-drag-handle-symbolic</property>
+        <property name="visible">false</property>"
+        <property name="halign">start</property>
+        <property name="valign">center</property>
+        <property name="hexpand">false</property>
+        <property name="margin-end">10</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkImage" id="cover">
         <property name="halign">start</property>
         <property name="valign">center</property>
