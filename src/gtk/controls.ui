@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="Controls" parent="GtkActionBar">
+  <template class="Controls" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="hexpand">true</property>
+    <!-- Start -->
+    <child>
+      <object class="GtkActionBar" id="small_now_playing_area">
+        <property name="hexpand">true</property>
+        <property name="visible">false</property>
+      </object>
+    </child>
+    <!-- End -->
+
+    <child>
+      <object class="GtkActionBar" id="action_bar">
     <child type="start">
-      <object class="GtkScrolledWindow">
+      <object class="GtkScrolledWindow" id="now_playing_box">
         <property name="hexpand">true</property>
         <child>
           <object class="GtkBox">
@@ -124,6 +137,8 @@
               <object class="GtkBox">
                 <child>
                   <object class="GtkScale" id="volumescale">
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

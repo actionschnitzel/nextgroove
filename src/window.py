@@ -99,16 +99,24 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._artists = Gio.ListStore()
         self._selected_artist_content = Gio.ListStore()
         self._artist_albums = Gio.ListStore()
-        self.breaker.connect("apply", self.apply)
-        self.breaker2.connect("apply", self.apply)
+        self.breaker.connect("apply", self.go_small)
+        self.breaker2.connect("apply", self.go_big)
 
-    def apply(self, _):
+    def apply(self):
         """
         Need to keep this visible initially so that when the breakpoint is triggered,
         there is more than one item visible, or the switcher_bar remains hidden forever.
         Also hooked up to being larger than a certain amount to hide the fake one for the same reason
         """
         self.fake_stack.props.visible = False
+
+    def go_big(self, _):
+        self.apply()
+        self.controls.go_big()
+
+    def go_small(self, _):
+        self.apply()
+        self.controls.go_small()
 
     def set_mpris(self, mpris):
         self.mpris = mpris

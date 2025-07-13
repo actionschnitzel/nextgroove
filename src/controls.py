@@ -30,7 +30,7 @@ from html import escape
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/controls.ui")
-class Controls(Gtk.ActionBar):
+class Controls(Gtk.Box):
     __gtype_name__ = "Controls"
 
     # Child Widgets
@@ -49,6 +49,10 @@ class Controls(Gtk.ActionBar):
     duration_scale = Gtk.Template.Child()
     loading = Gtk.Template.Child()
     network_issue_icon = Gtk.Template.Child()
+    # Now playing
+    now_playing_box = Gtk.Template.Child()
+    small_now_playing_area = Gtk.Template.Child()
+    action_bar = Gtk.Template.Child()
 
     # Data refs
     _client = None
@@ -73,6 +77,9 @@ class Controls(Gtk.ActionBar):
         self.queue_pos = -1
         self.duration_scale.set_size_request(150,1)
         self.application = None
+        # Now playing portrait/landscape logic
+        self.shown = False
+        self.portrait = False
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -209,6 +216,13 @@ class Controls(Gtk.ActionBar):
         self._window.play_song(song_file, self._client.song_title_last_callback)
 
     def set_now_playing(self, queue_item):
+        self.shown = True
+        self.action_bar.set_visible(True)
+        if self.portrait:
+            self.small_now_playing_area.set_visible(True)
+            current_width = self.get_size_request()[0]
+            self.small_now_playing_area.set_size_request(current_width, 50)
+        self.queue_resize()
 
         song_title = queue_item.title
         artist_title = self._client.artist_name_by_id[queue_item.artist_id]
@@ -288,3 +302,24 @@ class Controls(Gtk.ActionBar):
 
     def finished_loading(self):
         self.loading.set_visible(False)
+
+
+    def go_big(self):
+        logging.debug("Moving now playing to bottom left")
+        current_width = self.get_size_request()[0]
+        self.small_now_playing_area.remove(self.now_playing_box)
+        self.small_now_playing_area.set_visible(False)
+        self.action_bar.pack_start(self.now_playing_box)
+        self.queue_resize()
+        self.portrait = False
+
+    def go_small(self):
+        logging.debug("Moving now playing above controls")
+        current_width = self.get_size_request()[0]
+        if self.shown:
+            self.small_now_playing_area.set_visible(True)
+            self.small_now_playing_area.set_size_request(current_width, 50)
+        self.action_bar.remove(self.now_playing_box)
+        self.small_now_playing_area.set_center_widget(self.now_playing_box)
+        self.queue_resize()
+        self.portrait = True
