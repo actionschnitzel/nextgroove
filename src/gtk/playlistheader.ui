@@ -31,6 +31,7 @@
             <property name="halign">start</property>
             <property name="hexpand">true</property>
             <property name="lines">1</property>
+            <property name="ellipsize">end</property>
           </object>
         </child>
       </object>

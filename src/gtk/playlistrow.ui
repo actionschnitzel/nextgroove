@@ -12,6 +12,7 @@
         <property name="margin-start">10</property>
         <property name="margin-end">10</property>
         <property name="hexpand">true</property>
+        <property name="ellipsize">end</property>
       </object>
     </child>
     <child>
