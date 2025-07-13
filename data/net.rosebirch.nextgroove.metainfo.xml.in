@@ -70,6 +70,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.2.4" date="2025-07-17">
+      <description translate="no">
+        <p>Adding ability to cache songs locally. There is no limit to this, but you can clear manually in settings.</p>
+        <p>Aligning text was misaligned and now is realigned.</p>
+        <p>MPRIS now changes to not playing once the queue ends.</p>
+        <p>Queue page was previously unscrollable on touch devices as the entire row was a drag source. Now you can only drag from a designated marker.</p>
+        <p>Song titles now are ellipsized (…) to avoid horizontal scrolling. This should be more noticeable on a mobile device.</p>
+        <p>The now playing area is now more readable on a mobile and should display above the normal controls rather than bottom left for mobiles.</p>
+      </description>
+    </release>
     <release version="0.2.3" date="2025-07-07">
       <description translate="no">
         <p>Queue shows a badge number indicating size of the queue, so even if the playback isn't instantaneous, there's some feedback.</p>
