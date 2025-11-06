@@ -31,6 +31,7 @@ from .window import NextcloudmusicWindow
 from .settings import NextcloudmusicSettingsWindow
 from .mpris import MPRIS
 from .client import NextcloudMusicClient
+from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
 class NextcloudmusicApplication(Adw.Application):
@@ -47,6 +48,7 @@ class NextcloudmusicApplication(Adw.Application):
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
+        self.create_action("do_login", self.do_login, ["<ctrl>l"])
         self.cookie = 0
 
 
@@ -85,9 +87,7 @@ class NextcloudmusicApplication(Adw.Application):
 
     def update_client_credentials(self):
         s = self._window.settings
-        self._client = NextcloudMusicClient(
-            s.get_string("server"), s.get_string("user"), s.get_string("token"), s.get_boolean("cache")
-        )
+        self._client = NextcloudMusicClient(self._window.settings)
         self._window.set_client(self._client)
         callback = self._window.update_collection
         self._client.collection_async(callback)
@@ -117,6 +117,11 @@ class NextcloudmusicApplication(Adw.Application):
         settings = NextcloudmusicSettingsWindow()
         settings.connect("closed", self.update_client_credentials_callback)
         settings.present(self._window)
+
+    def do_login(self, widget, _):
+        dialog = NextcloudLoginDialog(0, self._window.settings, self._client)
+        dialog.present(self._window)
+
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

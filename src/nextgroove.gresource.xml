@@ -11,5 +11,6 @@
     <file preprocess="xml-stripblanks">gtk/playlistrow.ui</file>
     <file preprocess="xml-stripblanks">gtk/playlistheader.ui</file>
     <file preprocess="xml-stripblanks">gtk/queuepage.ui</file>
+    <file preprocess="xml-stripblanks">gtk/nextcloud_login_dialog.ui</file>
   </gresource>
 </gresources>
