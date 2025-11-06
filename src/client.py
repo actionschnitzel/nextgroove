@@ -33,6 +33,7 @@ from .queueitem import QueueItem
 class NextcloudMusicClient(GObject.Object):
 
     TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
+    AGENT_HEADERS = {"User-Agent": "Nextgroove/0.2.4"}
 
     _auth = None
     _base_url = None
@@ -62,10 +63,10 @@ class NextcloudMusicClient(GObject.Object):
         self.cache = cache
 
     def _collection(self):
-        return requests.get(f"{self._base_url}/collection", auth=self._auth, timeout=5)
+        return requests.get(f"{self._base_url}/collection", headers=self.AGENT_HEADERS, auth=self._auth, timeout=5)
 
     def _playlists(self):
-        return requests.get(f"{self._base_url}/playlists", auth=self._auth, timeout=5)
+        return requests.get(f"{self._base_url}/playlists", headers=self.AGENT_HEADERS, auth=self._auth, timeout=5)
 
     def album_details(self, album_list_item):
         if not self.collection:
@@ -198,7 +199,7 @@ class NextcloudMusicClient(GObject.Object):
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
         logging.info(f"Downloading cover at {cover_url_full}")
-        response = requests.get(cover_url_full, auth=self._auth, timeout=5)
+        response = requests.get(cover_url_full, headers=self.AGENT_HEADERS, auth=self._auth, timeout=5)
         if response.status_code != 200:
             logging.error(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
@@ -335,7 +336,7 @@ class NextcloudMusicClient(GObject.Object):
 
         logging.info(f"Downloading song from {self._base_url}/files/{song_id}/download and saving to {song_location}")
         response = requests.get(
-            f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
+            f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15, headers=self.AGENT_HEADERS
         )
         if not response.ok:
             raise Exception(f"Got status {response.status_code} from downloading song")
@@ -378,7 +379,7 @@ class NextcloudMusicClient(GObject.Object):
         songs = playlist_buffer["songs"]
         in_data = {"name": playlist_name}
         response = requests.post(
-            f"{self._base_url}/playlists", auth=self._auth, json=in_data
+            f"{self._base_url}/playlists", auth=self._auth, json=in_data, headers=self.AGENT_HEADERS
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
@@ -396,7 +397,7 @@ class NextcloudMusicClient(GObject.Object):
         tracks_csv = ",".join(track_ids)
         track_data = {"track": tracks_csv}
         response = requests.post(
-            f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data
+            f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data, headers=self.AGENT_HEADERS
         )
         # TODO check output
 
@@ -411,7 +412,7 @@ class NextcloudMusicClient(GObject.Object):
     def delete_playlist_sync(self, task, source_object, task_data, cancellable):
         playlist_id = task.get_task_data()
         response = requests.delete(
-            f"{self._base_url}/playlists/{playlist_id}", auth=self._auth
+            f"{self._base_url}/playlists/{playlist_id}", auth=self._auth, headers=self.AGENT_HEADERS
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
