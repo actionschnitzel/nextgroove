@@ -135,7 +135,7 @@ class NextcloudLoginDialog(Adw.Dialog):
         def thread_do() -> None:
             assert self.__endpoint
             assert self.__token
-            login_success = self.__client.check_for_login_success(self.__endpoint, self.__token)
+            login_success = not self.__client.check_for_login_success(self.__endpoint, self.__token)
             if login_success:
                 print("Got a success")
                 GLib.idle_add(self.__on_initial_sync_finished)

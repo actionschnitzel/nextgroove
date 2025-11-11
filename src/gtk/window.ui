@@ -52,6 +52,20 @@
                       <object class="AdwStatusPage">
                         <property name="title">Welcome</property>
                         <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
+                        <property name="child">
+                          <object class="GtkButton" id="welcome_login_button">
+                            <property name="halign">center</property>
+                            <!-- Translators: Button -->
+                            <property name="label" translatable="yes">Login</property>
+                            <!-- Translators: Button tooltip -->
+                            <property name="tooltip-text" translatable="yes">Continue to URL Entry</property>
+                            <signal name="clicked" handler="_do_login"/>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </property>
                       </object>
                     </property>
                   </object>

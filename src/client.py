@@ -21,7 +21,6 @@ import logging
 import requests
 import json
 import os
-import time
 from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio, GLib, Gtk, Gdk

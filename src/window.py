@@ -34,6 +34,7 @@ from .playlist_row import PlaylistRow
 from .playlist_header import PlaylistHeader
 from .song_row import SongRow
 from .queue_page import QueuePage
+from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
@@ -52,6 +53,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_click_menu = Gtk.Template.Child("album_click_menu")
     playlist_view = Gtk.Template.Child("playlistview")
     welcome_view = Gtk.Template.Child("welcomepage")
+    welcome_login_button = Gtk.Template.Child()
     status_toast = Gtk.Template.Child("status_toast")
 
     #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
@@ -694,5 +696,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Store updated indexes on songRow
         self.queue_page.queue_reorder()
 
-
-
+    @Gtk.Template.Callback()
+    def _do_login(self, widget):
+        dialog = NextcloudLoginDialog(0, self.settings, self._client)
+        dialog.present(self)
