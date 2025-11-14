@@ -111,6 +111,12 @@ class NextcloudLoginDialog(Adw.Dialog):
 
         self._instance_label.set_text(clean_url)
 
+        # Update collections
+        app = Gio.Application.get_default()
+        window = app.get_active_window()
+        self.__client.collection_async(window.update_collection)
+        # Update playlists
+
     def __url_entry_valid(self) -> bool:
         valid = False
         entry_text = self.__get_sanitised_url_entry()
