@@ -103,6 +103,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._artist_albums = Gio.ListStore()
         self.breaker.connect("apply", self.go_small)
         self.breaker2.connect("apply", self.go_big)
+        self.__logged_in = False
 
     def apply(self):
         """
@@ -204,7 +205,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         if isinstance(collection, str) and collection.startswith("Error"):
             # We encountered an error, and we've been handed the error not the collection
             self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
+            self.__logged_in = False
             return
+        self.__logged_in = True
 
         # Hide welcome view
         self.fake_stack.props.visible = False
@@ -700,3 +703,16 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def _do_login(self, widget):
         dialog = NextcloudLoginDialog(0, self.settings, self._client)
         dialog.present(self)
+
+    def _do_logout(self):
+        # FIXME can we clear password remotely?
+        # TODO add a proper dialog to check this is wanted
+        # Clear login
+        self._settings.set_string("server", "")
+        self._settings.set_string("token", "")
+        self._settings.set_string("user", "")
+        # Quit
+        self.get_application().quit()
+
+    def is_logged_in(self):
+        return self.__logged_in

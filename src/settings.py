@@ -28,11 +28,11 @@ import os
 class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
     __gtype_name__ = "NextcloudmusicSettingsWindow"
 
-    _server_row = Gtk.Template.Child()
-    _user_row = Gtk.Template.Child()
-    _token_row = Gtk.Template.Child()
     _cache_row = Gtk.Template.Child()
     _clear_cache_row = Gtk.Template.Child()
+    _login_row = Gtk.Template.Child()
+    _logout_row = Gtk.Template.Child()
+    _server_group = Gtk.Template.Child()
 
     _settings = None
 
@@ -41,27 +41,37 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
 
     def present(self, window):
         self._settings = window.props.settings
+        self.window = window
+
+        if window.is_logged_in():
+            self._login_row.props.visible = False
+            self._logout_row.props.visible = True
+            self._server_group.props.description = f"Logged into {window.props.settings.get_string("server")}"
+        else:
+            self._login_row.props.visible = True
+            self._logout_row.props.visible = False
+            server = window.props.settings.get_string("server")
+            if server:
+                self._server_group.props.description = f"Unable to login to {server}"
+            else:
+                self._server_group.props.description = f"Not logged into any server"
 
         # Set previous values and connect to update them if needed
-        self._server_row.connect("changed", self._update_server)
-        self._server_row.set_text(self._settings.get_string("server"))
-        self._user_row.connect("changed", self._update_user)
-        self._user_row.set_text(self._settings.get_string("user"))
-        self._token_row.connect("changed", self._update_token)
-        self._token_row.set_text(self._settings.get_string("token"))
         self._cache_row.connect("notify::active", self._update_use_cache)
         self._cache_row.set_active(self._settings.get_boolean("cache"))
         self._clear_cache_row.connect("activated", self._clear_cache)
+
+        self._login_row.connect("activated", self._login_clicked)
+        self._logout_row.connect("activated", self._logout_clicked)
         super().present(window)
 
-    def _update_server(self, server_row):
-        self._settings.set_string("server", server_row.get_text())
+    def _login_clicked(self, _):
+        print("Want to login")
+        self.window._do_login(self)
 
-    def _update_user(self, user_row):
-        self._settings.set_string("user", user_row.get_text())
-
-    def _update_token(self, token_row):
-        self._settings.set_string("token", token_row.get_text())
+    def _logout_clicked(self, _):
+        print("Want to logout")
+        self.window._do_logout()
 
     def _update_use_cache(self, cache_row, thing):
         logging.info(f"Now set cache to {cache_row.get_active()}")

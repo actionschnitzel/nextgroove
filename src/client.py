@@ -501,3 +501,4 @@ class NextcloudMusicClient(GObject.Object):
             self.__settings.set_string("token", password)
             return False
         return True
+
