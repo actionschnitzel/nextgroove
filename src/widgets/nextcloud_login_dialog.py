@@ -139,6 +139,10 @@ class NextcloudLoginDialog(Adw.Dialog):
             if login_success:
                 print("Got a success")
                 GLib.idle_add(self.__on_initial_sync_finished)
+            else:
+                GLib.idle_add(self.__wait_and_check_success)
+
+
 
         thread = Thread(target=thread_do)
         thread.daemon = True
