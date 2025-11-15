@@ -70,8 +70,19 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
         self.window._do_login(self)
 
     def _logout_clicked(self, _):
-        print("Want to logout")
-        self.window._do_logout()
+        title = "Disconnect Nextcloud?"
+        body = "Do you want to sign out?"
+        dialog = Adw.AlertDialog.new(title, body)
+        dialog.add_response("close", "Cancel")
+        dialog.add_response("disconnect", "Disconnect")
+        dialog.set_response_appearance("disconnect", Adw.ResponseAppearance.DESTRUCTIVE)
+
+        def handle_response(_o: Adw.AlertDialog, response: str) -> None:
+            if response == "disconnect":
+                self.window._do_logout()
+
+        dialog.connect("response", handle_response)
+        dialog.present(self)
 
     def _update_use_cache(self, cache_row, thing):
         logging.info(f"Now set cache to {cache_row.get_active()}")
