@@ -1,3 +1,6 @@
+# Many thanks to Iotas developers login flow
+# https://gitlab.gnome.org/World/iotas/-/blob/main/iotas/nextcloud_login_dialog.py
+
 from gettext import gettext as _
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
