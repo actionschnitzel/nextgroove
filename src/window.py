@@ -709,7 +709,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def _do_logout(self):
         # FIXME can we clear password remotely?
-        # TODO add a proper dialog to check this is wanted
         # Clear login
         self._settings.set_string("server", "")
         self._settings.set_string("token", "")

@@ -48,7 +48,6 @@ class NextcloudmusicApplication(Adw.Application):
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
-        self.create_action("do_login", self.do_login, ["<ctrl>l"])
         self.cookie = 0
 
 
