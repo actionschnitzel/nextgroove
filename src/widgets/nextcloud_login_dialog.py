@@ -25,7 +25,6 @@ class NextcloudLoginDialog(Adw.Dialog):
     _intro: Adw.StatusPage = Gtk.Template.Child()
     _secret_service_failure: Adw.StatusPage = Gtk.Template.Child()
     _entry: Adw.ToastOverlay = Gtk.Template.Child()
-    _self_signed_certificate_handling: Adw.StatusPage = Gtk.Template.Child()
     _loading: Adw.StatusPage = Gtk.Template.Child()
     _finished: Adw.StatusPage = Gtk.Template.Child()
 
@@ -73,18 +72,6 @@ class NextcloudLoginDialog(Adw.Dialog):
     def _on_url_entry_activated(self, _entry: Gtk.Entry) -> None:
         if self.__url_entry_valid():
             self.__attempt_login()
-
-    @Gtk.Template.Callback()
-    def _open_faq(self, _button: Gtk.Button) -> None:
-        app = Gio.Application.get_default()
-        if not app:
-            return None
-        window = app.get_active_window()
-        Gtk.show_uri(
-            window,
-            "https://gitlab.gnome.org/World/iotas/-/wikis/nextcloud-notes",
-            Gdk.CURRENT_TIME,
-        )
 
     @Gtk.Template.Callback()
     def _on_done_clicked(self, _button: Gtk.Button) -> None:
@@ -185,8 +172,6 @@ class NextcloudLoginDialog(Adw.Dialog):
             self.__endpoint = endpoint
             self.__token = token
             self.__wait_and_check_success()
-        elif result == LoginRequestResult.FAILURE_SELF_SIGNED_SSL:
-            self._stack.set_visible_child(self._self_signed_certificate_handling)
         else:
             self._stack.set_visible_child(self._entry)
             # Set the failed URL back into try text entry. This is to make any URI scheme
@@ -195,12 +180,8 @@ class NextcloudLoginDialog(Adw.Dialog):
             self._url_entry.set_position(-1)
             self._url_entry.grab_focus()
 
-            if result == LoginRequestResult.FAILURE_CERTIFICATE:
-                # Translators: Description, notification
-                msg = _("Failed to start login with possible certificate issue")
-            else:
-                # Translators: Description, notification
-                msg = _("Failed to start login. Wrong address?")
+            # Translators: Description, notification
+            msg = _("Failed to start login. Wrong address?")
 
             toast = Adw.Toast.new(msg)
             self._entry.add_toast(toast)

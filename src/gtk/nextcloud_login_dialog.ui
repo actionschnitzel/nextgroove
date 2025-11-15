@@ -111,30 +111,6 @@
             </child>
 
             <child>
-              <object class="AdwStatusPage" id="_self_signed_certificate_handling">
-                <property name="icon-name">dialog-error-symbolic</property>
-                <!-- Translators: Title -->
-                <property name="title" translatable="yes">Self-Signed Certificate</property>
-                <!-- Translators: Description -->
-                <property name="description" translatable="yes">You appear to be using a self-signed SSL certificate resulting in the server identity not being verified. If this is expected please follow the instructions in the FAQ to provide a CA chain file.</property>
-                <property name="child">
-                  <object class="GtkButton">
-                    <!-- Translators: Button -->
-                    <property name="label" translatable="yes">Open the FAQ</property>
-                    <property name="halign">center</property>
-                    <signal name="clicked" handler="_open_faq"/>
-                    <style>
-                      <class name="pill"/>
-                    </style>
-                  </object>
-                </property>
-                <style>
-                  <class name="compact"/>
-                </style>
-              </object>
-            </child>
-
-            <child>
               <object class="AdwStatusPage" id="_loading">
                 <property name="paintable">
                   <object class="AdwSpinnerPaintable">
