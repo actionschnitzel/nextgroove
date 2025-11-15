@@ -49,7 +49,7 @@
                 <property name="child">
                   <object class="AdwToastOverlay" id="status_toast">
                     <property name="child">
-                      <object class="AdwStatusPage">
+                      <object class="AdwStatusPage" id="welcome_status_page">
                         <property name="title">Welcome</property>
                         <property name="description">Checking connection. If you have not yet set connection details, check settings.</property>
                         <property name="child">

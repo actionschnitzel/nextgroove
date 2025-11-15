@@ -86,6 +86,11 @@ class NextcloudmusicApplication(Adw.Application):
         s = self._window.settings
         self._client = NextcloudMusicClient(self._window.settings)
         self._window.set_client(self._client)
+
+        # If we've never logged in...
+        if not self._client.initialized():
+            return
+
         callback = self._window.update_collection
         self._client.collection_async(callback)
         playlist_callback = self._window.update_playlists

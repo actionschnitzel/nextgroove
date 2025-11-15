@@ -61,6 +61,11 @@ class NextcloudMusicClient(GObject.Object):
         self.last_error = ""
 
 
+    def initialized(self):
+        """If we haven't tried a login ever, then this won't ever connect, let's check for that."""
+        return self.__server() is not ""
+
+
     def __cache(self):
         return self.__settings.get_string("cache")
 

@@ -55,6 +55,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     welcome_view = Gtk.Template.Child("welcomepage")
     welcome_login_button = Gtk.Template.Child()
     status_toast = Gtk.Template.Child("status_toast")
+    welcome_status_page = Gtk.Template.Child()
 
     #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
     artist_nav_2 = Gtk.Template.Child("artist_nav_2")
@@ -131,7 +132,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         Touches album view, queue view, media controls"""
         self._client = client
         logging.debug("Setting client")
-
         # We like Albums
         if not self.album_view.props.factory:
             album_item_factory = Gtk.SignalListItemFactory()
