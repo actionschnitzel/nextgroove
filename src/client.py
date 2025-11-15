@@ -463,9 +463,13 @@ class NextcloudMusicClient(GObject.Object):
     def start_login(self, server_url, window):
         login_url = f"{server_url}/{self.LOGIN_ENDPOINT}"
         logging.debug(f"Want to send a login request to {login_url}")
-        response = requests.post(
-            login_url, headers=self.AGENT_HEADERS
-        )
+        try:
+            response = requests.post(
+                login_url, headers=self.AGENT_HEADERS
+            )
+        except requests.ConnectionError as e:
+            logging.error(e)
+            return (LoginRequestResult.FAILURE_GENERIC, None, None)
         if not response.ok:
             logging.error("Failed to start login")
             return (LoginRequestResult.FAILURE_GENERIC, None, None)
