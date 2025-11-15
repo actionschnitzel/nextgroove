@@ -462,20 +462,18 @@ class NextcloudMusicClient(GObject.Object):
 
     def start_login(self, server_url, window):
         login_url = f"{server_url}/{self.LOGIN_ENDPOINT}"
-        print(f"Want to send a login request to {login_url}")
+        logging.debug(f"Want to send a login request to {login_url}")
         response = requests.post(
             login_url, headers=self.AGENT_HEADERS
         )
         if not response.ok:
-            print("FAILED TO LOGIN")
+            logging.error("Failed to start login")
             return (LoginRequestResult.FAILURE_GENERIC, None, None)
         response_json = json.loads(response.text)
-        print(f"Got back {response_json}")
 
         poll_url = response_json["poll"]["endpoint"]
         token_data = {"token": response_json["poll"]["token"]}
         user_auth_url = response_json["login"]
-        print(f"Open in browser: {user_auth_url}")
 
         # TODO change this to not need the window passed in
         def open_url_in_browser(window, response: dict) -> None:
@@ -485,7 +483,7 @@ class NextcloudMusicClient(GObject.Object):
         return (LoginRequestResult.SUCCESS, poll_url, token_data)
 
     def check_for_login_success(self, poll_url, token_data):
-        print("Checking poll url")
+        logging.debug("Checking poll url")
         try:
             poll_response = requests.post(
                 poll_url, headers=self.AGENT_HEADERS, data=token_data
@@ -497,7 +495,7 @@ class NextcloudMusicClient(GObject.Object):
 
         poll_json = json.loads(poll_response.text)
         if "server" in poll_json:
-            print("Login success, saving credentials")
+            logging.info("Login success, saving credentials")
             server = poll_json["server"]
             user = poll_json["loginName"]
             password = poll_json["appPassword"]

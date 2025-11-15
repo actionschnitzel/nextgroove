@@ -66,7 +66,6 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
         super().present(window)
 
     def _login_clicked(self, _):
-        print("Want to login")
         self.window._do_login(self)
 
     def _logout_clicked(self, _):

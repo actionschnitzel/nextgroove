@@ -133,7 +133,6 @@ class NextcloudLoginDialog(Adw.Dialog):
         return valid
 
     def __wait_and_check_success(self) -> None:
-        print("start timer")
         self.__timeout_id = GLib.timeout_add(self.CHECK_LOGIN_INTERVAL, self.__check_success)
 
     def __check_success(self) -> None:
@@ -144,7 +143,6 @@ class NextcloudLoginDialog(Adw.Dialog):
             assert self.__token
             login_success = not self.__client.check_for_login_success(self.__endpoint, self.__token)
             if login_success:
-                print("Got a success")
                 GLib.idle_add(self.__on_initial_sync_finished)
             else:
                 GLib.idle_add(self.__wait_and_check_success)
