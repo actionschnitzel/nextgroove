@@ -197,6 +197,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def settings(self):
         return self._settings
 
+    def welcome_description(self, description):
+        self.welcome_status_page.set_description(description)
+
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
         """

@@ -89,6 +89,7 @@ class NextcloudmusicApplication(Adw.Application):
 
         # If we've never logged in...
         if not self._client.initialized():
+            self._window.welcome_description("Please login to a Nextcloud instance to use Nextgroove.")
             return
 
         callback = self._window.update_collection
