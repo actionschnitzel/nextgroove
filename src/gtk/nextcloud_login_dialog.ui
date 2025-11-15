@@ -26,7 +26,7 @@
 
             <child>
               <object class="AdwStatusPage" id="_intro">
-                <property name="icon-name">earth</property>
+                <property name="icon-name">network-server</property>
                 <!-- Translators: Description -->
                 <property name="description" translatable="yes">Press Continue to provide your Nextcloud server address and login via a web browser</property>
                 <property name="child">
@@ -149,7 +149,7 @@
 
             <child>
               <object class="AdwStatusPage" id="_finished">
-                <property name="icon-name">check-round-outline-symbolic</property>
+                <property name="icon-name">checkbox-checked-symbolic</property>
                 <!-- Translators: Title -->
                 <property name="title" translatable="yes">Connection Established</property>
                 <property name="child">
