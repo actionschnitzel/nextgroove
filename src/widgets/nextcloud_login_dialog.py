@@ -116,6 +116,7 @@ class NextcloudLoginDialog(Adw.Dialog):
         window = app.get_active_window()
         self.__client.collection_async(window.update_collection)
         # Update playlists
+        self.__client.playlist_async(window.update_playlists)
 
     def __url_entry_valid(self) -> bool:
         valid = False
