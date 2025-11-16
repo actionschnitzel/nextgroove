@@ -67,6 +67,7 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
 
     def _login_clicked(self, _):
         self.window._do_login(self)
+        self.close()
 
     def _logout_clicked(self, _):
         title = "Disconnect Nextcloud?"
