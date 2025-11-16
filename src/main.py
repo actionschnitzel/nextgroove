@@ -92,6 +92,7 @@ class NextcloudmusicApplication(Adw.Application):
             return
 
         callback = self._window.update_collection
+        self._window.welcome_restart_spinner()
         self._client.collection_async(callback)
         playlist_callback = self._window.update_playlists
         self._client.playlist_async(playlist_callback)

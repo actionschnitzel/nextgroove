@@ -104,6 +104,7 @@ class NextcloudLoginDialog(Adw.Dialog):
         # Update collections
         app = Gio.Application.get_default()
         window = app.get_active_window()
+        window.welcome_restart_spinner()
         self.__client.collection_async(window.update_collection)
         # Update playlists
         self.__client.playlist_async(window.update_playlists)

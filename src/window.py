@@ -56,6 +56,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     welcome_login_button = Gtk.Template.Child()
     status_toast = Gtk.Template.Child("status_toast")
     welcome_status_page = Gtk.Template.Child()
+    welcome_retry_button = Gtk.Template.Child()
+    welcome_spinner = Gtk.Template.Child()
 
     #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
     artist_nav_2 = Gtk.Template.Child("artist_nav_2")
@@ -197,23 +199,39 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def settings(self):
         return self._settings
 
-    def welcome_description(self, description):
+    def welcome_description(self, description, allow_login=True, allow_retry=False):
         self.welcome_status_page.set_description(description)
+        self.welcome_retry_button.set_visible(allow_retry)
+        self.welcome_login_button.set_visible(allow_login)
+        self.welcome_spinner.set_visible(False)
+        self.fake_stack.props.visible = False
+
+    def welcome_restart_spinner(self):
+        self.welcome_retry_button.set_visible(False)
+        self.welcome_login_button.set_visible(False)
+        self.welcome_spinner.set_visible(True)
+        self.fake_stack.props.visible = False
+        self.welcome_status_page.set_description("Retrieving collection...")
 
     def update_collection(self, source_object, result, user_data):
         """Updates the collection view.
         """
         collection = result.propagate_value().value
+        self.fake_stack.props.visible = False
 
         if isinstance(collection, str) and collection.startswith("Error"):
             # We encountered an error, and we've been handed the error not the collection
             self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
             self.__logged_in = False
+            self.welcome_retry_button.set_visible(True)
+            self.welcome_login_button.set_visible(True)
+            self.welcome_spinner.set_visible(False)
+            self.welcome_status_page.set_description("Error retrieving library, check connection and retry, or login again.")
+
             return
         self.__logged_in = True
 
         # Hide welcome view
-        self.fake_stack.props.visible = False
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
@@ -706,6 +724,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def _do_login(self, widget):
         dialog = NextcloudLoginDialog(0, self.settings, self._client)
         dialog.present(self)
+
+    @Gtk.Template.Callback()
+    def _do_retry(self, widget):
+        self.welcome_restart_spinner()
+        self._client.collection_async(self.update_collection)
+        playlist_callback = self.update_playlists
+        self._client.playlist_async(playlist_callback)
 
     def _do_logout(self):
         # FIXME can we clear password remotely?
