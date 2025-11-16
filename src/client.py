@@ -17,6 +17,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import gi
+gi.require_version('Gtk', '4.0')
+
 import logging
 import requests
 import json
@@ -63,7 +66,7 @@ class NextcloudMusicClient(GObject.Object):
 
     def initialized(self):
         """If we haven't tried a login ever, then this won't ever connect, let's check for that."""
-        return self.__server() is not ""
+        return self.__server() != ""
 
 
     def __cache(self):
