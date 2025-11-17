@@ -76,7 +76,7 @@ class AlbumHeader(Gtk.Box):
         self._album_year_label.set_text(f"Released {album.year}")
 
     def set_cover(self, cover_file):
-        self._cover_image.set_from_file(cover_file)
+        self._cover_image.set_filename(cover_file)
 
     def set_tracks(self, tracks):
         self._track_elements.remove_all()

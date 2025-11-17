@@ -1,7 +1,7 @@
 {
     "id" : "net.rosebirch.nextgroove",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "48",
+    "runtime-version" : "49",
     "sdk" : "org.gnome.Sdk",
     "command" : "nextgroove",
     "finish-args" : [
@@ -24,18 +24,24 @@
         "*.a"
     ],
     "modules" : [
-      "python3-requests.json",
-      {
-        "name" : "nextgroove",
-        "builddir" : true,
-        "buildsystem" : "meson",
-        "sources" : [
-          {
-            "type" : "git",
-            "url" : "https://gitlab.gnome.org/dean36963/nextgroove",
-            "tag": "0.2.4-rc2"
-          }
-        ]
-      }
-    ]
+        "python3-requests.json",
+        {
+            "name" : "nextgroove",
+            "builddir" : true,
+            "buildsystem" : "meson",
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/dean36963/nextgroove",
+                    "tag" : "0.2.4-rc2"
+                }
+            ],
+            "config-opts" : [
+                "--libdir=lib"
+            ]
+        }
+    ],
+    "build-options" : {
+        "env" : {        }
+    }
 }

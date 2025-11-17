@@ -41,4 +41,4 @@ class AlbumTile(Gtk.Box):
         self._album_label.set_text(album.album)
 
     def set_cover(self, cover_file):
-        self._cover_image.set_from_file(cover_file)
+        self._cover_image.set_filename(cover_file)

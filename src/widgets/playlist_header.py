@@ -74,7 +74,7 @@ class PlaylistHeader(Gtk.Box):
         self.playlist_name.set_markup(f"<span size=\"xx-large\">{escape(playlist.playlist_name)}</span>")
 
     def set_cover(self, cover_file):
-        self._cover_image.set_from_file(cover_file)
+        self._cover_image.set_filename(cover_file)
 
     def set_tracks(self, tracks):
         self._track_elements.remove_all()
