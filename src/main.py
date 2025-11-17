@@ -31,6 +31,7 @@ from .window import NextcloudmusicWindow
 from .settings import NextcloudmusicSettingsWindow
 from .mpris import MPRIS
 from .client import NextcloudMusicClient
+from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
 class NextcloudmusicApplication(Adw.Application):
@@ -80,16 +81,18 @@ class NextcloudmusicApplication(Adw.Application):
         self._window = win
         self.update_client_credentials()
 
-    def update_client_credentials_callback(self, _):
-        self.update_client_credentials()
-
     def update_client_credentials(self):
         s = self._window.settings
-        self._client = NextcloudMusicClient(
-            s.get_string("server"), s.get_string("user"), s.get_string("token"), s.get_boolean("cache")
-        )
+        self._client = NextcloudMusicClient(self._window.settings)
         self._window.set_client(self._client)
+
+        # If we've never logged in...
+        if not self._client.initialized():
+            self._window.welcome_description("Please login to a Nextcloud instance to use Nextgroove.")
+            return
+
         callback = self._window.update_collection
+        self._window.welcome_restart_spinner()
         self._client.collection_async(callback)
         playlist_callback = self._window.update_playlists
         self._client.playlist_async(playlist_callback)
@@ -115,8 +118,12 @@ class NextcloudmusicApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         settings = NextcloudmusicSettingsWindow()
-        settings.connect("closed", self.update_client_credentials_callback)
         settings.present(self._window)
+
+    def do_login(self, widget, _):
+        dialog = NextcloudLoginDialog(0, self._window.settings, self._client)
+        dialog.present(self._window)
+
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

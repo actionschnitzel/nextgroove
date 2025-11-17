@@ -17,25 +17,30 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import gi
+gi.require_version('Gtk', '4.0')
+
 import logging
 import requests
 import json
 import os
 from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
-from gi.repository import GObject, Gio, GLib
+from gi.repository import GObject, Gio, GLib, Gtk, Gdk
 from .albumlistitem import AlbumListItem
 from functools import cmp_to_key
 from .playlist import PlaylistItem
 from .queueitem import QueueItem
+from .login_request_result import LoginRequestResult
 
 
 class NextcloudMusicClient(GObject.Object):
 
     TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
+    AGENT_HEADERS = {"User-Agent": "Nextgroove/0.2.4"}
+    LOGIN_ENDPOINT = "index.php/login/v2"
 
-    _auth = None
-    _base_url = None
+
     collection = None
     albums = None
     albums_before_sorting = None
@@ -46,26 +51,43 @@ class NextcloudMusicClient(GObject.Object):
     song_title_last_callback = None
     playlists = None
 
-    def __init__(self, server, user, token, cache):
+    def __init__(self, settings):
         super().__init__()
-        self._base_url = f"{server}/index.php/apps/music/api"
-        self._auth = HTTPBasicAuth(user, token)
+        self.__settings = settings
         self.albums = Gio.ListStore()
         self.albums_before_sorting = Gio.ListStore()
-        self._server = server
         self._album_urls_by_id = {}
         self.artist_name_by_id = {}
         self.album_name_by_id = {}
         self.playlists = Gio.ListStore()
         self.playlist_save_buffer = []
         self.last_error = ""
-        self.cache = cache
+
+
+    def initialized(self):
+        """If we haven't tried a login ever, then this won't ever connect, let's check for that."""
+        return self.__server() != ""
+
+
+    def __cache(self):
+        return self.__settings.get_string("cache")
+
+
+    def __auth(self):
+        return HTTPBasicAuth(self.__settings.get_string("user"), self.__settings.get_string("token"))
+
+
+    def __server(self):
+        return self.__settings.get_string("server")
+
+    def __base_url(self):
+        return f"{self.__server()}/index.php/apps/music/api"
 
     def _collection(self):
-        return requests.get(f"{self._base_url}/collection", auth=self._auth, timeout=5)
+        return requests.get(f"{self.__base_url()}/collection", headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
 
     def _playlists(self):
-        return requests.get(f"{self._base_url}/playlists", auth=self._auth, timeout=5)
+        return requests.get(f"{self.__base_url()}/playlists", headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
 
     def album_details(self, album_list_item):
         if not self.collection:
@@ -191,14 +213,14 @@ class NextcloudMusicClient(GObject.Object):
         if os.path.exists(NextcloudMusicClient.get_cover_from_album_id(save_file)):
             # Skipping download, cover already exists
             return
-        server=self._server
+        server=self.__server()
         # If the url is absolute, take urls off the server
         if url_is_absolute:
-            url_parts = urlparse(self._server)
+            url_parts = urlparse(self.__server())
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
         logging.info(f"Downloading cover at {cover_url_full}")
-        response = requests.get(cover_url_full, auth=self._auth, timeout=5)
+        response = requests.get(cover_url_full, headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
         if response.status_code != 200:
             logging.error(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
@@ -333,9 +355,9 @@ class NextcloudMusicClient(GObject.Object):
             logging.info(f"Using cached song from {song_location}")
             return os.path.abspath(song_location)
 
-        logging.info(f"Downloading song from {self._base_url}/files/{song_id}/download and saving to {song_location}")
+        logging.info(f"Downloading song from {self.__base_url()}/files/{song_id}/download and saving to {song_location}")
         response = requests.get(
-            f"{self._base_url}/files/{song_id}/download", auth=self._auth, timeout=15
+            f"{self.__base_url()}/files/{song_id}/download", auth=self.__auth(), timeout=15, headers=self.AGENT_HEADERS
         )
         if not response.ok:
             raise Exception(f"Got status {response.status_code} from downloading song")
@@ -378,7 +400,7 @@ class NextcloudMusicClient(GObject.Object):
         songs = playlist_buffer["songs"]
         in_data = {"name": playlist_name}
         response = requests.post(
-            f"{self._base_url}/playlists", auth=self._auth, json=in_data
+            f"{self.__base_url()}/playlists", auth=self.__auth(), json=in_data, headers=self.AGENT_HEADERS
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
@@ -396,7 +418,7 @@ class NextcloudMusicClient(GObject.Object):
         tracks_csv = ",".join(track_ids)
         track_data = {"track": tracks_csv}
         response = requests.post(
-            f"{self._base_url}/playlists/{new_playlist_id}/add", auth=self._auth, json=track_data
+            f"{self.__base_url()}/playlists/{new_playlist_id}/add", auth=self.__auth(), json=track_data, headers=self.AGENT_HEADERS
         )
         # TODO check output
 
@@ -411,7 +433,7 @@ class NextcloudMusicClient(GObject.Object):
     def delete_playlist_sync(self, task, source_object, task_data, cancellable):
         playlist_id = task.get_task_data()
         response = requests.delete(
-            f"{self._base_url}/playlists/{playlist_id}", auth=self._auth
+            f"{self.__base_url()}/playlists/{playlist_id}", auth=self.__auth(), headers=self.AGENT_HEADERS
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
@@ -428,7 +450,7 @@ class NextcloudMusicClient(GObject.Object):
 
     def song_path(self, song_id):
         base_dir = NextcloudMusicClient.TMP_DIR
-        if self.cache:
+        if self.__cache():
             base_dir = NextcloudMusicClient.get_cache_dir()
         song_dir = os.path.join(base_dir, "songs")
         if not os.path.isdir(song_dir):
@@ -440,3 +462,53 @@ class NextcloudMusicClient(GObject.Object):
     def get_cover_from_album_id(album_id):
         cache_dir = NextcloudMusicClient.get_cache_dir()
         return f"{cache_dir}/cover_{album_id}"
+
+    def start_login(self, server_url, window):
+        login_url = f"{server_url}/{self.LOGIN_ENDPOINT}"
+        logging.debug(f"Want to send a login request to {login_url}")
+        try:
+            response = requests.post(
+                login_url, headers=self.AGENT_HEADERS
+            )
+        except requests.ConnectionError as e:
+            logging.error(e)
+            return (LoginRequestResult.FAILURE_GENERIC, None, None)
+        if not response.ok:
+            logging.error("Failed to start login")
+            return (LoginRequestResult.FAILURE_GENERIC, None, None)
+        response_json = json.loads(response.text)
+
+        poll_url = response_json["poll"]["endpoint"]
+        token_data = {"token": response_json["poll"]["token"]}
+        user_auth_url = response_json["login"]
+
+        # TODO change this to not need the window passed in
+        def open_url_in_browser(window, response: dict) -> None:
+            Gtk.show_uri(window, user_auth_url, Gdk.CURRENT_TIME)
+
+        GLib.idle_add(open_url_in_browser, window, response)
+        return (LoginRequestResult.SUCCESS, poll_url, token_data)
+
+    def check_for_login_success(self, poll_url, token_data):
+        logging.debug("Checking poll url")
+        try:
+            poll_response = requests.post(
+                poll_url, headers=self.AGENT_HEADERS, data=token_data
+            )
+        except:
+            return True
+        if poll_response.status_code != 200:
+            return True
+
+        poll_json = json.loads(poll_response.text)
+        if "server" in poll_json:
+            logging.info("Login success, saving credentials")
+            server = poll_json["server"]
+            user = poll_json["loginName"]
+            password = poll_json["appPassword"]
+            self.__settings.set_string("server", server)
+            self.__settings.set_string("user", user)
+            self.__settings.set_string("token", password)
+            return False
+        return True
+

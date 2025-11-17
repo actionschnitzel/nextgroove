@@ -5,21 +5,19 @@
     <child>
       <object class="AdwPreferencesPage">
         <child>
-          <object class="AdwPreferencesGroup">
+          <object class="AdwPreferencesGroup" id="_server_group">
             <property name="title" translatable="true">Server Settings</property>
             <child>
-              <object class="AdwEntryRow" id="_server_row">
-                <property name="title" translatable="true">Server URL</property>
+              <object class="AdwButtonRow" id="_logout_row">
+                <property name="title" translatable="true">Log out</property>
+                  <style>
+                    <class name="destructive-action"/>
+                  </style>
               </object>
             </child>
             <child>
-              <object class="AdwEntryRow" id="_user_row">
-                <property name="title" translatable="true">User</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwPasswordEntryRow" id="_token_row">
-                <property name="title" translatable="true">Token</property>
+              <object class="AdwButtonRow" id="_login_row">
+                <property name="title" translatable="true">Log into server</property>
               </object>
             </child>
           </object>

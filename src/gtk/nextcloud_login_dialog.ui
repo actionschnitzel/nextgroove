@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="NextcloudLoginDialog" parent="AdwDialog">
+    <property name="content-width">510</property>
+    <property name="content-height">350</property>
+    <child>
+      <object class="AdwToolbarView" id="_toolbar_view">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="decoration-layout">None</property>
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">Nextgroove Login</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <property name="content">
+          <object class="GtkStack" id="_stack">
+            <property name="transition-type">slide-left</property>
+            <property name="visible-child">_intro</property>
+            <property name="vexpand">True</property>
+
+            <child>
+              <object class="AdwStatusPage" id="_intro">
+                <property name="icon-name">network-server</property>
+                <!-- Translators: Description -->
+                <property name="description" translatable="yes">Press Continue to provide your Nextcloud server address and login via a web browser</property>
+                <property name="child">
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label" translatable="yes">Continue</property>
+                    <!-- Translators: Button tooltip -->
+                    <property name="tooltip-text" translatable="yes">Continue to URL Entry</property>
+                    <signal name="clicked" handler="_on_intro_continue_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_secret_service_failure">
+                <property name="icon-name">dialog-error-symbolic</property>
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">Secret Service Inaccessible</property>
+                <!-- Translators: Description -->
+                <property name="description" translatable="yes">The Secret Service could not be accessed for storing authentication details. Ensure you have a provider such as gnome-keyring. A default keyring needs to be setup, and that keyring unlocked. Most desktop environments will provide this for you. Restart the app to try again.</property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwToastOverlay" id="_entry">
+                <property name="child">
+                  <object class="AdwStatusPage">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">30</property>
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <child>
+                              <object class="AdwEntryRow" id="_url_entry">
+                                <property name="text">https://</property>
+                                <property name="input-purpose">url</property>
+                                <!-- Translators: Description -->
+                                <property name="title" translatable="yes">Server URL</property>
+                                <property name="hexpand">True</property>
+                                <property name="can-focus">True</property>
+                                <signal name="entry-activated" handler="_on_url_entry_activated"/>
+                                <signal name="changed" handler="_on_url_entry_changed"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="_url_continue_button">
+                            <property name="halign">center</property>
+                            <!-- Translators: Button -->
+                            <property name="label" translatable="yes">Continue</property>
+                            <!-- Translators: Button tooltip -->
+                            <property name="tooltip-text" translatable="yes">Start Login</property>
+                            <signal name="clicked" handler="_on_entry_continue_clicked"/>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                    <style>
+                      <class name="compact"/>
+                    </style>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_loading">
+                <property name="paintable">
+                  <object class="AdwSpinnerPaintable">
+                    <property name="widget">_loading</property>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_finished">
+                <property name="icon-name">checkbox-checked-symbolic</property>
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">Connection Established</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">30</property>
+                    <child>
+                      <object class="GtkLabel" id="_instance_label">
+                        <property name="valign">start</property>
+                        <property name="opacity">0.7</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="halign">center</property>
+                        <!-- Translators: Button -->
+                        <property name="label" translatable="yes">Done</property>
+                        <!-- Translators: Button tooltip -->
+                        <property name="tooltip-text" translatable="yes">Complete Sync Setup</property>
+                        <signal name="clicked" handler="_on_done_clicked"/>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+          </object>
+        </property>
+      </object>
+    </child>
+  </template>
+</interface>
