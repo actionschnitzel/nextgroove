@@ -26,7 +26,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkImage" id="cover">
+      <object class="GtkPicture" id="cover">
         <property name="halign">start</property>
         <property name="valign">center</property>
         <property name="hexpand">false</property>

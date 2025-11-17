@@ -6,7 +6,7 @@
     <property name="valign">start</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkImage" id="_cover_image">
+      <object class="GtkPicture" id="_cover_image">
         <property name="vexpand">True</property>
         <property name="valign">center</property>
         <property name="halign">center</property>

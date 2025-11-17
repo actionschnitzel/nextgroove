@@ -98,7 +98,7 @@ class SongRow(Gtk.Box):
         self.album_id = album_id
 
     def set_cover_callback(self, foo, bar, baz):
-        self.cover.set_from_file(NextcloudMusicClient.get_cover_from_album_id(self.album_id))
+        self.cover.set_filename(NextcloudMusicClient.get_cover_from_album_id(self.album_id))
 
     def setup_drag(self, parent):
         # Called once before we have a queue_item

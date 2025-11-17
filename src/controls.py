@@ -227,7 +227,7 @@ class Controls(Gtk.Box):
         song_title = queue_item.title
         artist_title = self._client.artist_name_by_id[queue_item.artist_id]
         album_title = self._client.album_name_by_id[queue_item.album_id]
-        self.cover.set_from_file(NextcloudMusicClient.get_cover_from_album_id(queue_item.album_id))
+        self.cover.set_filename(NextcloudMusicClient.get_cover_from_album_id(queue_item.album_id))
         self.now_playing_label.set_text(song_title)
         self.current_album_artist.set_markup(f"{escape(artist_title)}: <i>{escape(album_title)}</i>")
         self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
