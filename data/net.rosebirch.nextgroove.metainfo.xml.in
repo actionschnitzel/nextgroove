@@ -70,6 +70,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.3.0" date="2025-11-18">
+      <description translate="no">
+        <p>Easier to login to an instance now. Instead of manually creating app passwords, just set the server name and it opens a browser window to authenticate.</p>
+        <p>Move to Gnome SDK 49.</p>
+      </description>
+    </release>
     <release version="0.2.4" date="2025-07-17">
       <description translate="no">
         <p>Adding ability to cache songs locally. There is no limit to this, but you can clear manually in settings.</p>
