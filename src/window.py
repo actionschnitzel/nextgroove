@@ -210,7 +210,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.welcome_retry_button.set_visible(False)
         self.welcome_login_button.set_visible(False)
         self.welcome_spinner.set_visible(True)
-        self.fake_stack.props.visible = False
         self.welcome_status_page.set_description("Retrieving collection...")
 
     def update_collection(self, source_object, result, user_data):
