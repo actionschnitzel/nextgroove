@@ -70,7 +70,7 @@ class NextcloudMusicClient(GObject.Object):
 
 
     def __cache(self):
-        return self.__settings.get_string("cache")
+        return self.__settings.get_boolean("cache")
 
 
     def __auth(self):
