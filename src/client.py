@@ -512,3 +512,24 @@ class NextcloudMusicClient(GObject.Object):
             return False
         return True
 
+    def scrobble(self, track_id):
+        logging.info(f"Want to scrobble id {track_id}")
+        scrobble_url = f"{self.__base_url()}/tracks/{track_id}/scrobble"
+        try:
+            scrobble_response = requests.post(
+                scrobble_url, headers=self.AGENT_HEADERS, auth=self.__auth()
+            )
+            logging.debug(f"Scrobble return code: {scrobble_response.status_code}")
+        except Exception as e:
+            logging.debug(f"Scrobble error: {str(e)}")
+            return True
+
+    def scrobble_async(self, track_id, widget):
+        task = Gio.Task.new(widget, None, None, None)
+        task.set_return_on_cancel(False)
+        task.set_task_data(track_id)
+        task.run_in_thread(self.scrobble_sync)
+
+    def scrobble_sync(self, task, source_object, task_data, cancellable):
+        track_id = task.get_task_data()
+        self.scrobble(track_id)

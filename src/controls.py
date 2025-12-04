@@ -80,6 +80,7 @@ class Controls(Gtk.Box):
         # Now playing portrait/landscape logic
         self.shown = False
         self.portrait = False
+        self.scrobbled = False
 
     def set_mpris(self, mpris):
         self.mpris = mpris
@@ -218,6 +219,7 @@ class Controls(Gtk.Box):
     def set_now_playing(self, queue_item):
         self.shown = True
         self.action_bar.set_visible(True)
+        self.scrobbled = False
         if self.portrait:
             self.small_now_playing_area.set_visible(True)
             current_width = self.get_size_request()[0]
@@ -251,6 +253,12 @@ class Controls(Gtk.Box):
         else:
             self.duration_label.set_text("")
         self.duration_scale.set_value(current_duration_seconds)
+
+        # At half way trigger a scrobble
+        if self.queue_item and not self.scrobbled and current_duration_seconds > self.queue_item.duration / 2.0:
+            logging.debug(f"Scrobble as over half way through song: {current_duration_seconds} / {self.queue_item.duration}")
+            self.scrobbled = True  # Don't trigger twice
+            self._client.scrobble_async(self.queue_item.get_track_id(), self)
 
         return True
 
