@@ -70,6 +70,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.3.1" date="2025-12-06">
+      <description translate="no">
+        <p>Play count recorded in Nextcloud is incremented at halfway through a song.</p>
+      </description>
+    </release>
     <release version="0.3.0" date="2025-11-18">
       <description translate="no">
         <p>Easier to login to an instance now. Instead of manually creating app passwords, just set the server name and it opens a browser window to authenticate.</p>
