@@ -12,8 +12,10 @@ from typing import Optional
 
 from .stats_row import StatsRow
 
+import datetime
 import os
 import re
+import json
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/play_stats_dialog.ui")
@@ -49,6 +51,7 @@ class PlayStatsDialog(Adw.Dialog):
     topartist5 = Gtk.Template.Child()
 
     previous_picker = Gtk.Template.Child()
+    _end = Gtk.Template.Child()
 
     def __init__(self, settings, client) -> None:
         super().__init__()
@@ -61,14 +64,40 @@ class PlayStatsDialog(Adw.Dialog):
     @Gtk.Template.Callback()
     def _on_intro_continue_clicked(self, _button: Gtk.Button) -> None:
         self._stack.set_visible_child(self._loading)
-
         self.__client.get_ampache_summary_async(self, self.__process_summary)
-
     def __on_close(self):
         pass
 
 
     def __process_summary(self, foo, bar, baz):
+        songs_data = self.__client.retreive_summary()
+        stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
+
+        # Save current summary
+        # This will overwrite if you do it twice in a day...
+        # but if you only do this every year, not going to make a lot of difference
+        current_datestr = datetime.datetime.now().date().isoformat()
+        current_date_file = os.path.join(stats_folder, f"stats_snapshot_{current_datestr}.json")
+        with open(current_date_file, "w") as stats_today:
+            stats_today.write(json.dumps(songs_data))
+
+        self.previous_model = Gtk.StringList()
+        self.previous_model.append("Lifetime")
+        self.previous_picker.set_model(self.previous_model)
+
+        pattern = "stats_snapshot_(\d{4}-\d\d-\d\d).json"
+        for filename in os.listdir(stats_folder):
+            if re.search(pattern, filename):
+                snapshot_date = re.search(pattern,filename).group(1)
+                print(f"Found prev snapshot of {filename} for {snapshot_date}")
+                if snapshot_date == current_datestr:
+                    print(f"Ignoring {filename} as that is today's date")
+                    continue
+                self.previous_model.append(snapshot_date)
+
+        self._stack.set_visible_child(self._finished_lifetime)
+
+    def __process_summary_method(self, songrow_list, albumrow_list, artistrow_list, stack):
         songs_data = self.__client.retreive_summary()
         song_counts = {}
         album_counts = {}
@@ -129,7 +158,7 @@ class PlayStatsDialog(Adw.Dialog):
 
         top_five_song_counts_sorted = song_counts_sorted[:5]
 
-        topsongs_list = [None, self.topsong1, self.topsong2, self.topsong3, self.topsong4, self.topsong5]
+        topsongs_list = songrow_list
         position = 1
         for song in top_five_song_counts_sorted:
             song_id = song[0]
@@ -149,7 +178,7 @@ class PlayStatsDialog(Adw.Dialog):
 
         top_five_artist_counts_sorted = artist_counts_sorted[:5]
 
-        topartists_list = [None, self.topartist1, self.topartist2, self.topartist3, self.topartist4, self.topartist5]
+        topartists_list = artistrow_list
         position = 1
         for artist in top_five_artist_counts_sorted:
             artist_id = artist[0]
@@ -166,7 +195,7 @@ class PlayStatsDialog(Adw.Dialog):
         album_counts_sorted = sorted(album_counts_list, key=itemgetter(1), reverse=True)
         top_five_album_counts_sorted = album_counts_sorted[:5]
 
-        topalbums_list = [None, self.topalbum1, self.topalbum2, self.topalbum3, self.topalbum4, self.topalbum5]
+        topalbums_list = albumrow_list
         position = 1
         for album in top_five_album_counts_sorted:
             album_id = album[0]
@@ -176,7 +205,7 @@ class PlayStatsDialog(Adw.Dialog):
             topalbums_list[position].set_details(album_name, None, position, album[1], album_id)
             position += 1
 
-        self._stack.set_visible_child(self.top5songslifetime)
+        self._stack.set_visible_child(stack)
 
     @Gtk.Template.Callback()
     def _on_albums_clicked(self, foo):
@@ -190,27 +219,25 @@ class PlayStatsDialog(Adw.Dialog):
 
     @Gtk.Template.Callback()
     def _on_lifetime_finished(self, foo):
-        # TODO populate the dropdown
-        self.previous_model = Gtk.StringList()
-        self.previous_picker.set_model(self.previous_model)
-        # TODO create snapshots that this will use
-        stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
-        print(stats_folder)
-        pattern = "stats_snapshot_(\d{8}).json"
-        for filename in os.listdir(stats_folder):
-            if re.search(pattern, filename):
-                snapshot_date = re.search(pattern,filename).group(1)
-                print(f"Found prev snapshot of {filename} for {snapshot_date}")
-                self.previous_model.append(snapshot_date)
-
-        self._stack.set_visible_child(self._finished_lifetime)
+        self._stack.set_visible_child(self._end)
 
     @Gtk.Template.Callback()
     def _on_previous_selected(self, foo):
         selected = self.previous_picker.get_selected()
-        print(f"slected is {selected}")
+        selected_date = self.previous_model[selected]
+        print(f"slected is {selected} {selected_date.get_string()}")
         stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
-        previous_file = os.path.join(stats_folder, f"stats_snapshot_{selected}.json")
+        previous_file = os.path.join(stats_folder, f"stats_snapshot_{selected_date.get_string()}.json")
+
+        if selected_date.get_string() == "Lifetime":
+            self.previous_data = None
+            self.__process_summary_method(
+                [None, self.topsong1, self.topsong2, self.topsong3, self.topsong4, self.topsong5],
+                [None, self.topalbum1, self.topalbum2, self.topalbum3, self.topalbum4, self.topalbum5],
+                [None, self.topartist1, self.topartist2, self.topartist3, self.topartist4, self.topartist5],
+                self.top5songslifetime
+            )
+            return
         with open(previous_file, 'r') as prev_stats_file:
             self.previous_data = json.load(prev_stats_file)
         for song in self.previous_data["song"]:
@@ -218,3 +245,15 @@ class PlayStatsDialog(Adw.Dialog):
             prev_playcount = song["playcount"]
             self.previous_song_counts[prev_id] = prev_playcount
 
+        # TDDO fixme do new areas
+        self.__process_summary_method(
+            [None, self.topsong1, self.topsong2, self.topsong3, self.topsong4, self.topsong5],
+            [None, self.topalbum1, self.topalbum2, self.topalbum3, self.topalbum4, self.topalbum5],
+            [None, self.topartist1, self.topartist2, self.topartist3, self.topartist4, self.topartist5],
+            self.top5songslifetime
+        )
+        self._stack.set_visible_child(self.top5songslifetime)
+
+    @Gtk.Template.Callback()
+    def _on_share_clicked(self, foo):
+        print("oh no now what")

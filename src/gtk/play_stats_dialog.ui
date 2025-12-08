@@ -30,7 +30,7 @@
                 <!-- Translators: Description -->
                 <property name="description" translatable="yes">
 Let's look at your music stats!
-First we'll look at lifetime statistics.
+Click continue and we'll take a snapshot of your current playcounts for future reference.
                 </property>
                 <property name="child">
                   <object class="GtkButton">
@@ -38,7 +38,7 @@ First we'll look at lifetime statistics.
                     <!-- Translators: Button -->
                     <property name="label" translatable="yes">Continue</property>
                     <!-- Translators: Button tooltip -->
-                    <property name="tooltip-text" translatable="yes">Continue to lifetime stats</property>
+                    <property name="tooltip-text" translatable="yes">Take snapshot and continue to range selection</property>
                     <signal name="clicked" handler="_on_intro_continue_clicked"/>
                     <style>
                       <class name="suggested-action"/>
@@ -52,11 +52,47 @@ First we'll look at lifetime statistics.
               </object>
             </child>
 
+            <!-- Range selection -->
             <child>
               <object class="AdwStatusPage" id="_loading">
                 <property name="paintable">
                   <object class="AdwSpinnerPaintable">
                     <property name="widget">_loading</property>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_finished_lifetime">
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">🗓️</property>
+                <property name="description">Pick a previous snapshot to compare to. If there is no suitable snapshot, you can still view lifetime statistics.</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">30</property>
+                    <child>
+                      <object class="GtkDropDown" id="previous_picker">
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="halign">center</property>
+                        <!-- Translators: Button -->
+                        <property name="label" translatable="yes">Done</property>
+                        <!-- Translators: Button tooltip -->
+                        <property name="tooltip-text" translatable="yes">See stats</property>
+                        <signal name="clicked" handler="_on_previous_selected"/>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </property>
                 <style>
@@ -205,32 +241,24 @@ First we'll look at lifetime statistics.
             </child>
 
             <child>
-              <object class="AdwStatusPage" id="_finished_lifetime">
-                <!-- Translators: Title -->
-                <property name="title" translatable="yes">🗓️</property>
-                <property name="description">Pick a previous snapshot to compare to.</property>
+              <object class="AdwStatusPage" id="_end">
+                <property name="icon-name">share-alt-symbolic</property>
+                <!-- Translators: Description -->
+                <property name="description" translatable="yes">
+See you next time!
+                </property>
                 <property name="child">
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">30</property>
-                    <child>
-                      <object class="GtkDropDown" id="previous_picker">
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="halign">center</property>
-                        <!-- Translators: Button -->
-                        <property name="label" translatable="yes">Done</property>
-                        <!-- Translators: Button tooltip -->
-                        <property name="tooltip-text" translatable="yes">Complete Sync Setup</property>
-                        <signal name="clicked" handler="_on_previous_selected"/>
-                        <style>
-                          <class name="suggested-action"/>
-                          <class name="pill"/>
-                        </style>
-                      </object>
-                    </child>
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label" translatable="yes">Share</property>
+                    <!-- Translators: Button tooltip -->
+                    <property name="tooltip-text" translatable="yes">Share on Mastodon</property>
+                    <signal name="clicked" handler="_on_share_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
                   </object>
                 </property>
                 <style>
