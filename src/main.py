@@ -22,6 +22,7 @@ import os
 import sys
 import gi
 from .client import NextcloudMusicClient
+from .play_stats_dialog import PlayStatsDialog
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -48,6 +49,7 @@ class NextcloudmusicApplication(Adw.Application):
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action, ["<primary>p"])
+        self.create_action("wrapped", self.on_wrapped_action)
         self.cookie = 0
 
 
@@ -166,6 +168,10 @@ class NextcloudmusicApplication(Adw.Application):
         )
         logging.info("Allowing suspend again")
         self.cookie = 0
+
+    def on_wrapped_action(self, foo, bar):
+        dialog = PlayStatsDialog(self._window.settings, self._client)
+        dialog.present(self._window)
 
 
 def main(version):

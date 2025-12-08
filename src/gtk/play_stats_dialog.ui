@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="PlayStatsDialog" parent="AdwDialog">
+    <property name="content-width">510</property>
+    <property name="content-height">400</property>
+    <child>
+      <object class="AdwToolbarView" id="_toolbar_view">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="decoration-layout">None</property>
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">NextGroove Wrapped</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <property name="content">
+          <object class="GtkStack" id="_stack">
+            <property name="transition-type">slide-left</property>
+            <property name="visible-child">_intro</property>
+            <property name="vexpand">True</property>
+
+            <child>
+              <object class="AdwStatusPage" id="_intro">
+                <property name="title">🏆</property>
+                <!-- Translators: Description -->
+                <property name="description" translatable="yes">
+Let's look at your music stats!
+First we'll look at lifetime statistics.
+                </property>
+                <property name="child">
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label" translatable="yes">Continue</property>
+                    <!-- Translators: Button tooltip -->
+                    <property name="tooltip-text" translatable="yes">Continue to lifetime stats</property>
+                    <signal name="clicked" handler="_on_intro_continue_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_loading">
+                <property name="paintable">
+                  <object class="AdwSpinnerPaintable">
+                    <property name="widget">_loading</property>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+            <!-- Top 5 songs lifetime -->
+            <child>
+              <object class="GtkBox" id="top5songslifetime">
+                <property name="orientation">vertical</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Cumulative Top 5 Songs</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topsong1">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topsong2">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topsong3">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topsong4">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topsong5">
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label" translatable="yes">Next</property>
+                    <!-- Translators: Button tooltip -->
+                    <property name="tooltip-text" translatable="yes">Continue to albums</property>
+                    <signal name="clicked" handler="_on_albums_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Top 5 album lifetime -->
+            <child>
+              <object class="GtkBox" id="top5albumslifetime">
+                <property name="orientation">vertical</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Cumulative Top 5 Albums</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topalbum1">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topalbum2">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topalbum3">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topalbum4">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topalbum5">
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label" translatable="yes">Next</property>
+                    <!-- Translators: Button tooltip -->
+                    <property name="tooltip-text" translatable="yes">Continue to artists</property>
+                    <signal name="clicked" handler="_on_artists_clicked"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Top 5 artist lifetime -->
+            <child>
+              <object class="GtkBox" id="top5artistslifetime">
+                <property name="orientation">vertical</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Cumulative Top 5 Artists</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topartist1">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topartist2">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topartist3">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topartist4">
+                  </object>
+                </child>
+                <child>
+                  <object class="StatsRow" id="topartist5">
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="halign">center</property>
+                    <!-- Translators: Button -->
+                    <property name="label">Next</property>
+                    <signal name="clicked" handler="_on_lifetime_finished"/>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwStatusPage" id="_finished_lifetime">
+                <!-- Translators: Title -->
+                <property name="title" translatable="yes">🗓️</property>
+                <property name="description">Pick a previous snapshot to compare to.</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">30</property>
+                    <child>
+                      <object class="GtkDropDown" id="previous_picker">
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="halign">center</property>
+                        <!-- Translators: Button -->
+                        <property name="label" translatable="yes">Done</property>
+                        <!-- Translators: Button tooltip -->
+                        <property name="tooltip-text" translatable="yes">Complete Sync Setup</property>
+                        <signal name="clicked" handler="_on_previous_selected"/>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <style>
+                  <class name="compact"/>
+                </style>
+              </object>
+            </child>
+
+          </object>
+        </property>
+      </object>
+    </child>
+  </template>
+</interface>

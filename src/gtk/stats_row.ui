@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="StatsRow" parent="GtkBox">
+    <property name="has_tooltip">True</property>
+    <property name="hexpand">true</property>
+    <property name="hexpand-set">true</property>
+    <property name="orientation">horizontal</property>
+    <child>
+      <object class="GtkLabel" id="position">
+        <property name="halign">start</property>
+        <property name="valign">center</property>
+        <property name="hexpand">false</property>
+        <property name="margin-end">10</property>
+        <property name="width-chars">3</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkPicture" id="cover">
+        <property name="halign">start</property>
+        <property name="valign">center</property>
+        <property name="hexpand">false</property>
+        <property name="vexpand">false</property>
+        <property name="height-request">30</property>
+        <property name="width-request">30</property>
+        <property name="visible">true</property>
+        <property name="margin-end">10</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="valign">center</property>
+        <child>
+          <object class="GtkLabel" id="title_label">
+            <property name="hexpand">true</property>
+            <property name="halign">start</property>
+            <property name="valign">center</property>
+            <property name="ellipsize">end</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="sub_label">
+            <property name="visible">false</property>
+            <property name="hexpand">true</property>
+            <property name="halign">start</property>
+            <property name="valign">center</property>
+            <property name="ellipsize">end</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="play_count">
+        <property name="halign">end</property>
+        <property name="margin-end">10</property>
+        <property name="valign">center</property>
+      </object>
+    </child>
+  </template>
+</interface>

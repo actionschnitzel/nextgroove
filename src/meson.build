@@ -41,10 +41,12 @@ nextgroove_sources = [
   'settings.py',
   'widgets/album_header.py',
   'widgets/nextcloud_login_dialog.py',
+  'widgets/play_stats_dialog.py',
   'widgets/playlist_header.py',
   'widgets/playlist_row.py',
   'widgets/queue_page.py',
   'widgets/song_row.py',
+  'widgets/stats_row.py',
   'window.py'
 ]
 
