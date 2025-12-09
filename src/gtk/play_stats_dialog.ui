@@ -256,10 +256,8 @@ See you next time!
                   <object class="GtkButton">
                     <property name="halign">center</property>
                     <!-- Translators: Button -->
-                    <property name="label" translatable="yes">Share</property>
-                    <!-- Translators: Button tooltip -->
-                    <property name="tooltip-text" translatable="yes">Share on Mastodon</property>
-                    <signal name="clicked" handler="_on_share_clicked"/>
+                    <property name="label" translatable="yes">Close</property>
+                    <signal name="clicked" handler="_on_close_clicked"/>
                     <style>
                       <class name="suggested-action"/>
                       <class name="pill"/>

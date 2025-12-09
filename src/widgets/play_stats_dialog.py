@@ -257,5 +257,5 @@ class PlayStatsDialog(Adw.Dialog):
         self._stack.set_visible_child(self.top5songslifetime)
 
     @Gtk.Template.Callback()
-    def _on_share_clicked(self, foo):
-        print("oh no now what")
+    def _on_close_clicked(self, foo):
+        self.close()
