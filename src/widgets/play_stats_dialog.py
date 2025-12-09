@@ -60,6 +60,7 @@ class PlayStatsDialog(Adw.Dialog):
         # TODO remove this connection if nothing in here
         self.connect("closed", lambda _o: self.__on_close())
         self.previous_song_counts = {}
+        self.share_text = ""
 
     @Gtk.Template.Callback()
     def _on_intro_continue_clicked(self, _button: Gtk.Button) -> None:
@@ -85,7 +86,7 @@ class PlayStatsDialog(Adw.Dialog):
         self.previous_model.append("Lifetime")
         self.previous_picker.set_model(self.previous_model)
 
-        pattern = "stats_snapshot_(\d{4}-\d\d-\d\d).json"
+        pattern = "stats_snapshot_(\\d{4}-\\d\\d-\\d\\d).json"
         for filename in os.listdir(stats_folder):
             if re.search(pattern, filename):
                 snapshot_date = re.search(pattern,filename).group(1)
@@ -97,11 +98,12 @@ class PlayStatsDialog(Adw.Dialog):
 
         self._stack.set_visible_child(self._finished_lifetime)
 
-    def __process_summary_method(self, songrow_list, albumrow_list, artistrow_list, stack):
+    def __process_summary_method(self, songrow_list, albumrow_list, artistrow_list, stack, period_text):
         songs_data = self.__client.retreive_summary()
         song_counts = {}
         album_counts = {}
         artist_counts = {}
+        self.share_text = f"{period_text}\n\n"
 
         song_details = {}
         artist_details = {}
@@ -146,6 +148,7 @@ class PlayStatsDialog(Adw.Dialog):
 
         top_five_song_counts_sorted = song_counts_sorted[:5]
 
+        self.share_text += "Top 5 Songs:\n"
         topsongs_list = songrow_list
         position = 1
         for song in top_five_song_counts_sorted:
@@ -157,6 +160,7 @@ class PlayStatsDialog(Adw.Dialog):
             album_id = top_song_details["album_id"]
             # FIXME album cover, make it not look shit and next button
             topsongs_list[position].set_details(title, f"{artist} - {album}", position, song[1], album_id)
+            self.share_text += f"{position}:  {title} - {artist} ({song[1]} plays)\n"
             position += 1
 
         artist_counts_list = []
@@ -166,6 +170,7 @@ class PlayStatsDialog(Adw.Dialog):
 
         top_five_artist_counts_sorted = artist_counts_sorted[:5]
 
+        self.share_text += f"\nTop 5 Artists:\n"
         topartists_list = artistrow_list
         position = 1
         for artist in top_five_artist_counts_sorted:
@@ -174,6 +179,7 @@ class PlayStatsDialog(Adw.Dialog):
 
             artist_name = artist_details[artist_id]
             topartists_list[position].set_details(artist_name, None, position, played, None)
+            self.share_text += f"{position}:  {artist_name} ({played} plays)\n"
             position += 1
 
 
@@ -183,6 +189,7 @@ class PlayStatsDialog(Adw.Dialog):
         album_counts_sorted = sorted(album_counts_list, key=itemgetter(1), reverse=True)
         top_five_album_counts_sorted = album_counts_sorted[:5]
 
+        self.share_text += f"\nTop 5 Albums:\n"
         topalbums_list = albumrow_list
         position = 1
         for album in top_five_album_counts_sorted:
@@ -191,7 +198,12 @@ class PlayStatsDialog(Adw.Dialog):
 
             album_name = album_details[album_id]
             topalbums_list[position].set_details(album_name, None, position, album[1], album_id)
+            self.share_text += f"{position}: {album_name} ({album[1]} plays)\n"
             position += 1
+
+        self.share_text += "\n#NextcloudWrapped #NextGroove #Nextcloud #Wrapped"
+
+        print(self.share_text)
 
         self._stack.set_visible_child(stack)
 
@@ -223,7 +235,8 @@ class PlayStatsDialog(Adw.Dialog):
                 [None, self.topsong1, self.topsong2, self.topsong3, self.topsong4, self.topsong5],
                 [None, self.topalbum1, self.topalbum2, self.topalbum3, self.topalbum4, self.topalbum5],
                 [None, self.topartist1, self.topartist2, self.topartist3, self.topartist4, self.topartist5],
-                self.top5songslifetime
+                self.top5songslifetime,
+                "My total Nextcloud music stats:"
             )
             return
         with open(previous_file, 'r') as prev_stats_file:
@@ -238,7 +251,8 @@ class PlayStatsDialog(Adw.Dialog):
             [None, self.topsong1, self.topsong2, self.topsong3, self.topsong4, self.topsong5],
             [None, self.topalbum1, self.topalbum2, self.topalbum3, self.topalbum4, self.topalbum5],
             [None, self.topartist1, self.topartist2, self.topartist3, self.topartist4, self.topartist5],
-            self.top5songslifetime
+            self.top5songslifetime,
+            f"My Nextcloud music stats from {selected_date.get_string()} to {datetime.datetime.now().date().isoformat()}:"
         )
         self._stack.set_visible_child(self.top5songslifetime)
 
