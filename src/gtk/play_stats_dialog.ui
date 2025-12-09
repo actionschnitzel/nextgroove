@@ -70,7 +70,9 @@ Click continue and we'll take a snapshot of your current playcounts for future r
               <object class="AdwStatusPage" id="_finished_lifetime">
                 <!-- Translators: Title -->
                 <property name="title" translatable="yes">🗓️</property>
-                <property name="description">Pick a previous snapshot to compare to. If there is no suitable snapshot, you can still view lifetime statistics.</property>
+                <property name="description">
+Pick a previous snapshot to compare to.
+If there is no suitable snapshot (created before today), you can still view lifetime statistics.</property>
                 <property name="child">
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
@@ -108,7 +110,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">Cumulative Top 5 Songs</property>
+                    <property name="label">Top 5 Songs</property>
                   </object>
                 </child>
                 <child>
@@ -138,6 +140,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                     <property name="label" translatable="yes">Next</property>
                     <!-- Translators: Button tooltip -->
                     <property name="tooltip-text" translatable="yes">Continue to albums</property>
+                    <property name="margin-bottom">10</property>
                     <signal name="clicked" handler="_on_albums_clicked"/>
                     <style>
                       <class name="suggested-action"/>
@@ -155,7 +158,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">Cumulative Top 5 Albums</property>
+                    <property name="label">Top 5 Albums</property>
                   </object>
                 </child>
                 <child>
@@ -185,6 +188,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                     <property name="label" translatable="yes">Next</property>
                     <!-- Translators: Button tooltip -->
                     <property name="tooltip-text" translatable="yes">Continue to artists</property>
+                    <property name="margin-bottom">10</property>
                     <signal name="clicked" handler="_on_artists_clicked"/>
                     <style>
                       <class name="suggested-action"/>
@@ -202,7 +206,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">Cumulative Top 5 Artists</property>
+                    <property name="label">Top 5 Artists</property>
                   </object>
                 </child>
                 <child>
@@ -230,6 +234,7 @@ Click continue and we'll take a snapshot of your current playcounts for future r
                     <property name="halign">center</property>
                     <!-- Translators: Button -->
                     <property name="label">Next</property>
+                    <property name="margin-bottom">10</property>
                     <signal name="clicked" handler="_on_lifetime_finished"/>
                     <style>
                       <class name="suggested-action"/>
