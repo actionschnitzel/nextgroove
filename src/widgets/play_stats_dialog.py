@@ -109,18 +109,6 @@ class PlayStatsDialog(Adw.Dialog):
 
         previous_data = None
 
-        # Detect previous results and subtract
-        if os.path.exists("previous.json"):
-            print("Detected previous summary!")
-            print("Will only count newer scrobbles than this entry\n")
-            with open("previous.json", "r") as infile:
-                previous_data = json.load(infile)
-            for song in previous_data["song"]:
-                prev_id = song["id"]
-                prev_playcount = song["playcount"]
-                self.previous_song_counts[prev_id] = prev_playcount
-
-
         for song in songs_data["song"]:
 
             # Record play counts
