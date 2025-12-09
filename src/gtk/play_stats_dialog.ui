@@ -4,7 +4,7 @@
   <requires lib="libadwaita" version="1.0"/>
   <template class="PlayStatsDialog" parent="AdwDialog">
     <property name="content-width">510</property>
-    <property name="content-height">400</property>
+    <property name="content-height">430</property>
     <child>
       <object class="AdwToolbarView" id="_toolbar_view">
         <child type="top">
@@ -253,15 +253,48 @@ If there is no suitable snapshot (created before today), you can still view life
 See you next time!
                 </property>
                 <property name="child">
-                  <object class="GtkButton">
-                    <property name="halign">center</property>
-                    <!-- Translators: Button -->
-                    <property name="label" translatable="yes">Close</property>
-                    <signal name="clicked" handler="_on_close_clicked"/>
-                    <style>
-                      <class name="suggested-action"/>
-                      <class name="pill"/>
-                    </style>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="AdwActionRow" id="sharerow">
+                        <property name="selectable">true</property>
+                        <property name="title">Summary</property>
+                        <property name="subtitle">TEST</property>
+                        <property name="subtitle-lines">4</property>
+                        <property name="use-markup">false</property>
+                        <child>
+                          <object class="AdwBin"/>
+                        </child>
+                        <child type="suffix">
+                          <object class="GtkBox">
+                            <property name="valign">center</property>
+                            <property name="spacing">2</property>
+                            <child>
+                              <object class="GtkButton" id="copy_button">
+                                <property name="icon-name">edit-copy-symbolic</property>
+                                <property name="valign">center</property>
+                                <!-- style>
+                                  <class name="flat"/>
+                                </style -->
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="halign">center</property>
+                        <!-- Translators: Button -->
+                        <property name="label" translatable="yes">Close</property>
+                        <signal name="clicked" handler="_on_close_clicked"/>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="pill"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </property>
                 <style>

@@ -52,6 +52,8 @@ class PlayStatsDialog(Adw.Dialog):
 
     previous_picker = Gtk.Template.Child()
     _end = Gtk.Template.Child()
+    sharerow = Gtk.Template.Child()
+    copy_button = Gtk.Template.Child()
 
     def __init__(self, settings, client) -> None:
         super().__init__()
@@ -61,6 +63,7 @@ class PlayStatsDialog(Adw.Dialog):
         self.connect("closed", lambda _o: self.__on_close())
         self.previous_song_counts = {}
         self.share_text = ""
+        self.copy_button.connect("clicked", self.__on_share_copy)
 
     @Gtk.Template.Callback()
     def _on_intro_continue_clicked(self, _button: Gtk.Button) -> None:
@@ -203,7 +206,9 @@ class PlayStatsDialog(Adw.Dialog):
 
         self.share_text += "\n#NextcloudWrapped #NextGroove #Nextcloud #Wrapped"
 
-        print(self.share_text)
+        shortened_share_text = "\n".join(self.share_text.split("\n")[0:4]) + "\n…"
+        self.sharerow.set_subtitle(shortened_share_text)
+        self.sharerow.set_subtitle_lines(4)
 
         self._stack.set_visible_child(stack)
 
@@ -259,3 +264,9 @@ class PlayStatsDialog(Adw.Dialog):
     @Gtk.Template.Callback()
     def _on_close_clicked(self, foo):
         self.close()
+
+    def __on_share_copy(self, foo):
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        content = gi.repository.Gdk.ContentProvider.new_for_value(self.share_text)
+        clipboard.set_content(content)
+        self.copy_button.set_icon_name("checkmark")
