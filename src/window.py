@@ -735,7 +735,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # FIXME can we clear password remotely?
         # Clear login
         self._settings.set_string("server", "")
-        self._settings.set_string("token", "")
+        self._client.set_token("")
         self._settings.set_string("user", "")
         # Quit
         self.get_application().quit()

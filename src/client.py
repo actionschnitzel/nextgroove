@@ -19,6 +19,7 @@
 
 import gi
 gi.require_version('Gtk', '4.0')
+gi.require_version('Secret', '1')
 
 import logging
 import requests
@@ -26,7 +27,7 @@ import json
 import os
 from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
-from gi.repository import GObject, Gio, GLib, Gtk, Gdk
+from gi.repository import GObject, Gio, GLib, Gtk, Gdk, Secret
 from .albumlistitem import AlbumListItem
 from functools import cmp_to_key
 from .playlist import PlaylistItem
@@ -39,6 +40,13 @@ class NextcloudMusicClient(GObject.Object):
     TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
     AGENT_HEADERS = {"User-Agent": "Nextgroove/0.3.1"}
     LOGIN_ENDPOINT = "index.php/login/v2"
+    SECRET_SCHEMA = Secret.Schema.new(
+        "net.rosebirch.NextGroove",
+        Secret.SchemaFlags.NONE,
+        {"service": Secret.SchemaAttributeType.STRING},
+    )
+    SECRET_ATTRIBUTES = {"service": "nextcloud"}
+
 
 
     collection = None
@@ -62,6 +70,7 @@ class NextcloudMusicClient(GObject.Object):
         self.playlists = Gio.ListStore()
         self.playlist_save_buffer = []
         self.last_error = ""
+        self.__migrate_secrets()
 
 
     def initialized(self):
@@ -72,9 +81,54 @@ class NextcloudMusicClient(GObject.Object):
     def __cache(self):
         return self.__settings.get_boolean("cache")
 
+    def __migrate_secrets(self):
+        user = self.__settings.get_string("user")
+        old_token = self.__settings.get_string("token")
+        if old_token in (None, ""):
+            logging.debug("Token already migrated: no action")
+            # Already migrated
+            return
+
+        success = False
+        try:
+            item_id = "net.rosebirch.NextGroove: {}".format(user)
+            success = Secret.password_store_sync(
+                self.SECRET_SCHEMA,
+                self.SECRET_ATTRIBUTES,
+                Secret.COLLECTION_DEFAULT,
+                item_id,
+                old_token,
+                None,
+            )
+        except Exception as e:
+            logging.error(f"Failed to store password: {e}")
+            return
+        logging.info("Migrated to secret store.")
+        self.__settings.set_string("token", "")
+        return success
+
+
+    def set_token(self, token):
+        success = False
+        try:
+            item_id = "net.rosebirch.NextGroove: {}".format(user)
+            success = Secret.password_store_sync(
+                self.SECRET_SCHEMA,
+                self.SECRET_ATTRIBUTES,
+                Secret.COLLECTION_DEFAULT,
+                item_id,
+                old_token,
+                None,
+            )
+        except Exception as e:
+            logging.error(f"Failed to store password: {e}")
+            return
+        logging.info("Stored new token")
+
 
     def __auth(self):
-        return HTTPBasicAuth(self.__settings.get_string("user"), self.__settings.get_string("token"))
+        token = Secret.password_lookup_sync(self.SECRET_SCHEMA, self.SECRET_ATTRIBUTES, None)
+        return HTTPBasicAuth(self.__settings.get_string("user"), token)
 
 
     def __server(self):
@@ -508,7 +562,7 @@ class NextcloudMusicClient(GObject.Object):
             password = poll_json["appPassword"]
             self.__settings.set_string("server", server)
             self.__settings.set_string("user", user)
-            self.__settings.set_string("token", password)
+            self.set_token(password)
             return False
         return True
 
