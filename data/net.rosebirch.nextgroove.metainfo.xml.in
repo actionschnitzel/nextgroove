@@ -70,6 +70,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.4.0" date="2025-12-14">
+      <description translate="no">
+        <p>NextGroove wrapped! View your top played songs/albums/artists from lifetime playcount, or comparing to a previous snapshot. Saves a snapshot to be compared against later.</p>
+        <p>Improved security of token storage.</p>
+      </description>
+    </release>
     <release version="0.3.1" date="2025-12-06">
       <description translate="no">
         <p>Play count recorded in Nextcloud is incremented at halfway through a song.</p>
