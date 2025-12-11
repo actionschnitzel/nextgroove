@@ -533,3 +533,26 @@ class NextcloudMusicClient(GObject.Object):
     def scrobble_sync(self, task, source_object, task_data, cancellable):
         track_id = task.get_task_data()
         self.scrobble(track_id)
+
+    def get_ampache_summary(self):
+        # Note this uses the ampache API, base url cannot be used.
+        stats_url = f"{self.__server()}/index.php/apps/music/ampache/internal?action=songs"
+        stats_response = requests.get(
+                stats_url, headers=self.AGENT_HEADERS, auth=self.__auth()
+            )
+        if stats_response.status_code != 200:
+            logging.error("Failed to get stats")
+            return None
+
+        self.songs_data = json.loads(stats_response.text)
+
+    def get_ampache_summary_async(self, widget, callback):
+        task = Gio.Task.new(widget, None, callback, None)
+        task.set_return_on_cancel(False)
+        task.run_in_thread(self.get_ampache_summary_sync)
+
+    def get_ampache_summary_sync(self, task, source_object, task_data, cancellable):
+        self.get_ampache_summary()
+
+    def retreive_summary(self):
+        return self.songs_data

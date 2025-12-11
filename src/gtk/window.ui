@@ -347,6 +347,12 @@
         <attribute name="action">app.about</attribute>
       </item>
     </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_NextGroove Wrapped</attribute>
+        <attribute name="action">app.wrapped</attribute>
+      </item>
+    </section>
   </menu>
   <menu id="album_click_menu">
     <section>
