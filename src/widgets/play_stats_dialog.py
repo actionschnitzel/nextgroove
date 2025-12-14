@@ -77,6 +77,10 @@ class PlayStatsDialog(Adw.Dialog):
         songs_data = self.__client.retreive_summary()
         stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
 
+        # If folder doesn't exist, create it
+        if not os.path.isdir(stats_folder):
+            os.makedirs(stats_folder)
+
         # Save current summary
         # This will overwrite if you do it twice in a day...
         # but if you only do this every year, not going to make a lot of difference
