@@ -11,12 +11,19 @@
             <object class="GtkButton" id="_save_queue_as_playlist_button">
               <property name="icon-name">document-save</property>
               <property name="tooltip-text">Save current queue as playlist</property>
+              <style>
+                <class name="osd"/>
+                <class name="circular"/>
+              </style>
             </object>
           </child>
           <child>
             <object class="GtkEntry" id="_queue_name_entry">
               <property name="visible">False</property>
               <property name="placeholder-text">Name of Playlist</property>
+              <style>
+                <class name="osd"/>
+              </style>
             </object>
           </child>
           <child>
@@ -24,6 +31,10 @@
               <property name="icon-name">window-close-symbolic</property>
               <property name="visible">False</property>
               <property name="tooltip-text">Cancel save as playlist</property>
+              <style>
+                <class name="osd"/>
+                <class name="circular"/>
+              </style>
             </object>
           </child>
         </object>
@@ -35,7 +46,6 @@
               <property name="has_tooltip">True</property>
               <property name="valign">start</property>
               <property name="orientation">vertical</property>
-
               <child>
                 <object class="GtkListView" id="queueview">
                 </object>
