@@ -87,6 +87,9 @@
     <child type="center">
       <object class="GtkBox">
         <property name="halign">center</property>
+        <style>
+          <class name="linked"/>
+        </style>
         <child>
           <object class="GtkButton" id="previous">
             <property name="label">prev</property>
@@ -97,6 +100,7 @@
           <object class="GtkButton" id="playpause">
             <property name="label">play/pause</property>
             <property name="icon-name">media-playback-start-symbolic</property>
+            <property name="width-request">48</property>
           </object>
         </child>
         <child>
