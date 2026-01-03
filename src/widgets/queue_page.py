@@ -85,6 +85,10 @@ class QueuePage(Gtk.Overlay):
         list_item.props.child.show_artist()
         list_item.props.child.set_window(self)
         list_item.props.child.setup_drag(self)
+        list_item.connect("notify::selected", self.list_item_selection_changed)
+
+    def list_item_selection_changed(self, list_item, selected):
+        list_item.props.child.set_selected(list_item.get_selected())
 
     def _bind_queue_list_item(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem

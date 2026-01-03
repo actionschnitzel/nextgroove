@@ -53,6 +53,7 @@ class SongRow(Gtk.Box):
         self.window = None
         self.list_item = None
         self.album_id = None
+        self.drag_enabled = False
 
     def set_index(self, index):
         self.index = index
@@ -112,14 +113,20 @@ class SongRow(Gtk.Box):
         content_type = source.get_content().ref_formats().get_gtypes()[0]
 
         self.drag_source.add_controller(source)
-        self.drag_source.set_visible(True)
+        self.drag_enabled = True
 
         target = Gtk.DropTarget.new(content_type ,Gdk.DragAction.MOVE)
         target.connect("drop", self.on_drag_drop)
         self.add_controller(target)
 
 
+
     def on_drag_drop(self, drop_target, source, x, y):
         logging.debug(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
         logging.debug(f"That's moving index {source.index} to {self.index}")
         self.window.reorder_queue(source.index, self.index)
+
+    def set_selected(self, selected):
+        if not self.drag_enabled:
+            return
+        self.drag_source.set_visible(selected)
