@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <interface>
     <requires lib="gtk" version="4.0"/>
-    <template class="QueuePage" parent="GtkBox">
-      <property name="has_tooltip">True</property>
-      <property name="valign">start</property>
-      <property name="orientation">vertical</property>
+    <template class="QueuePage" parent="GtkScrolledWindow">
       <child>
         <object class="GtkBox">
-          <property name="halign">end</property>
-          <property name="valign">end</property>
-          <property name="orientation">horizontal</property>
+          <property name="has_tooltip">True</property>
+          <property name="valign">start</property>
+          <property name="orientation">vertical</property>
           <child>
-            <object class="GtkButton" id="_save_queue_as_playlist_button">
-              <property name="icon-name">document-save</property>
-              <property name="tooltip-text">Save current queue as playlist</property>
+            <object class="GtkBox">
+              <property name="halign">end</property>
+              <property name="valign">end</property>
+              <property name="orientation">horizontal</property>
+              <child>
+                <object class="GtkButton" id="_save_queue_as_playlist_button">
+                  <property name="icon-name">document-save</property>
+                  <property name="tooltip-text">Save current queue as playlist</property>
+                </object>
+              </child>
+              <child>
+                <object class="GtkEntry" id="_queue_name_entry">
+                  <property name="visible">False</property>
+                  <property name="placeholder-text">Name of Playlist</property>
+                </object>
+              </child>
+              <child>
+                <object class="GtkButton" id="_hide_playlist_save">
+                  <property name="icon-name">window-close-symbolic</property>
+                  <property name="visible">False</property>
+                  <property name="tooltip-text">Cancel save as playlist</property>
+                </object>
+              </child>
             </object>
           </child>
           <child>
-            <object class="GtkEntry" id="_queue_name_entry">
-              <property name="visible">False</property>
-              <property name="placeholder-text">Name of Playlist</property>
+            <object class="GtkListView" id="queueview">
             </object>
           </child>
-          <child>
-            <object class="GtkButton" id="_hide_playlist_save">
-              <property name="icon-name">window-close-symbolic</property>
-              <property name="visible">False</property>
-              <property name="tooltip-text">Cancel save as playlist</property>
-            </object>
-          </child>
-        </object>
-      </child>
-      <child>
-        <object class="GtkListView" id="queueview">
         </object>
       </child>
     </template>

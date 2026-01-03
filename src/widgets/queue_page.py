@@ -29,7 +29,7 @@ from .song_row import SongRow
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/queuepage.ui")
-class QueuePage(Gtk.Box):
+class QueuePage(Gtk.ScrolledWindow):
 
     __gtype_name__ = "QueuePage"
 

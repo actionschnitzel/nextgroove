@@ -308,11 +308,7 @@
                 <property name="icon-name">view-list-ordered-symbolic</property>
                 <property name="visible">False</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow" id="_scrolled_window_queue">
-                    <child>
-                      <object class="QueuePage" id="queuepage">
-                      </object>
-                    </child>
+                  <object class="QueuePage" id="queuepage">
                   </object>
                 </property>
               </object>
