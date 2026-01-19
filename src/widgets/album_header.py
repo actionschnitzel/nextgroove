@@ -73,7 +73,10 @@ class AlbumHeader(Gtk.Box):
         self.album = album
         self._album_label.set_markup(f"<span size=\"xx-large\">{escape(album.album)}</span>")
         self._artist_label.set_markup(f"<span size=\"x-large\">{escape(album.artist)}</span>")
-        self._album_year_label.set_text(f"Released {album.year}")
+        if album.year:
+            self._album_year_label.set_text(f"Released {album.year}")
+        else:
+            self._album_year_label.set_text("")
 
     def set_cover(self, cover_file):
         self._cover_image.set_filename(cover_file)
