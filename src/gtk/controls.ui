@@ -87,26 +87,36 @@
     <child type="center">
       <object class="GtkBox">
         <property name="halign">center</property>
-        <style>
-          <class name="linked"/>
-        </style>
+
         <child>
           <object class="GtkButton" id="previous">
             <property name="label">prev</property>
             <property name="icon-name">media-skip-backward-symbolic</property>
+            <style>
+              <class name="circular"/>
+            </style>
           </object>
+
         </child>
         <child>
           <object class="GtkButton" id="playpause">
             <property name="label">play/pause</property>
             <property name="icon-name">media-playback-start-symbolic</property>
-            <property name="width-request">48</property>
+            <property name="width-request">58</property>
+            <property name="height-request">58</property>
+            <style>
+              <class name="circular"/>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="next">
             <property name="label">next</property>
             <property name="icon-name">media-skip-forward-symbolic</property>
+            <style>
+              <class name="circular"/>
+            </style>
           </object>
         </child>
       </object>
