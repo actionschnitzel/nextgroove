@@ -38,7 +38,7 @@ from .login_request_result import LoginRequestResult
 class NextcloudMusicClient(GObject.Object):
 
     TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
-    AGENT_HEADERS = {"User-Agent": "Nextgroove/0.4.0"}
+    AGENT_HEADERS = {"User-Agent": "Nextgroove/0.4.1"}
     LOGIN_ENDPOINT = "index.php/login/v2"
     SECRET_SCHEMA = Secret.Schema.new(
         "net.rosebirch.NextGroove",
