@@ -109,6 +109,7 @@ class NextcloudMusicClient(GObject.Object):
 
 
     def set_token(self, token):
+        user = self.__settings.get_string("user")
         success = False
         try:
             item_id = "net.rosebirch.NextGroove: {}".format(user)
@@ -117,9 +118,10 @@ class NextcloudMusicClient(GObject.Object):
                 self.SECRET_ATTRIBUTES,
                 Secret.COLLECTION_DEFAULT,
                 item_id,
-                old_token,
+                token,
                 None,
             )
+
         except Exception as e:
             logging.error(f"Failed to store password: {e}")
             return
