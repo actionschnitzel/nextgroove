@@ -185,6 +185,7 @@ class Controls(Gtk.Box):
 
         current_song_queue_item = self._queue[self.queue_pos]
         next_song_index = self.queue_pos + 1
+        print(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
 
         song_queue_item = None
         if next_song_index < len(self._queue):  # Then this is valid
@@ -205,9 +206,44 @@ class Controls(Gtk.Box):
         self._client.get_song_async(song_queue_item.get_song_id(), song_queue_item.get_title(), self.next_song_file_returned)
         self.start_loading()
 
-    def next_song_file_returned(self, source_object, result, user_data):
-        self.increment_queue_pos()
+    def remove_current_item_and_play_next(self):
+        if len(self._queue) == 0:
+            logging.debug("Queue empty, ignoring next button")
+            self.application.allow_suspend()
+            return
+
+        song_to_remove = self._queue[self.queue_pos]
+        self._queue.remove(self.queue_pos)
+
+        print(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
+        # Queue pos remains the same
+        next_song_index = self.queue_pos
+
+        song_queue_item = None
+        if next_song_index < len(self._queue):  # Then this is valid
+            song_queue_item = self._queue[next_song_index]
+
+        if not song_queue_item:
+            logging.info("Reached end of queue, not playing new song.")
+            self.play_pause_button.set_icon_name("media-playback-start-symbolic")
+            self.application.allow_suspend()
+            self.mpris._on_playing_changed(None, None)
+            return
+
+        song_to_remove.set_now_playing(False)
+        song_to_remove.notify("now_playing")
+        song_queue_item.set_now_playing(True)
+        song_queue_item.notify("now_playing")
+
+        self._client.get_song_async(song_queue_item.get_song_id(), song_queue_item.get_title(), self.next_song_file_returned_no_increment)
+        self.start_loading()
+
+    def _next_song_file_returned(self, result, increment=1):
+        self.increment_queue_pos(increment)
         self.finished_loading()
+
+        print(f"Got a new song file to play, at position {self.queue_pos} in queue of length {len(self._queue)}")
+
         if result.had_error():
             logging.error("Had an error, stop")
             self.network_issue_icon.set_visible(True)
@@ -215,6 +251,13 @@ class Controls(Gtk.Box):
             return
         song_file = result.propagate_value().value
         self._window.play_song(song_file, self._client.song_title_last_callback)
+
+    def next_song_file_returned(self, source_object, result, user_data):
+        self._next_song_file_returned(result)
+
+    def next_song_file_returned_no_increment(self, source_object, result, user_data):
+        print(f"Special case for receiving file, don't change pos of {self.queue_pos}")
+        self._next_song_file_returned(result, increment=0)
 
     def set_now_playing(self, queue_item):
         self.shown = True

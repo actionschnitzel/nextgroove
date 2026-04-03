@@ -18,7 +18,10 @@ install_data(
   scalable_dir / 'double-ended-arrows-vertical.svg',
   install_dir: get_option('datadir') / 'icons' / scalable_dir
 )
-
+install_data(
+  scalable_dir / 'cross-small-symbolic.svg',
+  install_dir: get_option('datadir') / 'icons' / scalable_dir
+)
 
 symbolic_dir = 'hicolor' / 'symbolic' / 'apps'
 install_data(

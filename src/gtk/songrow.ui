@@ -61,6 +61,19 @@
       </object>
     </child>
     <child>
+      <object class="GtkButton" id="remove_button">
+        <property name="icon-name">cross-small-symbolic</property>
+        <property name="visible">false</property>"
+        <property name="halign">start</property>
+        <property name="valign">center</property>
+        <property name="hexpand">false</property>
+        <property name="margin-end">10</property>
+        <style>
+          <class name="destructive-action"/>
+        </style>
+      </object>
+    </child>
+    <child>
       <object class="GtkLabel" id="song_duration">
         <property name="halign">end</property>
         <property name="margin-end">10</property>

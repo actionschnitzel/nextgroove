@@ -719,6 +719,29 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Store updated indexes on songRow
         self.queue_page.queue_reorder()
 
+    def remove_queue_item(self, index):
+        old_len = len(self._queue)
+        new_len = old_len - 1
+        item = self._queue.get_item(index)
+        item_was_playing = item.is_now_playing()
+        current_queue_pos = self.controls.queue_pos
+        print(f"Removing queue item {index} from queue of length {old_len}, with current queue position of {current_queue_pos}")
+        if current_queue_pos > index:
+            print(f"Decreasing queue position from {current_queue_pos} to {current_queue_pos-1}")
+            self.controls.increment_queue_pos(-1)
+
+        if item_was_playing:
+            self.controls.remove_current_item_and_play_next()
+            # Store updated indexes on songRow
+            self.queue_page.queue_reorder()
+            return
+
+        self._queue.remove(index)
+        # Store updated indexes on songRow
+        self.queue_page.queue_reorder()
+
+
+
     @Gtk.Template.Callback()
     def _do_login(self, widget):
         dialog = NextcloudLoginDialog(0, self.settings, self._client)

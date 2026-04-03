@@ -42,6 +42,7 @@ class SongRow(Gtk.Box):
     _song_duration = Gtk.Template.Child("song_duration")
     cover = Gtk.Template.Child()
     drag_source = Gtk.Template.Child()
+    remove_button = Gtk.Template.Child()
 
     queue_item = None
 
@@ -77,6 +78,8 @@ class SongRow(Gtk.Box):
         if self.parent:
             # That means we want drag
             self.setup_drag(self.parent)
+            # Also
+            self.remove_button.connect("clicked", self.remove_clicked)
 
     def draw(self, queue_item):
         weight = "normal"
@@ -119,8 +122,6 @@ class SongRow(Gtk.Box):
         target.connect("drop", self.on_drag_drop)
         self.add_controller(target)
 
-
-
     def on_drag_drop(self, drop_target, source, x, y):
         logging.debug(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
         logging.debug(f"That's moving index {source.index} to {self.index}")
@@ -130,3 +131,8 @@ class SongRow(Gtk.Box):
         if not self.drag_enabled:
             return
         self.drag_source.set_visible(selected)
+        self.remove_button.set_visible(selected)
+
+    def remove_clicked(self, _):
+        print(f"want to remove {self.queue_item} at index {self.index}")
+        self.window.remove_queue_item(self.index)
