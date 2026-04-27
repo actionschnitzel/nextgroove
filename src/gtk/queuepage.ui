@@ -7,6 +7,8 @@
           <property name="halign">end</property>
           <property name="valign">end</property>
           <property name="orientation">horizontal</property>
+          <property name="margin-end">10</property>
+          <property name="margin-bottom">10</property>
           <child>
             <object class="GtkButton" id="_save_queue_as_playlist_button">
               <property name="icon-name">document-save</property>
