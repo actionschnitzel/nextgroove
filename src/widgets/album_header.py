@@ -44,6 +44,7 @@ class AlbumHeader(Gtk.Box):
     song_click_menu_album_view = Gtk.Template.Child("song_click_menu_album_view")
     append_button = Gtk.Template.Child("append_button")
     append_next_button = Gtk.Template.Child("append_next_button")
+    add_play_order = Gtk.Template.Child()
 
 
 
@@ -136,5 +137,3 @@ class AlbumHeader(Gtk.Box):
             insert_index += 1
 
         self.window._queue.insert(insert_index+1 , self.clicked_song)
-
-

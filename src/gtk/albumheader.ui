@@ -98,6 +98,29 @@
               <property name="tooltip-text">Add to queue (play next)</property>
             </object>
           </child>
+          <child>
+           <object class="AdwToggleGroup" id="add_play_order">
+             <property name="active-name">consecutive</property>
+             <property name="margin-start">10</property>
+              <property name="margin-end">20</property>
+              <property name="margin-top">20</property>
+              <property name="margin-bottom">20</property>
+             <child>
+               <object class="AdwToggle">
+                 <property name="icon-name">playlist-consecutive-symbolic</property>
+                 <property name="tooltip" translatable="yes">Play in order</property>
+                 <property name="name">consecutive</property>
+               </object>
+             </child>
+             <child>
+               <object class="AdwToggle">
+                 <property name="icon-name">playlist-shuffle-symbolic</property>
+                 <property name="tooltip" translatable="yes">Play shuffled</property>
+                 <property name="name">shuffle</property>
+               </object>
+             </child>
+           </object>
+          </child>
         </object>
       </child>
       <child>

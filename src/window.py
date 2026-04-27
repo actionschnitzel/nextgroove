@@ -18,6 +18,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
+import random
 import os.path
 from html import escape
 
@@ -310,14 +311,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album = self._client.albums[album_index]
         self.album_play_clicked_generic(album)
 
-    def album_play_clicked_generic(self, album):
+    def album_play_clicked_generic(self, album, source):
         album_id = album.album_id
         logging.info(f"Clicked play on album '{album.album}' from artist {album.artist}")
         album_details = self._client.album_details(album)
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
+        sorted_tracks = self.sorted_or_shuffled(album_details["tracks"], source)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
@@ -361,7 +362,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album = self._client.albums[album_index]
         self.album_queue_add_end_clicked_generic(album)
 
-    def album_queue_add_end_clicked_generic(self, album):
+    def album_queue_add_end_clicked_generic(self, album, source):
         if len(self._queue) == 0:
             logging.debug("Add to end of queue is identical to play when no queue: rerouting...")
             self.album_play_clicked_generic(album)
@@ -373,7 +374,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
+        sorted_tracks = self.sorted_or_shuffled(album_details["tracks"], source)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
@@ -387,9 +388,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def album_queue_add_next_clicked(self, event, something):
         album_index = self._album_selected
         album = self._client.albums[album_index]
-        self.album_queue_play_next_generic(album)
+        source = self.album_tab_details_content
+        self.album_queue_play_next_generic(album, source)
 
-    def album_queue_play_next_generic(self, album):
+    def album_queue_play_next_generic(self, album, source):
         album_id = album.album_id
         if len(self._queue) == 0:
             logging.info("Add to next in queue is identical to play when no queue: rerouting...")
@@ -401,7 +403,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
+        sorted_tracks = self.sorted_or_shuffled(album_details["tracks"], source)
 
         for song in reversed(sorted_tracks):
             queued_song_id = list(song["files"].values())[0]
@@ -409,6 +411,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             song_item.set_track_id(song['id'])
             song_item.set_duration(song['length'])
             self._queue.insert(self.controls.queue_pos+1, song_item)
+
+    def sorted_or_shuffled(self, tracks, from_view):
+        if from_view.add_play_order.get_active_name() == "shuffle":
+            return random.sample(tracks, len(tracks))
+        else:
+            return sorted(tracks, key=self.get_track_number)
 
 
     ##################
@@ -481,19 +489,21 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def artist_album_play_clicked_artist_view(self, _):
         album = self.album_details_content.album
-        return self.artist_album_play_clicked(album)
+        source = self.album_details_content
+        return self.artist_album_play_clicked(album, source)
 
     def artist_album_play_clicked_album_view(self, _):
         album = self.album_tab_details_content.album
-        return self.artist_album_play_clicked(album)
+        source = self.album_tab_details_content
+        return self.artist_album_play_clicked(album, source)
 
-    def artist_album_play_clicked(self, album):
+    def artist_album_play_clicked(self, album, source):
         album_details = self._client.album_details(album)
         album_id = album_details['id']
         artist_id = self._client.get_artist_id_for_album_list_item(album)
 
         # Tracks are not ordered in the json output
-        sorted_tracks = sorted(album_details["tracks"], key=self.get_track_number)
+        sorted_tracks = self.sorted_or_shuffled(album_details["tracks"], source)
 
         # GOTCHA songs contain an ID and each file (for which I've only seen one) has an ID
         # we need that file ID, which makes this look quite ugly
@@ -514,19 +524,23 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def artist_album_append_clicked_artist_view(self, _):
         album = self.album_details_content.album
-        self.album_queue_add_end_clicked_generic(album)
+        source = self.album_details_content
+        self.album_queue_add_end_clicked_generic(album, source)
 
     def artist_album_append_clicked_album_view(self, _):
         album = self.album_tab_details_content.album
-        self.album_queue_add_end_clicked_generic(album)
+        source = self.album_tab_details_content
+        self.album_queue_add_end_clicked_generic(album, source)
 
     def artist_album_append_next_clicked_artist_view(self, _):
         album = self.album_details_content.album
-        self.album_queue_play_next_generic(album)
+        source = self.album_details_content
+        self.album_queue_play_next_generic(album, source)
 
     def artist_album_append_next_clicked_album_view(self, _):
         album = self.album_tab_details_content.album
-        self.album_queue_play_next_generic(album)
+        source = self.album_tab_details_content
+        self.album_queue_play_next_generic(album, source)
 
 
     #################
