@@ -87,6 +87,9 @@
             <property name="margin-top">20</property>
             <property name="margin-bottom">20</property>
             <property name="tooltip-text">Delete playlist</property>
+            <style>
+              <class name="destructive-action"/>
+            </style>
           </object>
         </child>
       </object>
