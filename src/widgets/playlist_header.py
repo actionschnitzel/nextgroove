@@ -21,6 +21,7 @@ from __future__ import annotations
 from typing import Optional
 
 import logging
+import random
 
 from gi.repository import GObject, Gtk, Gio
 from .playlist import PlaylistItem
@@ -43,8 +44,7 @@ class PlaylistHeader(Gtk.Box):
     append_button = Gtk.Template.Child("append_button")
     append_next_button = Gtk.Template.Child("append_next_button")
     delete_playlist = Gtk.Template.Child("delete_playlist")
-
-
+    add_play_order = Gtk.Template.Child()
 
     def __init__(self):
         super().__init__()
@@ -54,6 +54,7 @@ class PlaylistHeader(Gtk.Box):
         self.clicked_song = None
         self.window = None
         self.playlist_to_delete = None
+        self.playlist = None
 
         song_item_factory = Gtk.SignalListItemFactory()
         song_item_factory.connect("setup", self._setup_song_list_item)
@@ -160,4 +161,14 @@ class PlaylistHeader(Gtk.Box):
 
         self.window.playlist_nav_view.pop()
         self.window._client.delete_playlist_async(self.playlist.playlist_id)
+
+    def get_track_ids(self):
+        """Checks whether we are using shuffle or not.
+           If in shuffle mode, shuffle the track IDs.
+           If not, just return tracks
+        """
+        if self.add_play_order.get_active_name() == "shuffle":
+            return random.sample(self.playlist.track_ids, len(self.playlist.track_ids))
+        return self.playlist.track_ids
+
 

@@ -553,9 +553,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist = self._client.playlists[playlist_id]
         playlist_name = playlist.playlist_name
         logging.debug(f"Clicked playlist {playlist_name}")
-        track_ids = playlist.track_ids
-
         self.playlistdetails.set_playlist(playlist)
+        track_ids = self.playlistdetails.get_track_ids()
         self.playlistdetails.set_window(self)
         tracks = []
         for track in track_ids:
@@ -568,7 +567,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
         logging.debug(f"Clicked playlist {playlist_name}")
-        track_ids = playlist.track_ids
+        track_ids = self.playlistdetails.get_track_ids()
 
         self._queue.remove_all()
 
@@ -590,7 +589,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
         logging.debug(f"Clicked playlist {playlist_name}")
-        track_ids = playlist.track_ids
+        track_ids = self.playlistdetails.get_track_ids()
 
         if len(self._queue) == 0:
             self.playlist_play_clicked(event)
@@ -608,7 +607,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist = self.playlistdetails.playlist
         playlist_name = playlist.playlist_name
         logging.debug(f"Clicked playlist {playlist_name}")
-        track_ids = playlist.track_ids
+        track_ids = self.playlistdetails.get_track_ids()
 
         if len(self._queue) == 0:
             self.playlist_play_clicked(event)
