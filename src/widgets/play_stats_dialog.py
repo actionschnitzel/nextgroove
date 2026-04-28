@@ -98,7 +98,7 @@ class PlayStatsDialog(Adw.Dialog):
         self.previous_picker.set_model(self.previous_model)
 
         pattern = "stats_snapshot_(\\d{4}-\\d\\d-\\d\\d).json"
-        for filename in os.listdir(stats_folder):
+        for filename in sorted(os.listdir(stats_folder)):
             if re.search(pattern, filename):
                 snapshot_date = re.search(pattern,filename).group(1)
                 print(f"Found prev snapshot of {filename} for {snapshot_date}")
