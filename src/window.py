@@ -728,7 +728,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         # Also if the we move the currently played song, move the queue position
         if from_index == self.controls.queue_pos:
             self.controls.set_queue_pos(to_index+1)
-
+        # Also if we move a song from before the currently played song to after it
+        elif from_index < self.controls.queue_pos and to_index >= self.controls.queue_pos:
+            self.controls.set_queue_pos(self.controls.queue_pos-1)
+        # Also if we move a song from after the currently played song to before it
+        elif from_index > self.controls.queue_pos and to_index < self.controls.queue_pos:
+            self.controls.set_queue_pos(self.controls.queue_pos+1)
         # Store updated indexes on songRow
         self.queue_page.queue_reorder()
 
