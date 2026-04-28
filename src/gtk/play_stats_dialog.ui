@@ -109,7 +109,7 @@ If there is no suitable snapshot (created before today), you can still view life
                 <property name="orientation">vertical</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="topsongsheaderlabel">
                     <property name="label">Top 5 Songs</property>
                   </object>
                 </child>
@@ -157,7 +157,7 @@ If there is no suitable snapshot (created before today), you can still view life
                 <property name="orientation">vertical</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="topalbumsheaderlabel">
                     <property name="label">Top 5 Albums</property>
                   </object>
                 </child>
@@ -205,7 +205,7 @@ If there is no suitable snapshot (created before today), you can still view life
                 <property name="orientation">vertical</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="topartistsheaderlabel">
                     <property name="label">Top 5 Artists</property>
                   </object>
                 </child>

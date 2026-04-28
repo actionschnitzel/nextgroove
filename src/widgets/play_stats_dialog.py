@@ -50,6 +50,10 @@ class PlayStatsDialog(Adw.Dialog):
     topartist4 = Gtk.Template.Child()
     topartist5 = Gtk.Template.Child()
 
+    topsongsheaderlabel = Gtk.Template.Child()
+    topalbumsheaderlabel = Gtk.Template.Child()
+    topartistsheaderlabel = Gtk.Template.Child()
+
     previous_picker = Gtk.Template.Child()
     _end = Gtk.Template.Child()
     sharerow = Gtk.Template.Child()
@@ -247,6 +251,9 @@ class PlayStatsDialog(Adw.Dialog):
                 self.top5songslifetime,
                 "My total Nextcloud music stats:"
             )
+            self.topalbumsheaderlabel.set_label(self.topalbumsheaderlabel.get_label()+" (Lifetime)")
+            self.topsongsheaderlabel.set_label(self.topsongsheaderlabel.get_label()+" (Lifetime)")
+            self.topartistsheaderlabel.set_label(self.topartistsheaderlabel.get_label()+" (Lifetime)")
             return
         with open(previous_file, 'r') as prev_stats_file:
             self.previous_data = json.load(prev_stats_file)
@@ -263,6 +270,9 @@ class PlayStatsDialog(Adw.Dialog):
             self.top5songslifetime,
             f"My Nextcloud music stats from {selected_date.get_string()} to {datetime.datetime.now().date().isoformat()}:"
         )
+        self.topalbumsheaderlabel.set_label(self.topalbumsheaderlabel.get_label()+f" (since {selected_date.get_string()})")
+        self.topsongsheaderlabel.set_label(self.topsongsheaderlabel.get_label()+f" (since {selected_date.get_string()})")
+        self.topartistsheaderlabel.set_label(self.topartistsheaderlabel.get_label()+f" (since {selected_date.get_string()})")
         self._stack.set_visible_child(self.top5songslifetime)
 
     @Gtk.Template.Callback()
