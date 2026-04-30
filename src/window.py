@@ -743,9 +743,9 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         item = self._queue.get_item(index)
         item_was_playing = item.is_now_playing()
         current_queue_pos = self.controls.queue_pos
-        print(f"Removing queue item {index} from queue of length {old_len}, with current queue position of {current_queue_pos}")
+        logging.info(f"Removing queue item {index} from queue of length {old_len}, with current queue position of {current_queue_pos}")
         if current_queue_pos > index:
-            print(f"Decreasing queue position from {current_queue_pos} to {current_queue_pos-1}")
+            logging.debug(f"Decreasing queue position from {current_queue_pos} to {current_queue_pos-1}")
             self.controls.increment_queue_pos(-1)
 
         if item_was_playing:

@@ -101,9 +101,9 @@ class PlayStatsDialog(Adw.Dialog):
         for filename in sorted(os.listdir(stats_folder)):
             if re.search(pattern, filename):
                 snapshot_date = re.search(pattern,filename).group(1)
-                print(f"Found prev snapshot of {filename} for {snapshot_date}")
+                logging.debug(f"Found prev snapshot of {filename} for {snapshot_date}")
                 if snapshot_date == current_datestr:
-                    print(f"Ignoring {filename} as that is today's date")
+                    logging.debug(f"Ignoring {filename} as that is today's date")
                     continue
                 self.previous_model.append(snapshot_date)
 
@@ -222,12 +222,12 @@ class PlayStatsDialog(Adw.Dialog):
 
     @Gtk.Template.Callback()
     def _on_albums_clicked(self, foo):
-        print("Albums clicked")
+        logging.debug("Albums clicked")
         self._stack.set_visible_child(self.top5albumslifetime)
 
     @Gtk.Template.Callback()
     def _on_artists_clicked(self, foo):
-        print("Artists clicked")
+        logging.debug("Artists clicked")
         self._stack.set_visible_child(self.top5artistslifetime)
 
     @Gtk.Template.Callback()
@@ -238,7 +238,7 @@ class PlayStatsDialog(Adw.Dialog):
     def _on_previous_selected(self, foo):
         selected = self.previous_picker.get_selected()
         selected_date = self.previous_model[selected]
-        print(f"slected is {selected} {selected_date.get_string()}")
+        logging.debug(f"Selected previous stats snapshot is {selected} {selected_date.get_string()}")
         stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
         previous_file = os.path.join(stats_folder, f"stats_snapshot_{selected_date.get_string()}.json")
 

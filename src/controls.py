@@ -185,7 +185,7 @@ class Controls(Gtk.Box):
 
         current_song_queue_item = self._queue[self.queue_pos]
         next_song_index = self.queue_pos + 1
-        print(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
+        logging.info(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
 
         song_queue_item = None
         if next_song_index < len(self._queue):  # Then this is valid
@@ -215,7 +215,7 @@ class Controls(Gtk.Box):
         song_to_remove = self._queue[self.queue_pos]
         self._queue.remove(self.queue_pos)
 
-        print(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
+        logging.info(f"Clicking next, currently in queue position {self.queue_pos} in a queue of length {len(self._queue)}")
         # Queue pos remains the same
         next_song_index = self.queue_pos
 
@@ -242,7 +242,7 @@ class Controls(Gtk.Box):
         self.increment_queue_pos(increment)
         self.finished_loading()
 
-        print(f"Got a new song file to play, at position {self.queue_pos} in queue of length {len(self._queue)}")
+        logging.info(f"Got a new song file to play, at position {self.queue_pos} in queue of length {len(self._queue)}")
 
         if result.had_error():
             logging.error("Had an error, stop")
@@ -256,7 +256,7 @@ class Controls(Gtk.Box):
         self._next_song_file_returned(result)
 
     def next_song_file_returned_no_increment(self, source_object, result, user_data):
-        print(f"Special case for receiving file, don't change pos of {self.queue_pos}")
+        logging.info(f"Special case for receiving file, don't change pos of {self.queue_pos}")
         self._next_song_file_returned(result, increment=0)
 
     def set_now_playing(self, queue_item):

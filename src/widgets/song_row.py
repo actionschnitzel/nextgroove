@@ -134,5 +134,5 @@ class SongRow(Gtk.Box):
         self.remove_button.set_visible(selected)
 
     def remove_clicked(self, _):
-        print(f"want to remove {self.queue_item} at index {self.index}")
+        logging.debug(f"want to remove {self.queue_item} at index {self.index}")
         self.window.remove_queue_item(self.index)
