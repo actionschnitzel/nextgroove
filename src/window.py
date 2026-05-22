@@ -708,6 +708,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def reorder_queue(self, from_index, to_index):
         # Dragging should drop below the drop target song
+        logging.debug(f"Moving from {from_index} to {to_index} where {self.controls.queue_pos} is currently being played")
 
         if from_index == to_index:
             # No change
@@ -729,12 +730,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         if from_index == self.controls.queue_pos:
             self.controls.set_queue_pos(to_index+1)
         # Also if we move a song from before the currently played song to after it
-        elif from_index < self.controls.queue_pos and to_index >= self.controls.queue_pos:
+        elif from_index < self.controls.queue_pos and to_index >= self.controls.queue_pos-1:
             self.controls.set_queue_pos(self.controls.queue_pos-1)
         # Also if we move a song from after the currently played song to before it
         elif from_index > self.controls.queue_pos and to_index < self.controls.queue_pos:
             self.controls.set_queue_pos(self.controls.queue_pos+1)
         # Store updated indexes on songRow
+        logging.debug(f"Now queue pos is {self.controls.queue_pos}")
         self.queue_page.queue_reorder()
 
     def remove_queue_item(self, index):
