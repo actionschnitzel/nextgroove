@@ -11,12 +11,12 @@
     <p>Nextgroove lets you browse and play songs from your Nextcloud instance (with Nextcloud Music installed).</p>
     <p>Features: </p>
     <ul>
-      <li>Connects to a Nextcloud instance of your choice via normal API tokens (does not use subsonic/ampache endpoints but the Nextcloud ones).</li>
+      <li>Connects to a Nextcloud instance of your choice.</li>
       <li>Does download album art, images in screenshots are modified for copyright reasons.</li>
-      <li>Can select music from an album view (most recent first), a full list of songs in the collection, or playlists.</li>
       <li>Can select albums, playlists or individual songs from either to the queue.</li>
       <li>Basic MPRIS support allowing to be controlled via common controls and shortcuts.</li>
       <li>Can create playlists from the current play queue.</li>
+      <li>Able to optionally cache songs</li>
     </ul>
   </description>
 
@@ -24,7 +24,7 @@
     <name>Dean Birch</name>
   </developer>
 
-  <!-- Requered: Should be a link to the upstream homepage for the component -->
+  <!-- Required: Should be a link to the upstream homepage for the component -->
   <url type="homepage">https://gitlab.gnome.org/dean36963/NextGroove</url>
   <!-- Recommended: It is highly recommended for open-source projects to display the source code repository -->
   <url type="vcs-browser">https://gitlab.gnome.org/dean36963/NextGroove</url>
@@ -46,6 +46,7 @@
 
   <keywords>
     <keyword>Nextcloud</keyword>
+    <keyword>Music</keyword>
   </keywords>
 
   <!-- Applications should set a brand color in both light and dark variants like so -->
@@ -70,6 +71,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.5.0" date="2026-06-15">
+      <description translate="no">
+        <p>Able to add songs to queue in a shuffled format</p>
+        <p>Changed UI around queue reordering to also allow song removal, only shown for highlighted song.</p>
+        <p>Move to Gnome SDK 50</p>
+        <p>Improving some layouts</p>
+      </description>
+    </release>
     <release version="0.4.1" date="2026-01-12">
       <description translate="no">
         <p>Fix login issue</p>
