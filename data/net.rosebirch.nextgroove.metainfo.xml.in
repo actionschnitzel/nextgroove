@@ -75,7 +75,6 @@
       <description translate="no">
         <p>Able to add songs to queue in a shuffled format</p>
         <p>Changed UI around queue reordering to also allow song removal, only shown for highlighted song.</p>
-        <p>Move to Gnome SDK 50</p>
         <p>Improving some layouts</p>
       </description>
     </release>
