@@ -72,6 +72,10 @@ class NextcloudMusicClient(GObject.Object):
         self.last_error = ""
         self.__migrate_secrets()
 
+    @property
+    def cookie_headers(self):
+        return self.AGENT_HEADERS | {"Cookie": f"nc_username={self.__auth().username}; nc_token={self.__auth().password}"}
+
 
     def initialized(self):
         """If we haven't tried a login ever, then this won't ever connect, let's check for that."""
@@ -140,10 +144,10 @@ class NextcloudMusicClient(GObject.Object):
         return f"{self.__server()}/index.php/apps/music/api"
 
     def _collection(self):
-        return requests.get(f"{self.__base_url()}/collection", headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
+        return requests.get(f"{self.__base_url()}/collection", headers=self.cookie_headers, auth=self.__auth(), timeout=5)
 
     def _playlists(self):
-        return requests.get(f"{self.__base_url()}/playlists", headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
+        return requests.get(f"{self.__base_url()}/playlists", headers=self.cookie_headers, auth=self.__auth(), timeout=5)
 
     def album_details(self, album_list_item):
         if not self.collection:
@@ -276,7 +280,7 @@ class NextcloudMusicClient(GObject.Object):
             server = f"{url_parts.scheme}://{url_parts.netloc}"
         cover_url_full = f"{server}{cover_url}"
         logging.info(f"Downloading cover at {cover_url_full}")
-        response = requests.get(cover_url_full, headers=self.AGENT_HEADERS, auth=self.__auth(), timeout=5)
+        response = requests.get(cover_url_full, headers=self.cookie_headers, auth=self.__auth(), timeout=5)
         if response.status_code != 200:
             logging.error(f"Could not download cover at url code {response.status_code} for path {cover_url_full}")
         if not os.path.exists(NextcloudMusicClient.get_cache_dir()):
@@ -413,7 +417,7 @@ class NextcloudMusicClient(GObject.Object):
 
         logging.info(f"Downloading song from {self.__base_url()}/files/{song_id}/download and saving to {song_location}")
         response = requests.get(
-            f"{self.__base_url()}/files/{song_id}/download", auth=self.__auth(), timeout=15, headers=self.AGENT_HEADERS
+            f"{self.__base_url()}/files/{song_id}/download", auth=self.__auth(), timeout=15, headers=self.cookie_headers
         )
         if not response.ok:
             raise Exception(f"Got status {response.status_code} from downloading song")
@@ -456,7 +460,7 @@ class NextcloudMusicClient(GObject.Object):
         songs = playlist_buffer["songs"]
         in_data = {"name": playlist_name}
         response = requests.post(
-            f"{self.__base_url()}/playlists", auth=self.__auth(), json=in_data, headers=self.AGENT_HEADERS
+            f"{self.__base_url()}/playlists", auth=self.__auth(), json=in_data, headers=self.cookie_headers
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
@@ -474,7 +478,7 @@ class NextcloudMusicClient(GObject.Object):
         tracks_csv = ",".join(track_ids)
         track_data = {"track": tracks_csv}
         response = requests.post(
-            f"{self.__base_url()}/playlists/{new_playlist_id}/add", auth=self.__auth(), json=track_data, headers=self.AGENT_HEADERS
+            f"{self.__base_url()}/playlists/{new_playlist_id}/add", auth=self.__auth(), json=track_data, headers=self.cookie_headers
         )
         # TODO check output
 
@@ -489,7 +493,7 @@ class NextcloudMusicClient(GObject.Object):
     def delete_playlist_sync(self, task, source_object, task_data, cancellable):
         playlist_id = task.get_task_data()
         response = requests.delete(
-            f"{self.__base_url()}/playlists/{playlist_id}", auth=self.__auth(), headers=self.AGENT_HEADERS
+            f"{self.__base_url()}/playlists/{playlist_id}", auth=self.__auth(), headers=self.cookie_headers
         )
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
@@ -573,7 +577,7 @@ class NextcloudMusicClient(GObject.Object):
         scrobble_url = f"{self.__base_url()}/tracks/{track_id}/scrobble"
         try:
             scrobble_response = requests.post(
-                scrobble_url, headers=self.AGENT_HEADERS, auth=self.__auth()
+                scrobble_url, headers=self.cookie_headers, auth=self.__auth(), allow_redirects=False,
             )
             logging.debug(f"Scrobble return code: {scrobble_response.status_code}")
         except Exception as e:
@@ -594,7 +598,7 @@ class NextcloudMusicClient(GObject.Object):
         # Note this uses the ampache API, base url cannot be used.
         stats_url = f"{self.__server()}/index.php/apps/music/ampache/internal?action=songs"
         stats_response = requests.get(
-                stats_url, headers=self.AGENT_HEADERS, auth=self.__auth()
+                stats_url, headers=self.cookie_headers, auth=self.__auth()
             )
         if stats_response.status_code != 200:
             logging.error("Failed to get stats")
