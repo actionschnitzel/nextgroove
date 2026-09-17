@@ -71,6 +71,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.5.1" date="2026-09-17">
+      <description translate="no">
+        <p>Hotfix for changes in Nextcloud to authenticate properly.</p>
+        <p>Main functionality working ok but scrobbling and playlist creation/deletion is impacted.</p>
+      </description>
+    </release>
     <release version="0.5.0" date="2026-06-15">
       <description translate="no">
         <p>Able to add songs to queue in a shuffled format</p>
