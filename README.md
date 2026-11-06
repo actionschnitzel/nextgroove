@@ -1,5 +1,7 @@
 #  NextGroove
 
+**This application is no longer being maintained.**
+
 GNOME based client for Nextcloud Music created as a holiday programming
 project and therefore its functionality is quite limited: check the current capabilities section.
 
