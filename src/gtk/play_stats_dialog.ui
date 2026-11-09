@@ -253,8 +253,11 @@ If there is no suitable snapshot (created before today), you can still view life
 See you next time!
                 </property>
                 <property name="child">
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkListBox">
+                    <property name="selection-mode">none</property>
+                    <style>
+                      <class name="boxed-list"/>
+                    </style>
                     <child>
                       <object class="AdwActionRow" id="sharerow">
                         <property name="selectable">true</property>

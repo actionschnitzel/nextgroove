@@ -18,6 +18,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Adw
+from gi.repository import GLib
 from gi.repository import Gtk
 
 import logging
@@ -89,9 +90,7 @@ class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
         self._settings.set_boolean("cache", cache_row.get_active())
 
     def _clear_cache(self, cache_button):
-        if 'XDG_CACHE_HOME' not in os.environ:
-            return
-        song_cache_dir = os.path.join(os.environ['XDG_CACHE_HOME'], "songs")
+        song_cache_dir = os.path.join(GLib.get_user_cache_dir(), "songs")
         logging.warning(f"About to clear cache under {song_cache_dir}")
         with os.scandir(song_cache_dir) as it:
             for entry in it:

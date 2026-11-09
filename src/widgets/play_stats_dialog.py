@@ -80,7 +80,7 @@ class PlayStatsDialog(Adw.Dialog):
 
     def __process_summary(self, foo, bar, baz):
         songs_data = self.__client.retreive_summary()
-        stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
+        stats_folder = os.path.join(GLib.get_user_cache_dir(), "stats")
 
         # If folder doesn't exist, create it
         if not os.path.isdir(stats_folder):
@@ -240,7 +240,7 @@ class PlayStatsDialog(Adw.Dialog):
         selected = self.previous_picker.get_selected()
         selected_date = self.previous_model[selected]
         logging.debug(f"Selected previous stats snapshot is {selected} {selected_date.get_string()}")
-        stats_folder = os.path.join(os.environ['XDG_CACHE_HOME'], "stats")
+        stats_folder = os.path.join(GLib.get_user_cache_dir(), "stats")
         previous_file = os.path.join(stats_folder, f"stats_snapshot_{selected_date.get_string()}.json")
 
         if selected_date.get_string() == "Lifetime":

@@ -361,10 +361,15 @@ class Controls(Gtk.Box):
         self.loading.set_visible(False)
 
 
+    def _detach_now_playing(self):
+        parent = self.now_playing_box.get_parent()
+        if parent is not None:
+            parent.remove(self.now_playing_box)
+
     def go_big(self):
         logging.debug("Moving now playing to bottom left")
         current_width = self.get_size_request()[0]
-        self.small_now_playing_area.remove(self.now_playing_box)
+        self._detach_now_playing()
         self.small_now_playing_area.set_visible(False)
         self.action_bar.pack_start(self.now_playing_box)
         self.queue_resize()
@@ -376,7 +381,7 @@ class Controls(Gtk.Box):
         if self.shown:
             self.small_now_playing_area.set_visible(True)
             self.small_now_playing_area.set_size_request(current_width, 50)
-        self.action_bar.remove(self.now_playing_box)
+        self._detach_now_playing()
         self.small_now_playing_area.set_center_widget(self.now_playing_box)
         self.queue_resize()
         self.portrait = True
