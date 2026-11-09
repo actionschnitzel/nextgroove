@@ -4,7 +4,7 @@
   <requires lib="Adw" version="1.0"/>
   <template class="NextcloudmusicWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">NextGroove</property>
-    <property name="default-width">800</property>
+    <property name="default-width">1000</property>
     <property name="default-height">600</property>
     <property name="adaptive-preview">false</property>
     <child>
@@ -40,6 +40,10 @@
           </object>
         </child>
         <property name="content">
+          <object class="GtkPaned">
+            <property name="position">670</property>
+            <property name="shrink-start-child">false</property>
+            <child type="start">
           <object class="AdwViewStack" id="stack">
             <child>
               <object class="AdwViewStackPage" id="welcomepage">
@@ -331,16 +335,10 @@
                 </property>
               </object>
             </child>
-            <child>
-              <object class="AdwViewStackPage" id="queue_stack">
-                <property name="name">queue</property>
-                <property name="title">Queue</property>
-                <property name="icon-name">view-list-ordered-symbolic</property>
-                <property name="visible">False</property>
-                <property name="child">
-                  <object class="QueuePage" id="queuepage">
-                  </object>
-                </property>
+          </object>
+            </child>
+            <child type="end">
+              <object class="QueuePage" id="queuepage">
               </object>
             </child>
           </object>

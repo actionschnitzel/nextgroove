@@ -78,7 +78,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     stack = Gtk.Template.Child("stack")
     album_stack = Gtk.Template.Child("album_stack")
     playlist_stack = Gtk.Template.Child("playlist_stack")
-    queue_stack = Gtk.Template.Child("queue_stack")
     artist_stack = Gtk.Template.Child("artist_stack")
     breaker = Gtk.Template.Child()
     breaker2 = Gtk.Template.Child()
@@ -245,7 +244,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.welcome_view.props.visible = False
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
-        self.queue_stack.props.visible = True
         self.artist_stack.props.visible = True
         self.stack.props.visible_child_name = "albums"
 
