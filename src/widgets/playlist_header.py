@@ -63,6 +63,9 @@ class PlaylistHeader(Gtk.Box):
         song_selection_model = Gtk.SingleSelection.new(self._track_elements)
         self._songlist.props.model = song_selection_model
         self._songlist.connect("activate", self.song_clicked)
+        right_click = Gtk.GestureClick(button=3)
+        right_click.connect("pressed", self.song_right_clicked)
+        self._songlist.add_controller(right_click)
 
         # Header buttons (some done in window.py)
         self.delete_playlist.connect("clicked", self.delete_playlist_clicked)
@@ -103,11 +106,24 @@ class PlaylistHeader(Gtk.Box):
         self.window._client.download_cover_async_generic(album_id, cover_url, self, song_row.set_cover_callback)
 
     def song_clicked(self, event, song_id):
-        song_thing = self._track_elements[song_id]
+        self._show_song_menu(self._track_elements[song_id])
+
+    def song_right_clicked(self, gesture, n_press, x, y):
+        row = self._songlist.pick(x, y, Gtk.PickFlags.DEFAULT)
+        while row is not None and not isinstance(row, SongRow):
+            row = row.get_parent()
+        if row is not None and row.queue_item is not None:
+            self._show_song_menu(row.queue_item)
+
+    def _show_song_menu(self, song_thing):
+        self.window._client.fill_song_playlist_menu(self.song_click_menu_playlist, "app.song_add_to_playlist_playlist")
         popover = Gtk.PopoverMenu.new_from_model(self.song_click_menu_playlist)
         popover.set_parent(song_thing.widget)
         popover.popup()
         self.clicked_song = song_thing
+
+    def song_add_to_playlist_clicked(self, action, parameter):
+        self.window._client.add_track_to_playlist_async(parameter.get_string(), self.clicked_song.get_track_id())
 
     def song_play_clicked(self, event, _):
         logging.info(f"Let's play {self.clicked_song.title}")

@@ -26,6 +26,10 @@ import logging
 
 from gi.repository import GObject, Gtk, Gdk
 from .song_row import SongRow
+from .queueitem import QueueItem
+
+
+_QUEUE_CSS = "listview.queue-list > row:selected { background: none; }"
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/queuepage.ui")
@@ -35,6 +39,7 @@ class QueuePage(Gtk.Overlay):
 
     queueview = Gtk.Template.Child()
     _save_queue_as_playlist_button = Gtk.Template.Child()
+    _clear_queue_button = Gtk.Template.Child()
     _queue_name_entry = Gtk.Template.Child()
     _hide_playlist_save = Gtk.Template.Child()
 
@@ -46,8 +51,15 @@ class QueuePage(Gtk.Overlay):
         self.window = None
         self._save_queue_as_playlist_button.set_sensitive(False)
         self._save_queue_as_playlist_button.connect("clicked", self.save_queue_button_clicked)
+        self._clear_queue_button.set_sensitive(False)
+        self._clear_queue_button.connect("clicked", self._clear_queue_clicked)
         self._hide_playlist_save.connect("clicked", self._hide_playlist_save_clicked)
         self._rows = set()
+        provider = Gtk.CssProvider()
+        provider.load_from_string(_QUEUE_CSS)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
 
     def set_client(self, client):
@@ -65,6 +77,11 @@ class QueuePage(Gtk.Overlay):
         selection_model = Gtk.MultiSelection.new(self._queue)
         self.queueview.props.model = selection_model
         self.queueview.connect("activate", self.queue_clicked)
+        queue_drop = Gtk.DropTarget.new(QueueItem, Gdk.DragAction.COPY)
+        queue_drop.connect("enter", self._queue_drag_enter)
+        queue_drop.connect("motion", self._queue_drag_enter)
+        queue_drop.connect("drop", self._queue_drop)
+        self.add_controller(queue_drop)
 
     def set_controls(self, controls):
         self.controls = controls
@@ -134,6 +151,18 @@ class QueuePage(Gtk.Overlay):
 
         self._client.get_song_async(song.get_song_id(), song.get_title(), self.window.song_file_returned)
 
+    def _queue_drag_enter(self, drop_target, x, y):
+        return Gdk.DragAction.COPY
+
+    def _queue_drop(self, drop_target, value, x, y):
+        if not isinstance(value, QueueItem):
+            return False
+        was_empty = self._queue.get_n_items() == 0
+        self._queue.append(value)
+        if was_empty:
+            self.queue_clicked(None, 0)
+        return True
+
     def _hide_playlist_save_clicked(self, event):
         self._hide_playlist_save.set_visible(False)
         self._queue_name_entry.set_visible(False)
@@ -154,14 +183,16 @@ class QueuePage(Gtk.Overlay):
         self._hide_playlist_save_clicked(None)
         self._client.create_new_playlist_async(playlist_name, self._queue, self.call_update_playlist)
 
+    def _clear_queue_clicked(self, event):
+        self._queue.remove_all()
+
     def call_update_playlist(self, one, two, three):
         self._client.playlist_async(None)
 
     def queue_items_changed(self, position, removed, added, user_data):
-        if self._queue.get_n_items() == 0:
-            self._save_queue_as_playlist_button.set_sensitive(False)
-        else:
-            self._save_queue_as_playlist_button.set_sensitive(True)
+        has_items = self._queue.get_n_items() > 0
+        self._save_queue_as_playlist_button.set_sensitive(has_items)
+        self._clear_queue_button.set_sensitive(has_items)
 
     def queue_reorder(self):
         for row in self._rows:

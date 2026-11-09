@@ -27,7 +27,7 @@ from .play_stats_dialog import PlayStatsDialog
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, GLib, Adw
 from .window import NextcloudmusicWindow
 from .settings import NextcloudmusicSettingsWindow
 from .mpris import MPRIS
@@ -75,6 +75,9 @@ class NextcloudmusicApplication(Adw.Application):
             self.create_action("song_play_clicked_playlist", win.playlistdetails.song_play_clicked)
             self.create_action("song_queue_add_end_clicked_playlist", win.playlistdetails.song_queue_add_end_clicked)
             self.create_action("song_queue_add_next_clicked_playlist", win.playlistdetails.song_queue_add_next_clicked)
+            self.create_string_action("song_add_to_playlist_album", win.album_details_content.song_add_to_playlist_clicked)
+            self.create_string_action("song_add_to_playlist_album_view", win.album_tab_details_content.song_add_to_playlist_clicked)
+            self.create_string_action("song_add_to_playlist_playlist", win.playlistdetails.song_add_to_playlist_clicked)
             self.mpris = MPRIS(self)
             win.set_mpris(self.mpris)
 
@@ -141,6 +144,12 @@ class NextcloudmusicApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
+
+    def create_string_action(self, name, callback):
+        """Add an application action taking a string parameter."""
+        action = Gio.SimpleAction.new(name, GLib.VariantType.new("s"))
+        action.connect("activate", callback)
+        self.add_action(action)
 
     def quit(self):
         super().quit()

@@ -55,6 +55,7 @@ class SongRow(Gtk.Box):
         self.list_item = None
         self.album_id = None
         self.drag_enabled = False
+        self.setup_queue_drag()
 
     def set_index(self, index):
         self.index = index
@@ -67,6 +68,7 @@ class SongRow(Gtk.Box):
 
     def show_artist(self):
         self._artist_title.set_visible(True)
+        self._song_number.set_visible(False)
 
     def set_window(self, window):
         self.window = window
@@ -117,10 +119,23 @@ class SongRow(Gtk.Box):
 
         self.drag_source.add_controller(source)
         self.drag_enabled = True
+        self.drag_source.set_visible(True)
 
         target = Gtk.DropTarget.new(content_type ,Gdk.DragAction.MOVE)
         target.connect("drop", self.on_drag_drop)
         self.add_controller(target)
+
+    def setup_queue_drag(self):
+        source = Gtk.DragSource.new()
+        source.set_actions(Gdk.DragAction.COPY)
+        source.connect("prepare", self._queue_drag_prepare)
+        self.add_controller(source)
+
+    def _queue_drag_prepare(self, source, x, y):
+        # Queue rows reorder via their handle instead
+        if self.parent or self.queue_item is None:
+            return None
+        return Gdk.ContentProvider.new_for_value(self.queue_item)
 
     def on_drag_drop(self, drop_target, source, x, y):
         logging.debug(f"Dragged {source.queue_item.title} to {self.queue_item.title}")
@@ -130,7 +145,6 @@ class SongRow(Gtk.Box):
     def set_selected(self, selected):
         if not self.drag_enabled:
             return
-        self.drag_source.set_visible(selected)
         self.remove_button.set_visible(selected)
 
     def remove_clicked(self, _):

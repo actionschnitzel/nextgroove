@@ -25,6 +25,7 @@ import logging
 import requests
 import json
 import os
+import threading
 from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio, GLib, Gtk, Gdk, Secret
@@ -508,6 +509,30 @@ class NextcloudMusicClient(GObject.Object):
         if response.status_code != 200:
             logging.error(f"Got {response.status_code} http status from POST at playlists api endpoint")
             return
+
+    def fill_song_playlist_menu(self, menu, action_name):
+        """Rebuild the trailing playlist submenu of a song menu."""
+        while menu.get_n_items() > 1:
+            menu.remove(menu.get_n_items() - 1)
+        if self.playlists.get_n_items() == 0:
+            return
+        submenu = Gio.Menu()
+        for playlist in self.playlists:
+            item = Gio.MenuItem.new(playlist.playlist_name, None)
+            item.set_action_and_target_value(action_name, GLib.Variant.new_string(str(playlist.playlist_id)))
+            submenu.append_item(item)
+        menu.append_submenu("_Add to playlist", submenu)
+
+    def add_track_to_playlist_async(self, playlist_id, track_id):
+        threading.Thread(target=self.add_track_to_playlist_sync, args=(playlist_id, track_id), daemon=True).start()
+
+    def add_track_to_playlist_sync(self, playlist_id, track_id):
+        response = requests.post(
+            f"{self.__base_url()}/playlists/{playlist_id}/add", auth=self.__auth(),
+            json={"track": str(track_id)}, headers=self.cookie_headers
+        )
+        if response.status_code != 200:
+            logging.error(f"Got {response.status_code} http status adding track to playlist {playlist_id}")
 
     def call_update_playlist(self, one, two, three):
         self.playlist_async(None)
