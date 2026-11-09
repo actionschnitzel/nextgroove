@@ -1,1 +1,3 @@
 *.cmb
+__pycache__/
+*.pyc
