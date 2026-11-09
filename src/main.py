@@ -176,6 +176,7 @@ class NextcloudmusicApplication(Adw.Application):
 
 def main(version):
     """The application's entry point."""
+    os.makedirs(NextcloudMusicClient.get_cache_dir(), exist_ok=True)
     logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "nextgroove.log"))
     logging.getLogger().addHandler(logging.StreamHandler())
     logging.getLogger().setLevel(logging.DEBUG)

@@ -506,7 +506,7 @@ class NextcloudMusicClient(GObject.Object):
         if 'XDG_CACHE_HOME' in os.environ:
             return os.environ['XDG_CACHE_HOME']
         else:
-            return NextcloudMusicClient.TMP_DIR
+            return os.path.expanduser("~/.cache")
 
     def song_path(self, song_id):
         base_dir = NextcloudMusicClient.TMP_DIR
