@@ -83,6 +83,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     breaker = Gtk.Template.Child()
     breaker2 = Gtk.Template.Child()
     fake_stack = Gtk.Template.Child()
+    album_search = Gtk.Template.Child()
+    artist_search = Gtk.Template.Child()
 
     # Data objects
     _settings = None
@@ -93,6 +95,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     mpris = None
 
     _album_selected = None
+    _album_search_text = ""
+    _artist_search_text = ""
 
     def __init__(self, **kwargs):
         """Standard constructor for the window, initialize things, and get the settings"""
@@ -142,7 +146,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             album_item_factory.connect("bind", self._bind_list_item)
             self.album_view.props.factory = album_item_factory
         if not self.album_view.props.model:
-            selection_model = Gtk.MultiSelection.new(client.albums)
+            self._album_filter = Gtk.CustomFilter.new(lambda item, *_: self._album_matches(item))
+            self.album_search.connect("search-changed", self._on_album_search_changed)
+            filtered_albums = Gtk.FilterListModel.new(client.albums, self._album_filter)
+            selection_model = Gtk.MultiSelection.new(filtered_albums)
             self.album_view.props.model = selection_model
             self.album_view.connect("activate", self.album_clicked)
 
@@ -159,7 +166,10 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_sidebar_factory.connect("setup", self._setup_artist_sidebar_list_item)
         artist_sidebar_factory.connect("bind", self._bind_artist_sidebar_list_item)
         self.artist_sidebar.props.factory = artist_sidebar_factory
-        selection_model = Gtk.MultiSelection.new(self._artists)
+        self._artist_filter = Gtk.CustomFilter.new(lambda item, *_: self._artist_matches(item))
+        self.artist_search.connect("search-changed", self._on_artist_search_changed)
+        filtered_artists = Gtk.FilterListModel.new(self._artists, self._artist_filter)
+        selection_model = Gtk.MultiSelection.new(filtered_artists)
         self.artist_sidebar.props.model = selection_model
         self.artist_sidebar.connect("activate", self.artist_clicked)
         # Selected artist Album content
@@ -297,6 +307,22 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
                 album_list_item.album_id, album_list_item.cover_url, album_widget
             )
 
+    def _album_matches(self, album):
+        text = self._album_search_text.lower()
+        return not text or text in f"{album.artist} {album.album}".lower()
+
+    def _artist_matches(self, artist):
+        text = self._artist_search_text.lower()
+        return not text or text in artist.artist.lower()
+
+    def _on_album_search_changed(self, entry):
+        self._album_search_text = entry.get_text().strip()
+        self._album_filter.changed(Gtk.FilterChange.DIFFERENT)
+
+    def _on_artist_search_changed(self, entry):
+        self._artist_search_text = entry.get_text().strip()
+        self._artist_filter.changed(Gtk.FilterChange.DIFFERENT)
+
     def album_clicked(self, event, album_id):
         self._album_selected = album_id
         album_tile = event.get_model()[album_id].widget
@@ -308,7 +334,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         A single click currently activates this and will attempt to play that album
         """
         album_index = self._album_selected
-        album = self._client.albums[album_index]
+        album = self.album_view.props.model.get_item(album_index)
         self.album_play_clicked_generic(album)
 
     def album_play_clicked_generic(self, album, source):
@@ -341,7 +367,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def album_view_details_clicked(self, event, something):
         album_index = self._album_selected
-        album = self._client.albums[album_index]
+        album = self.album_view.props.model.get_item(album_index)
         album_id = album.album_id
         logging.info(f"Clicked on album {album.album}")
         self.album_tab_details_content.set_album(album)
@@ -359,7 +385,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def album_queue_add_end_clicked(self, event, something):
         album_index = self._album_selected
-        album = self._client.albums[album_index]
+        album = self.album_view.props.model.get_item(album_index)
         self.album_queue_add_end_clicked_generic(album)
 
     def album_queue_add_end_clicked_generic(self, album, source):
@@ -387,7 +413,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
 
     def album_queue_add_next_clicked(self, event, something):
         album_index = self._album_selected
-        album = self._client.albums[album_index]
+        album = self.album_view.props.model.get_item(album_index)
         source = self.album_tab_details_content
         self.album_queue_play_next_generic(album, source)
 
@@ -440,7 +466,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_label.set_halign(Gtk.Align.START)
 
     def artist_clicked(self, artist_list_id, list_number):
-        artist = self._artists[list_number]
+        artist = artist_list_id.get_model().get_item(list_number)
         logging.debug(f"Clicked on artist {artist.artist}")
         self._artist_albums.remove_all()
         artist_collection = self._client.artist_details(artist)
