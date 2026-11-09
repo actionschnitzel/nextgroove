@@ -50,6 +50,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     album_sidebar = Gtk.Template.Child("album_sidebar")
     album_details_content = Gtk.Template.Child("album_details_content")
     queue_page = Gtk.Template.Child("queuepage")
+    split_view = Gtk.Template.Child("split_view")
+    queue_toggle = Gtk.Template.Child("queue_toggle")
     controls = Gtk.Template.Child("controls")
     album_click_menu = Gtk.Template.Child("album_click_menu")
     playlist_view = Gtk.Template.Child("playlistview")
@@ -110,6 +112,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._artist_albums = Gio.ListStore()
         self.breaker.connect("apply", self.go_small)
         self.breaker2.connect("apply", self.go_big)
+        self.queue_toggle.bind_property("active", self.split_view, "show-sidebar",
+                                        GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
         self.__logged_in = False
 
     def apply(self):

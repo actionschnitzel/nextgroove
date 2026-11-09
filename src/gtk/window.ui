@@ -11,6 +11,7 @@
       <object class="AdwBreakpoint" id="breaker">
          <condition>max-width: 600sp</condition>
         <setter object="switcher_bar" property="reveal">True</setter>
+        <setter object="split_view" property="collapsed">True</setter>
           <setter object="header_bar" property="title-widget"/>
         </object>
     </child>
@@ -30,6 +31,13 @@
               </object>
             </property>
             <child type="end">
+              <object class="GtkToggleButton" id="queue_toggle">
+                <property name="active">True</property>
+                <property name="icon-name">sidebar-show-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Queue</property>
+              </object>
+            </child>
+            <child type="end">
 -              <object class="GtkMenuButton">
 -                <property name="primary">True</property>
 -                <property name="icon-name">open-menu-symbolic</property>
@@ -40,10 +48,13 @@
           </object>
         </child>
         <property name="content">
-          <object class="GtkPaned">
-            <property name="position">670</property>
-            <property name="shrink-start-child">false</property>
-            <child type="start">
+          <object class="AdwOverlaySplitView" id="split_view">
+            <property name="sidebar-position">end</property>
+            <property name="sidebar-width-fraction">0.33</property>
+            <property name="min-sidebar-width">280</property>
+            <property name="max-sidebar-width">450</property>
+            <property name="show-sidebar">True</property>
+            <property name="content">
           <object class="AdwViewStack" id="stack">
             <child>
               <object class="AdwViewStackPage" id="welcomepage">
@@ -336,11 +347,11 @@
               </object>
             </child>
           </object>
-            </child>
-            <child type="end">
+            </property>
+            <property name="sidebar">
               <object class="QueuePage" id="queuepage">
               </object>
-            </child>
+            </property>
           </object>
         </property>
         <child type="bottom">
