@@ -409,6 +409,16 @@ class NextcloudMusicClient(GObject.Object):
             self.playlists.append(item)
 
 
+    @staticmethod
+    def strip_id3v2(data):
+        if len(data) < 10 or data[:3] != b"ID3":
+            return data
+        size = 0
+        for byte in data[6:10]:
+            size = (size << 7) | (byte & 0x7F)
+        footer = 10 if data[5] & 0x10 else 0
+        return data[10 + size + footer:]
+
     def get_song(self, song_id):
         song_location = self.song_path(song_id)
         if os.path.exists(song_location):
@@ -423,7 +433,7 @@ class NextcloudMusicClient(GObject.Object):
             raise Exception(f"Got status {response.status_code} from downloading song")
 
         with open(song_location, "wb") as song_file:
-            song_file.write(response.content)
+            song_file.write(self.strip_id3v2(response.content))
         return os.path.abspath(song_location)
 
     def get_song_async(self, song_id, song_title, callback):

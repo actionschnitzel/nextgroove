@@ -657,6 +657,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         Also has a hack to update the queue to force a redraw"""
         # I can't seem to reuse the same object, so make another
         # and then connect the damn signals again
+        if self._media:
+            self._media.set_playing(False)
         self._media = Gtk.MediaFile.new_for_filename(song_file)
         self._media.play()
         # Playing music, don't suspend

@@ -65,6 +65,8 @@ class Controls(Gtk.Box):
     play_pause_handler_id = None
     next_handler_id = None
     previous_handler_id = None
+    song_ended_handler_id = None
+    volume_handler_id = None
 
     def __init__(self):
         super().__init__()
@@ -93,6 +95,10 @@ class Controls(Gtk.Box):
             self.next_button.disconnect(self.next_handler_id)
         if self.previous_handler_id:
             self.previous_button.disconnect(self.previous_handler_id)
+        if self._media and self.song_ended_handler_id:
+            self._media.disconnect(self.song_ended_handler_id)
+        if self.volume_handler_id:
+            self.volumebutton.disconnect(self.volume_handler_id)
 
         self.volumescale.set_value(window.settings.get_int("volume"))
 
@@ -106,8 +112,8 @@ class Controls(Gtk.Box):
         self.previous_handler_id = self.previous_button.connect(
             "clicked", self.on_previous_button_pressed
         )
-        media.connect("notify::ended", self.song_ended)
-        self.volumebutton.connect("clicked", self.volume_clicked)
+        self.song_ended_handler_id = media.connect("notify::ended", self.song_ended)
+        self.volume_handler_id = self.volumebutton.connect("clicked", self.volume_clicked)
 
         self._media = media
         self._client = client
