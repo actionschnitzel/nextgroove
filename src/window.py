@@ -39,7 +39,11 @@ from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
 _BACKGROUND_CSS = (
-    ".album-details-bg { background-color: @view_bg_color; }"
+    ".album-details-bg { background-color: @view_bg_color; }\n"
+    ".queue-separator { background-color: alpha(currentColor, 0.15); }\n"
+    ".shiny-play { background-image: linear-gradient(to bottom, alpha(white, 0.45) 0%, alpha(white, 0.1) 48%, alpha(white, 0.0) 52%, alpha(black, 0.12) 100%); box-shadow: inset 0 1px 0 alpha(white, 0.7), inset 0 -1px 0 alpha(white, 0.25), 0 2px 6px alpha(black, 0.3); border: 1px solid alpha(white, 0.35); }\n"
+    "button.suggested-action.shiny-play:disabled { background-color: alpha(currentColor, 0.2); background-image: none; box-shadow: none; border: none; opacity: 1; color: alpha(currentColor, 0.5); }\n"
+    "button.circular.round-control { border-radius: 999px; padding: 0; margin: 0; min-width: 42px; min-height: 42px; }"
 )
 
 

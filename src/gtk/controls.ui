@@ -91,9 +91,14 @@
         <child>
           <object class="GtkButton" id="previous">
             <property name="label">prev</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
             <property name="icon-name">media-skip-backward-symbolic</property>
+            <property name="width-request">42</property>
+            <property name="height-request">42</property>
             <style>
               <class name="circular"/>
+              <class name="round-control"/>
             </style>
           </object>
 
@@ -107,15 +112,21 @@
             <style>
               <class name="circular"/>
               <class name="suggested-action"/>
+              <class name="shiny-play"/>
             </style>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="next">
             <property name="label">next</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
             <property name="icon-name">media-skip-forward-symbolic</property>
+            <property name="width-request">42</property>
+            <property name="height-request">42</property>
             <style>
               <class name="circular"/>
+              <class name="round-control"/>
             </style>
           </object>
         </child>
@@ -141,7 +152,14 @@
         <child>
           <object class="GtkButton" id="volumebutton">
             <property name="label">vol</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
             <property name="icon-name">audio-volume-high-symbolic</property>
+            <property name="width-request">42</property>
+            <property name="height-request">42</property>
+            <style>
+              <class name="round-control"/>
+            </style>
           </object>
         </child>
         <child>

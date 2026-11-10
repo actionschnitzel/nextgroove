@@ -369,7 +369,23 @@
           </object>
             </property>
             <property name="sidebar">
-              <object class="QueuePage" id="queuepage">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="width-request">1</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <style>
+                      <class name="queue-separator"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="QueuePage" id="queuepage">
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
               </object>
             </property>
           </object>

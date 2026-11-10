@@ -121,11 +121,17 @@ class Controls(Gtk.Box):
         self._window = window
         self.timeout = None
 
+        self._update_play_pause_sensitivity()
+        queue.connect("items-changed", lambda *_: self._update_play_pause_sensitivity())
+
         if self._media.get_playing():
             self.play_pause_button.set_icon_name("media-playback-pause-symbolic")
 
         # Restore it to it's saved position
         self.volume_changed(self.volumescale)
+
+    def _update_play_pause_sensitivity(self):
+        self.play_pause_button.set_sensitive(self._queue.get_n_items() > 0)
 
     def on_play_pause_button_pressed(self, event):
         if not self._media:
