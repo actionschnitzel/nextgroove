@@ -1,6 +1,6 @@
 #  ActionGrooveNC
 
-The Projekt forked from [https://gitlab.gnome.org/dean36963/nextgroove](https://gitlab.gnome.org/dean36963/nextgroove). Since the projekt is nolonger Maintainded ActionGrooveNC aimes to continue an improve the code.
+This project is a fork of [NextGroove](https://gitlab.gnome.org/dean36963/nextgroove). Since the original project is no longer maintained, ActionGrooveNC aims to continue its development, improve the existing codebase, and introduce further enhancements.
 
 
 GNOME based client for Nextcloud Music created as a holiday programming
