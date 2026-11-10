@@ -38,11 +38,23 @@ from .queue_page import QueuePage
 from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
+_BACKGROUND_CSS = (
+    ".album-details-bg { background-color: @view_bg_color; }"
+)
+
+
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     """Main window"""
 
     __gtype_name__ = "NextcloudmusicWindow"
+
+    def _apply_background_css(self):
+        provider = Gtk.CssProvider()
+        provider.load_from_string(_BACKGROUND_CSS)
+        Gtk.StyleContext.add_provider_for_display(
+            self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
     # Widgets
     album_view = Gtk.Template.Child("albumview")
@@ -62,12 +74,17 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     welcome_retry_button = Gtk.Template.Child()
     welcome_spinner = Gtk.Template.Child()
 
-    #artist_nav_1 = Gtk.Template.Child("artist_nav_1")
+    artist_nav_1 = Gtk.Template.Child("artist_nav_1")
     artist_nav_2 = Gtk.Template.Child("artist_nav_2")
     artist_nav_3 = Gtk.Template.Child("artist_nav_3")
     outer_artist_split = Gtk.Template.Child("outer_artist_split")
     #inner_artist_split = Gtk.Template.Child("inner_artist_split")
     album_navigation = Gtk.Template.Child("album_navigation")
+    album_navigation_page = Gtk.Template.Child("album_navigation_page")
+    header_back_button = Gtk.Template.Child("header_back_button")
+    album_tab_button = Gtk.Template.Child("album_tab_button")
+    artist_tab_button = Gtk.Template.Child("artist_tab_button")
+    playlist_tab_button = Gtk.Template.Child("playlist_tab_button")
     album_tab_details = Gtk.Template.Child("album_tab_details")
     album_tab_details_content = Gtk.Template.Child("album_tab_details_content")
 
@@ -84,8 +101,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     breaker = Gtk.Template.Child()
     breaker2 = Gtk.Template.Child()
     fake_stack = Gtk.Template.Child()
-    album_search = Gtk.Template.Child()
-    artist_search = Gtk.Template.Child()
+    main_search = Gtk.Template.Child()
 
     # Data objects
     _settings = None
@@ -96,12 +112,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     mpris = None
 
     _album_selected = None
-    _album_search_text = ""
-    _artist_search_text = ""
+    _search_text = ""
 
     def __init__(self, **kwargs):
         """Standard constructor for the window, initialize things, and get the settings"""
         super().__init__(**kwargs)
+        self._apply_background_css()
         self.application = kwargs['application']
         self._settings = Gio.Settings.new("net.rosebirch.nextgroove")
         self._queue = Gio.ListStore()
@@ -112,6 +128,14 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._artist_albums = Gio.ListStore()
         self.breaker.connect("apply", self.go_small)
         self.breaker2.connect("apply", self.go_big)
+        self._setup_tab_button(self.album_stack, "albums", self.album_tab_button)
+        self._setup_tab_button(self.artist_stack, "artist", self.artist_tab_button)
+        self._setup_tab_button(self.playlist_stack, "playlists", self.playlist_tab_button)
+        self.header_back_button.connect("clicked", self._on_back_clicked)
+        self.stack.connect("notify::visible-child-name", self._update_back_button)
+        for nav in (self.album_navigation, self.outer_artist_split, self.playlist_nav_view):
+            nav.connect("notify::visible-page", self._update_back_button)
+        self._update_back_button()
         self.queue_toggle.bind_property("active", self.split_view, "show-sidebar",
                                         GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
         self.__logged_in = False
@@ -132,6 +156,31 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.apply()
         self.controls.go_small()
 
+    def _setup_tab_button(self, page_child, tab_name, tab_button):
+        """Bind a tab button to its stack page and keep it in sync with the visible tab."""
+        page_child.bind_property("visible", tab_button, "visible", GObject.BindingFlags.SYNC_CREATE)
+        tab_button.connect("toggled", lambda b: b.get_active() and self.stack.set_visible_child_name(tab_name))
+        self.stack.connect("notify::visible-child-name",
+                           lambda *_: tab_button.set_active(self.stack.props.visible_child_name == tab_name))
+
+    def _active_navigation(self):
+        """Return the navigation view and its root page for the visible tab."""
+        name = self.stack.props.visible_child_name
+        return {
+            "albums": (self.album_navigation, self.album_navigation_page),
+            "artist": (self.outer_artist_split, self.artist_nav_1),
+            "playlists": (self.playlist_nav_view, self.playlist_list_page),
+        }.get(name, (None, None))
+
+    def _update_back_button(self, *_):
+        nav, root_page = self._active_navigation()
+        self.header_back_button.set_sensitive(nav is not None and nav.props.visible_page is not root_page)
+
+    def _on_back_clicked(self, _):
+        nav, _root = self._active_navigation()
+        if nav is not None:
+            nav.pop()
+
     def set_mpris(self, mpris):
         self.mpris = mpris
         self.controls.set_mpris(mpris)
@@ -150,7 +199,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self.album_view.props.factory = album_item_factory
         if not self.album_view.props.model:
             self._album_filter = Gtk.CustomFilter.new(lambda item, *_: self._album_matches(item))
-            self.album_search.connect("search-changed", self._on_album_search_changed)
             filtered_albums = Gtk.FilterListModel.new(client.albums, self._album_filter)
             selection_model = Gtk.MultiSelection.new(filtered_albums)
             self.album_view.props.model = selection_model
@@ -170,7 +218,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         artist_sidebar_factory.connect("bind", self._bind_artist_sidebar_list_item)
         self.artist_sidebar.props.factory = artist_sidebar_factory
         self._artist_filter = Gtk.CustomFilter.new(lambda item, *_: self._artist_matches(item))
-        self.artist_search.connect("search-changed", self._on_artist_search_changed)
+        self.main_search.connect("search-changed", self._on_search_changed)
+        self.stack.connect("notify::visible-child-name", self._on_tab_changed)
         filtered_artists = Gtk.FilterListModel.new(self._artists, self._artist_filter)
         selection_model = Gtk.MultiSelection.new(filtered_artists)
         self.artist_sidebar.props.model = selection_model
@@ -310,20 +359,24 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             )
 
     def _album_matches(self, album):
-        text = self._album_search_text.lower()
+        text = self._search_text.lower()
         return not text or text in f"{album.artist} {album.album}".lower()
 
     def _artist_matches(self, artist):
-        text = self._artist_search_text.lower()
+        text = self._search_text.lower()
         return not text or text in artist.artist.lower()
 
-    def _on_album_search_changed(self, entry):
-        self._album_search_text = entry.get_text().strip()
-        self._album_filter.changed(Gtk.FilterChange.DIFFERENT)
+    def _active_filter(self):
+        return self._artist_filter if self.stack.props.visible_child_name == "artist" else self._album_filter
 
-    def _on_artist_search_changed(self, entry):
-        self._artist_search_text = entry.get_text().strip()
-        self._artist_filter.changed(Gtk.FilterChange.DIFFERENT)
+    def _on_search_changed(self, entry):
+        self._search_text = entry.get_text().strip()
+        self._active_filter().changed(Gtk.FilterChange.DIFFERENT)
+
+    def _on_tab_changed(self, *_):
+        page = self.stack.props.visible_child_name
+        self.main_search.set_visible(page in ("albums", "artist"))
+        self._active_filter().changed(Gtk.FilterChange.DIFFERENT)
 
     def album_clicked(self, event, album_id):
         self._album_selected = album_id

@@ -29,7 +29,10 @@ from .song_row import SongRow
 from .queueitem import QueueItem
 
 
-_QUEUE_CSS = "listview.queue-list > row:selected { background: none; }"
+_QUEUE_CSS = (
+    "listview.queue-list > row:selected { background: none; }\n"
+    ".queue-placeholder { border: 2px dashed alpha(currentColor, 0.3); border-radius: 12px; padding: 24px; }"
+)
 
 
 @Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/queuepage.ui")
@@ -42,6 +45,7 @@ class QueuePage(Gtk.Overlay):
     _clear_queue_button = Gtk.Template.Child()
     _queue_name_entry = Gtk.Template.Child()
     _hide_playlist_save = Gtk.Template.Child()
+    _queue_placeholder = Gtk.Template.Child()
 
     def __init__(self):
         super().__init__()
@@ -193,6 +197,7 @@ class QueuePage(Gtk.Overlay):
         has_items = self._queue.get_n_items() > 0
         self._save_queue_as_playlist_button.set_sensitive(has_items)
         self._clear_queue_button.set_sensitive(has_items)
+        self._queue_placeholder.set_visible(not has_items)
 
     def queue_reorder(self):
         for row in self._rows:
