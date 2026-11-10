@@ -1,6 +1,7 @@
-#  NextGroove
+#  ActionGrooveNC
 
-**This application is no longer being maintained.**
+The Projekt forked from [https://gitlab.gnome.org/dean36963/nextgroove](https://gitlab.gnome.org/dean36963/nextgroove). Since the projekt is nolonger Maintainded ActionGrooveNC aimes to continue an improve the code.
+
 
 GNOME based client for Nextcloud Music created as a holiday programming
 project and therefore its functionality is quite limited: check the current capabilities section.
@@ -13,6 +14,7 @@ project and therefore its functionality is quite limited: check the current capa
  - Can select music from an album view (most recent first), filtering by an artist first, or playlists.
  - Allows adding albums/playlists/songs to the queue, either at the end or after the current song.
  - Basic MPRIS support allowing to be controlled via common controls and shortcuts.
+ - Drag&Drop to Queue 
  - Caches album art, and can optionally cache songs.
  - Can save current play queue as a playlist.
  - Adaptive and works at mobile resolution.
