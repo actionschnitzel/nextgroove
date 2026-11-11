@@ -30,7 +30,6 @@ from urllib.parse import urlparse
 from requests.auth import HTTPBasicAuth
 from gi.repository import GObject, Gio, GLib, Gtk, Gdk, Secret
 from .albumlistitem import AlbumListItem
-from functools import cmp_to_key
 from .playlist import PlaylistItem
 from .queueitem import QueueItem
 from .login_request_result import LoginRequestResult
@@ -243,32 +242,11 @@ class NextcloudMusicClient(GObject.Object):
         logging.info(f"Retrieved albums and we have {len(self.albums_before_sorting)} albums")
         for album in sorted(
             self.albums_before_sorting,
-            key=cmp_to_key(
-                lambda album1, album2: self.latest_song_id_in_album(album1)
-                - self.latest_song_id_in_album(album2)
-            ),
-            reverse=True,
+            key=lambda item: (item.album.lower(), item.artist.lower()),
         ):
             self.albums.append(album)
         logging.info(f"Sorted albums and we have {len(self.albums)} albums")
         self.albums_before_sorting = None
-
-    def latest_song_id_in_album(self, album_list_item):
-        """Take the AlbumListItem object, retreives details,
-        tracks can contain multiple, but find the largest id within there
-        """
-        album_object = self.album_details(album_list_item)
-        latest_id = None
-        for track in album_object["tracks"]:
-            # Edge case for it not being set yet
-            if not latest_id:
-                latest_id = track["id"]
-                continue
-
-            if track["id"] > latest_id:
-                latest_id = track["id"]
-
-        return latest_id
 
     def download_cover(self, save_file, cover_url, url_is_absolute=False):
         if os.path.exists(NextcloudMusicClient.get_cover_from_album_id(save_file)):
