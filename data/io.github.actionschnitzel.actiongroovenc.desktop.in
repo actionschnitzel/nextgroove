@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=ActionGrooveNC
 Exec=actiongroovenc
-Icon=io.github.actionschnitzel.actiongroovenc
+Icon=com.github.artemanufrij.playmymusic
 Terminal=false
 Type=Application
 Categories=Audio;Music;
