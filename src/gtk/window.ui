@@ -343,18 +343,11 @@
                         <property name="title" translatable="yes">Playlist Details</property>
                         <property name="child">
                           <object class="AdwToolbarView">
-                            <child type="top">
-                              <object class="AdwHeaderBar">
-                                <property name="title-widget">
-                                  <object class="AdwWindowTitle"/>
-                                </property>
-                                <property name="show-back-button">false</property>
-                                <property name="show-end-title-buttons">false</property>
-                                <property name="show-start-title-buttons">false</property>
-                              </object>
-                            </child>
                             <property name="content">
                               <object class="GtkScrolledWindow">
+                                <style>
+                                  <class name="album-details-bg"/>
+                                </style>
                                 <child>
                                   <object class="PlaylistHeader" id="playlistdetails">
                                   </object>
