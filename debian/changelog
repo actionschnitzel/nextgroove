@@ -1,3 +1,21 @@
+actiongroovenc (0.6-1) unstable; urgency=medium
+
+  * Rebrand to ActionGrooveNC: new app ID, paths and icons.
+  * Albums are sorted alphabetically.
+  * Add "Add to playlist" submenu to album and playlist song menus; menus open on right click.
+  * Drag songs from album and playlist views into the queue; play dropped song when queue is empty.
+  * Queue is a collapsible, resizable right pane with drag handles and layout polish.
+  * Add search bar and German translation.
+  * Add shuffle/ordered toggle to album and playlist headers; remove items from the queue.
+  * Fix playback crash with ID3-tagged MP3 files.
+  * Fix startup crash outside Flatpak; run from source tree via run-dev.py.
+  * Fix queue position moves and leftover empty header bars in artist and playlist views.
+  * Unify background colors and theme in album, artist, playlist and login views.
+  * Play button styling, separator, rounded control buttons and cover spacing.
+  * Wrapped dialog: duration label, sorted stats files, share row as list.
+
+ -- Actionschnitzel <actionschnitzel@guideos.de>  Wed, 11 Nov 2026 12:00:00 +0100
+
 nextgroove (0.5.1-1) unstable; urgency=medium
 
   * Initial Debian packaging.

@@ -71,6 +71,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.6" date="2026-11-11">
+      <description translate="no">
+        <p>Rebrand to ActionGrooveNC, albums sorted alphabetically, queue as resizable pane, search bar, German translation.</p>
+        <p>Fixes for playback crash with ID3-tagged MP3 files and for startup outside Flatpak.</p>
+      </description>
+    </release>
     <release version="0.5.1" date="2026-09-17">
       <description translate="no">
         <p>Hotfix for changes in Nextcloud to authenticate properly.</p>
