@@ -31,8 +31,6 @@ from gi.repository import Gtk, Gio, GLib, Adw
 from .window import NextcloudmusicWindow
 from .settings import NextcloudmusicSettingsWindow
 from .mpris import MPRIS
-from .client import NextcloudMusicClient
-from .nextcloud_login_dialog import NextcloudLoginDialog
 
 
 class NextcloudmusicApplication(Adw.Application):
@@ -62,22 +60,7 @@ class NextcloudmusicApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = NextcloudmusicWindow(application=self)
-            self.create_action("album_play_clicked", win.album_play_clicked)
-            self.create_action("album_view_details_clicked", win.album_view_details_clicked)
-            self.create_action("album_queue_add_end_clicked", win.album_queue_add_end_clicked)
-            self.create_action("album_queue_add_next_clicked", win.album_queue_add_next_clicked)
-            self.create_action("song_play_clicked", win.album_details_content.song_play_clicked)
-            self.create_action("song_queue_add_end_clicked", win.album_details_content.song_queue_add_end_clicked)
-            self.create_action("song_queue_add_next_clicked", win.album_details_content.song_queue_add_next_clicked)
-            self.create_action("song_play_clicked_album_view", win.album_tab_details_content.song_play_clicked)
-            self.create_action("song_queue_add_end_clicked_album_view", win.album_tab_details_content.song_queue_add_end_clicked)
-            self.create_action("song_queue_add_next_clicked_album_view", win.album_tab_details_content.song_queue_add_next_clicked)
-            self.create_action("song_play_clicked_playlist", win.playlistdetails.song_play_clicked)
-            self.create_action("song_queue_add_end_clicked_playlist", win.playlistdetails.song_queue_add_end_clicked)
-            self.create_action("song_queue_add_next_clicked_playlist", win.playlistdetails.song_queue_add_next_clicked)
-            self.create_string_action("song_add_to_playlist_album", win.album_details_content.song_add_to_playlist_clicked)
-            self.create_string_action("song_add_to_playlist_album_view", win.album_tab_details_content.song_add_to_playlist_clicked)
-            self.create_string_action("song_add_to_playlist_playlist", win.playlistdetails.song_add_to_playlist_clicked)
+            self.register_window_actions(win)
             self.mpris = MPRIS(self)
             win.set_mpris(self.mpris)
 
@@ -125,10 +108,37 @@ class NextcloudmusicApplication(Adw.Application):
         settings = NextcloudmusicSettingsWindow()
         settings.present(self._window)
 
-    def do_login(self, widget, _):
-        dialog = NextcloudLoginDialog(0, self._window.settings, self._client)
-        dialog.present(self._window)
+    def register_window_actions(self, win):
+        """Expose window and sub-widget callbacks as app actions for menus and shortcuts."""
+        album_details = win.album_details_content
+        album_tab = win.album_tab_details_content
+        playlist = win.playlistdetails
 
+        actions = [
+            ("album_play_clicked", win.album_play_clicked),
+            ("album_view_details_clicked", win.album_view_details_clicked),
+            ("album_queue_add_end_clicked", win.album_queue_add_end_clicked),
+            ("album_queue_add_next_clicked", win.album_queue_add_next_clicked),
+            ("song_play_clicked", album_details.song_play_clicked),
+            ("song_queue_add_end_clicked", album_details.song_queue_add_end_clicked),
+            ("song_queue_add_next_clicked", album_details.song_queue_add_next_clicked),
+            ("song_play_clicked_album_view", album_tab.song_play_clicked),
+            ("song_queue_add_end_clicked_album_view", album_tab.song_queue_add_end_clicked),
+            ("song_queue_add_next_clicked_album_view", album_tab.song_queue_add_next_clicked),
+            ("song_play_clicked_playlist", playlist.song_play_clicked),
+            ("song_queue_add_end_clicked_playlist", playlist.song_queue_add_end_clicked),
+            ("song_queue_add_next_clicked_playlist", playlist.song_queue_add_next_clicked),
+        ]
+        string_actions = [
+            ("song_add_to_playlist_album", album_details.song_add_to_playlist_clicked),
+            ("song_add_to_playlist_album_view", album_tab.song_add_to_playlist_clicked),
+            ("song_add_to_playlist_playlist", playlist.song_add_to_playlist_clicked),
+        ]
+
+        for name, callback in actions:
+            self.create_action(name, callback)
+        for name, callback in string_actions:
+            self.create_string_action(name, callback)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
