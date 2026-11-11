@@ -29,7 +29,7 @@ from html import escape
 
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/albumheader.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/albumheader.ui")
 class AlbumHeader(Gtk.Box):
 
     __gtype_name__ = "AlbumHeader"

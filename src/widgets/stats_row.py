@@ -31,7 +31,7 @@ from html import escape
 
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/stats_row.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/stats_row.ui")
 class StatsRow(Gtk.Box):
 
     __gtype_name__ = "StatsRow"

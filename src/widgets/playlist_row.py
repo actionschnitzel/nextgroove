@@ -26,7 +26,7 @@ from html import escape
 
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/playlistrow.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/playlistrow.ui")
 class PlaylistRow(Gtk.Box):
 
     __gtype_name__ = "PlaylistRow"

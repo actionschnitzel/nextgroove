@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=NextGroove
-Exec=nextgroove
-Icon=net.rosebirch.nextgroove
+Name=ActionGrooveNC
+Exec=actiongroovenc
+Icon=io.github.actionschnitzel.actiongroovenc
 Terminal=false
 Type=Application
 Categories=Audio;Music;

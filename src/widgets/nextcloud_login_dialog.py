@@ -16,7 +16,7 @@ class LoginDialogMode(IntEnum):
     SECRET_SERVICE_FAILURE = auto()
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/nextcloud_login_dialog.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/nextcloud_login_dialog.ui")
 class NextcloudLoginDialog(Adw.Dialog):
     __gtype_name__ = "NextcloudLoginDialog"
 

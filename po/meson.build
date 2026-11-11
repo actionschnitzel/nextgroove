@@ -1,1 +1,1 @@
-i18n.gettext('nextgroove', preset: 'glib')
+i18n.gettext('actiongroovenc', preset: 'glib')

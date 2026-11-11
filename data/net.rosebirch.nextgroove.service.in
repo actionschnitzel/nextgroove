@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=net.rosebirch.nextgroove
-Exec=@bindir@/nextgroove --gapplication-service

@@ -1,4 +1,4 @@
-Source: nextgroove
+Source: actiongroovenc
 Section: gnome
 Priority: optional
 Maintainer: Actionschnitzel <actionschnitzel@guideos.de>
@@ -14,7 +14,7 @@ Standards-Version: 4.7.0
 Homepage: https://gitlab.gnome.org/dean36963/nextgroove
 Rules-Requires-Root: no
 
-Package: nextgroove
+Package: actiongroovenc
 Architecture: all
 Depends: gir1.2-adw-1,
          gir1.2-glib-2.0,
@@ -25,6 +25,6 @@ Depends: gir1.2-adw-1,
          python3-requests,
          ${misc:Depends}
 Description: GNOME client for Nextcloud Music
- NextGroove is a GNOME based client for Nextcloud Music. It allows browsing
+ ActionGrooveNC is a GNOME based client for Nextcloud Music. It allows browsing
  albums, artists and playlists, managing a play queue and controlling
  playback via MPRIS.

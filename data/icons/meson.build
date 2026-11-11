@@ -1,4 +1,4 @@
-application_id = 'net.rosebirch.nextgroove'
+application_id = 'io.github.actionschnitzel.actiongroovenc'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

@@ -40,6 +40,7 @@ from .nextcloud_login_dialog import NextcloudLoginDialog
 
 _BACKGROUND_CSS = (
     ".album-details-bg { background-color: @view_bg_color; }\n"
+    ".login-bg { background-color: @view_bg_color; }\n"
     ".queue-separator { background-color: alpha(currentColor, 0.15); }\n"
     ".shiny-play { background-image: linear-gradient(to bottom, alpha(white, 0.45) 0%, alpha(white, 0.1) 48%, alpha(white, 0.0) 52%, alpha(black, 0.12) 100%); box-shadow: inset 0 1px 0 alpha(white, 0.7), inset 0 -1px 0 alpha(white, 0.25), 0 2px 6px alpha(black, 0.3); border: 1px solid alpha(white, 0.35); }\n"
     "button.suggested-action.shiny-play:disabled { background-color: alpha(currentColor, 0.2); background-image: none; box-shadow: none; border: none; opacity: 1; color: alpha(currentColor, 0.5); }\n"
@@ -47,7 +48,7 @@ _BACKGROUND_CSS = (
 )
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/window.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/window.ui")
 class NextcloudmusicWindow(Adw.ApplicationWindow):
     """Main window"""
 
@@ -123,7 +124,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self._apply_background_css()
         self.application = kwargs['application']
-        self._settings = Gio.Settings.new("net.rosebirch.nextgroove")
+        self._settings = Gio.Settings.new("io.github.actionschnitzel.actiongroovenc")
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
         self._media = Gtk.MediaFile.new()
@@ -394,7 +395,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         """
         album_index = self._album_selected
         album = self.album_view.props.model.get_item(album_index)
-        self.album_play_clicked_generic(album)
+        self.album_play_clicked_generic(album, self.album_tab_details_content)
 
     def album_play_clicked_generic(self, album, source):
         album_id = album.album_id
@@ -445,12 +446,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     def album_queue_add_end_clicked(self, event, something):
         album_index = self._album_selected
         album = self.album_view.props.model.get_item(album_index)
-        self.album_queue_add_end_clicked_generic(album)
+        self.album_queue_add_end_clicked_generic(album, self.album_tab_details_content)
 
     def album_queue_add_end_clicked_generic(self, album, source):
         if len(self._queue) == 0:
             logging.debug("Add to end of queue is identical to play when no queue: rerouting...")
-            self.album_play_clicked_generic(album)
+            self.album_play_clicked_generic(album, source)
             return
 
         album_id = album.album_id
@@ -480,7 +481,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         album_id = album.album_id
         if len(self._queue) == 0:
             logging.info("Add to next in queue is identical to play when no queue: rerouting...")
-            self.album_play_clicked_generic(album)
+            self.album_play_clicked_generic(album, source)
             return
 
         logging.info(f"Clicked add to end of queue on album '{album.album}' from artist {album.artist}")

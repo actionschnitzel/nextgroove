@@ -19,7 +19,7 @@ import re
 import json
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/play_stats_dialog.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/play_stats_dialog.ui")
 class PlayStatsDialog(Adw.Dialog):
     __gtype_name__ = "PlayStatsDialog"
 
@@ -213,7 +213,7 @@ class PlayStatsDialog(Adw.Dialog):
             self.share_text += f"{position}: {album_name} ({album[1]} plays)\n"
             position += 1
 
-        self.share_text += "\n#NextcloudWrapped #NextGroove #Nextcloud #Wrapped"
+        self.share_text += "\n#NextcloudWrapped #ActionGrooveNC #Nextcloud #Wrapped"
 
         shortened_share_text = "\n".join(self.share_text.split("\n")[0:4]) + "\n…"
         self.sharerow.set_subtitle(shortened_share_text)

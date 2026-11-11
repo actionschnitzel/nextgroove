@@ -43,7 +43,7 @@ class NextcloudmusicApplication(Adw.Application):
 
     def __init__(self):
         super().__init__(
-            application_id="net.rosebirch.nextgroove",
+            application_id="io.github.actionschnitzel.actiongroovenc",
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
@@ -93,7 +93,7 @@ class NextcloudmusicApplication(Adw.Application):
 
         # If we've never logged in...
         if not self._client.initialized():
-            self._window.welcome_description("Please login to a Nextcloud instance to use Nextgroove.")
+            self._window.welcome_description("Please login to a Nextcloud instance to use ActionGrooveNC.")
             return
 
         callback = self._window.update_collection
@@ -105,8 +105,8 @@ class NextcloudmusicApplication(Adw.Application):
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(
-            application_name="NextGroove",
-            application_icon="net.rosebirch.nextgroove",
+            application_name="ActionGrooveNC",
+            application_icon="io.github.actionschnitzel.actiongroovenc",
             comments="Linux client for Nextcloud Music",
             developer_name="Dean Birch",
             version="0.5.1",
@@ -186,7 +186,7 @@ class NextcloudmusicApplication(Adw.Application):
 def main(version):
     """The application's entry point."""
     os.makedirs(NextcloudMusicClient.get_cache_dir(), exist_ok=True)
-    logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "nextgroove.log"))
+    logging.basicConfig(filename=os.path.join(NextcloudMusicClient.get_cache_dir(), "actiongroovenc.log"))
     logging.getLogger().addHandler(logging.StreamHandler())
     logging.getLogger().setLevel(logging.DEBUG)
     logging.debug(f"Logging under {NextcloudMusicClient.get_cache_dir()}")

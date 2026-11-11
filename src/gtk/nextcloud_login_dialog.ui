@@ -13,7 +13,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <!-- Translators: Title -->
-                <property name="title" translatable="yes">Nextgroove Login</property>
+                <property name="title" translatable="yes">ActionGrooveNC Login</property>
               </object>
             </property>
           </object>
@@ -26,6 +26,9 @@
 
             <child>
               <object class="AdwStatusPage" id="_intro">
+                <style>
+                  <class name="login-bg"/>
+                </style>
                 <property name="icon-name">network-server</property>
                 <!-- Translators: Description -->
                 <property name="description" translatable="yes">Press Continue to provide your Nextcloud server address and login via a web browser</property>
@@ -51,6 +54,9 @@
 
             <child>
               <object class="AdwStatusPage" id="_secret_service_failure">
+                <style>
+                  <class name="login-bg"/>
+                </style>
                 <property name="icon-name">dialog-error-symbolic</property>
                 <!-- Translators: Title -->
                 <property name="title" translatable="yes">Secret Service Inaccessible</property>
@@ -112,6 +118,9 @@
 
             <child>
               <object class="AdwStatusPage" id="_loading">
+                <style>
+                  <class name="login-bg"/>
+                </style>
                 <property name="paintable">
                   <object class="AdwSpinnerPaintable">
                     <property name="widget">_loading</property>
@@ -125,6 +134,9 @@
 
             <child>
               <object class="AdwStatusPage" id="_finished">
+                <style>
+                  <class name="login-bg"/>
+                </style>
                 <property name="icon-name">checkbox-checked-symbolic</property>
                 <!-- Translators: Title -->
                 <property name="title" translatable="yes">Connection Established</property>

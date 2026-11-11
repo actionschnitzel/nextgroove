@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/net/rosebirch/nextgroove">
+  <gresource prefix="/io/github/actionschnitzel/actiongroovenc">
     <file preprocess="xml-stripblanks">gtk/controls.ui</file>
     <file preprocess="xml-stripblanks">gtk/window.ui</file>
     <file preprocess="xml-stripblanks">gtk/albumtile.ui</file>

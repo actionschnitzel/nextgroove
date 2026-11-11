@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2025 Dean Birch -->
 <component type="desktop-application">
-  <id>net.rosebirch.nextgroove</id>
+  <id>io.github.actionschnitzel.actiongroovenc</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
-  <name>NextGroove</name>
+  <name>ActionGrooveNC</name>
   <summary>Play music from Nextcloud</summary>
   <description>
-    <p>Nextgroove lets you browse and play songs from your Nextcloud instance (with Nextcloud Music installed).</p>
+    <p>ActionGrooveNC lets you browse and play songs from your Nextcloud instance (with Nextcloud Music installed).</p>
     <p>Features: </p>
     <ul>
       <li>Connects to a Nextcloud instance of your choice.</li>
@@ -20,7 +20,7 @@
     </ul>
   </description>
 
-  <developer id="net.rosebirch">
+  <developer id="io.github.actionschnitzel">
     <name>Dean Birch</name>
   </developer>
 
@@ -29,14 +29,14 @@
   <!-- Recommended: It is highly recommended for open-source projects to display the source code repository -->
   <url type="vcs-browser">https://gitlab.gnome.org/dean36963/NextGroove</url>
 
-  <translation type="gettext">nextgroove</translation>
+  <translation type="gettext">actiongroovenc</translation>
   <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
      If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
-  <launchable type="desktop-id">net.rosebirch.nextgroove.desktop</launchable>
+  <launchable type="desktop-id">io.github.actionschnitzel.actiongroovenc.desktop</launchable>
   <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
-  <icon type="stock">net.rosebirch.nextgroove</icon>
+  <icon type="stock">io.github.actionschnitzel.actiongroovenc</icon>
 
   <categories>
     <category>AudioVideo</category>
@@ -58,15 +58,15 @@
   <screenshots>
     <screenshot type="default">
       <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot1.png</image>
-      <caption>Screenshot of the album view of NextGroove</caption>
+      <caption>Screenshot of the album view of ActionGrooveNC</caption>
     </screenshot>
     <screenshot>
       <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot2.png</image>
-      <caption>Album details view of NextGroove</caption>
+      <caption>Album details view of ActionGrooveNC</caption>
     </screenshot>
     <screenshot>
       <image>https://gitlab.gnome.org/dean36963/nextgroove/-/raw/0.2.0-rc2/screenshots/screenshot3.png</image>
-      <caption>Viewing a playlist in NextGroove</caption>
+      <caption>Viewing a playlist in ActionGrooveNC</caption>
     </screenshot>
   </screenshots>
 

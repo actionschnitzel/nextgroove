@@ -30,7 +30,7 @@ from html import escape
 
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/playlistheader.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/playlistheader.ui")
 class PlaylistHeader(Gtk.Box):
 
     __gtype_name__ = "PlaylistHeader"

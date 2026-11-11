@@ -27,6 +27,7 @@ import logging
 from gi.repository import GObject, Gtk, Gdk
 from .song_row import SongRow
 from .queueitem import QueueItem
+from .albumlistitem import AlbumListItem
 
 
 _QUEUE_CSS = (
@@ -35,7 +36,7 @@ _QUEUE_CSS = (
 )
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/queuepage.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/queuepage.ui")
 class QueuePage(Gtk.Overlay):
 
     __gtype_name__ = "QueuePage"
@@ -86,6 +87,12 @@ class QueuePage(Gtk.Overlay):
         queue_drop.connect("motion", self._queue_drag_enter)
         queue_drop.connect("drop", self._queue_drop)
         self.add_controller(queue_drop)
+
+        album_drop = Gtk.DropTarget.new(AlbumListItem, Gdk.DragAction.COPY)
+        album_drop.connect("enter", self._queue_drag_enter)
+        album_drop.connect("motion", self._queue_drag_enter)
+        album_drop.connect("drop", self._queue_drop)
+        self.add_controller(album_drop)
 
     def set_controls(self, controls):
         self.controls = controls
@@ -159,6 +166,9 @@ class QueuePage(Gtk.Overlay):
         return Gdk.DragAction.COPY
 
     def _queue_drop(self, drop_target, value, x, y):
+        if isinstance(value, AlbumListItem):
+            self.window.album_queue_add_end_clicked_generic(value, self.window.album_tab_details_content)
+            return True
         if not isinstance(value, QueueItem):
             return False
         was_empty = self._queue.get_n_items() == 0

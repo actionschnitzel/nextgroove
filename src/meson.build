@@ -1,9 +1,9 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'nextgroove'
+moduledir = pkgdatadir / 'actiongroovenc'
 gnome = import('gnome')
 
-gnome.compile_resources('nextgroove',
-  'nextgroove.gresource.xml',
+gnome.compile_resources('actiongroovenc',
+  'actiongroovenc.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -18,15 +18,15 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'nextgroove.in',
-  output: 'nextgroove',
+  input: 'actiongroovenc.in',
+  output: 'actiongroovenc',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
 )
 
-nextgroove_sources = [
+actiongroovenc_sources = [
   '__init__.py',
   'albumtile.py',
   'client.py',
@@ -50,4 +50,4 @@ nextgroove_sources = [
   'window.py'
 ]
 
-install_data(nextgroove_sources, install_dir: moduledir)
+install_data(actiongroovenc_sources, install_dir: moduledir)

@@ -31,7 +31,7 @@ from html import escape
 
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/songrow.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/songrow.ui")
 class SongRow(Gtk.Box):
 
     __gtype_name__ = "SongRow"
@@ -121,9 +121,13 @@ class SongRow(Gtk.Box):
         self.drag_enabled = True
         self.drag_source.set_visible(True)
 
-        target = Gtk.DropTarget.new(content_type ,Gdk.DragAction.MOVE)
+        target = Gtk.DropTarget.new(content_type, Gdk.DragAction.MOVE)
         target.connect("drop", self.on_drag_drop)
         self.add_controller(target)
+
+        album_target = Gtk.DropTarget.new(AlbumListItem, Gdk.DragAction.COPY)
+        album_target.connect("drop", self._on_album_drop)
+        self.add_controller(album_target)
 
     def setup_queue_drag(self):
         source = Gtk.DragSource.new()
@@ -136,6 +140,9 @@ class SongRow(Gtk.Box):
         if self.parent or self.queue_item is None:
             return None
         return Gdk.ContentProvider.new_for_value(self.queue_item)
+
+    def _on_album_drop(self, drop_target, value, x, y):
+        return self.parent._queue_drop(drop_target, value, x, y)
 
     def on_drag_drop(self, drop_target, source, x, y):
         logging.debug(f"Dragged {source.queue_item.title} to {self.queue_item.title}")

@@ -6,7 +6,7 @@ This project is a fork of [NextGroove](https://gitlab.gnome.org/dean36963/nextgr
 GNOME based client for Nextcloud Music created as a holiday programming
 project and therefore its functionality is quite limited: check the current capabilities section.
 
-![a](screenshots/screenshot1.png "Screenshot of NextGroove")
+![a](screenshots/screenshot1.png "Screenshot of ActionGrooveNC")
 
 ## Current Capabilities
 

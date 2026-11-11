@@ -1,12 +1,13 @@
-# German translation for NextGroove.
+# German translation for ActionGrooveNC.
 # Copyright (C) 2026 Dean Birch
-# This file is distributed under the same license as the NextGroove package.
+# This file is distributed under the same license as the ActionGrooveNC package.
 #
+#: src/mpris.py:163 src/mpris.py:165
 msgid ""
 msgstr ""
-"Project-Id-Version: nextgroove\n"
+"Project-Id-Version: ActionGrooveNC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 00:02+0100\n"
+"POT-Creation-Date: 2026-11-11 09:12+0100\n"
 "PO-Revision-Date: 2026-11-10 00:02+0100\n"
 "Last-Translator: Timo\n"
 "Language-Team: German\n"
@@ -16,36 +17,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/net.rosebirch.nextgroove.desktop.in:2
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:8 src/gtk/window.ui:6
-msgid "NextGroove"
-msgstr "NextGroove"
+#: data/io.github.actionschnitzel.actiongroovenc.desktop.in:2
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:8
+#: src/gtk/window.ui:6
+msgid "ActionGrooveNC"
+msgstr "ActionGrooveNC"
 
-#: data/net.rosebirch.nextgroove.desktop.in:8
+#: data/io.github.actionschnitzel.actiongroovenc.desktop.in:8
 msgid "GTK;"
 msgstr "GTK;"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:9
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:9
 msgid "Play music from Nextcloud"
 msgstr "Musik aus Nextcloud abspielen"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:11
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:11
 msgid ""
-"Nextgroove lets you browse and play songs from your Nextcloud instance (with "
-"Nextcloud Music installed)."
+"ActionGrooveNC lets you browse and play songs from your Nextcloud instance "
+"(with Nextcloud Music installed)."
 msgstr ""
-"Mit Nextgroove kannst du Songs aus deiner Nextcloud-Instanz durchsuchen und "
-"abspielen (mit installierter Nextcloud Music)."
+"Mit ActionGrooveNC kannst du Songs aus deiner Nextcloud-Instanz durchsuchen "
+"und abspielen (mit installierter Nextcloud Music)."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:12
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:12
 msgid "Features:"
 msgstr "Funktionen:"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:14
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:14
 msgid "Connects to a Nextcloud instance of your choice."
 msgstr "Verbindet sich mit einer Nextcloud-Instanz deiner Wahl."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:15
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:15
 msgid ""
 "Does download album art, images in screenshots are modified for copyright "
 "reasons."
@@ -53,14 +55,14 @@ msgstr ""
 "Lädt Albumcover herunter. Die Bilder in den Screenshots wurden aus "
 "urheberrechtlichen Gründen verändert."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:16
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:16
 msgid ""
 "Can select albums, playlists or individual songs from either to the queue."
 msgstr ""
 "Alben, Playlists oder einzelne Songs können zur Warteschlange hinzugefügt "
 "werden."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:17
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:17
 msgid ""
 "Basic MPRIS support allowing to be controlled via common controls and "
 "shortcuts."
@@ -68,58 +70,58 @@ msgstr ""
 "Grundlegende MPRIS-Unterstützung, sodass die Wiedergabe über gängige "
 "Steuerelemente und Tastenkürzel gesteuert werden kann."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:18
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:18
 msgid "Can create playlists from the current play queue."
 msgstr "Aus der aktuellen Warteschlange können Playlists erstellt werden."
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:19
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:19
 msgid "Able to optionally cache songs"
 msgstr "Songs können optional zwischengespeichert werden"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:24
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:24
 msgid "Dean Birch"
 msgstr "Dean Birch"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:48
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:48
 msgid "Nextcloud"
 msgstr "Nextcloud"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:49
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:49
 msgid "Music"
 msgstr "Musik"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:61
-msgid "Screenshot of the album view of NextGroove"
-msgstr "Screenshot der Albumansicht von NextGroove"
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:61
+msgid "Screenshot of the album view of ActionGrooveNC"
+msgstr "Screenshot der Albumansicht von ActionGrooveNC"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:65
-msgid "Album details view of NextGroove"
-msgstr "Albumdetails in NextGroove"
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:65
+msgid "Album details view of ActionGrooveNC"
+msgstr "Albumdetails in ActionGrooveNC"
 
-#: data/net.rosebirch.nextgroove.metainfo.xml.in:69
-msgid "Viewing a playlist in NextGroove"
-msgstr "Anzeige einer Playlist in NextGroove"
+#: data/io.github.actionschnitzel.actiongroovenc.metainfo.xml.in:69
+msgid "Viewing a playlist in ActionGrooveNC"
+msgstr "Anzeige einer Playlist in ActionGrooveNC"
 
-#: src/gtk/albumheader.ui:111 src/gtk/playlistheader.ui:90
+#: src/gtk/albumheader.ui:113 src/gtk/playlistheader.ui:90
 msgid "Play in order"
 msgstr "In Reihenfolge abspielen"
 
-#: src/gtk/albumheader.ui:118 src/gtk/playlistheader.ui:97
+#: src/gtk/albumheader.ui:120 src/gtk/playlistheader.ui:97
 msgid "Play shuffled"
 msgstr "Zufällig abspielen"
 
-#: src/gtk/albumheader.ui:134 src/gtk/albumheader.ui:150
-#: src/gtk/playlistheader.ui:128 src/gtk/window.ui:395
+#: src/gtk/albumheader.ui:136 src/gtk/albumheader.ui:152
+#: src/gtk/playlistheader.ui:128 src/gtk/window.ui:421
 msgid "_Play"
 msgstr "_Abspielen"
 
-#: src/gtk/albumheader.ui:138 src/gtk/albumheader.ui:154
-#: src/gtk/playlistheader.ui:132 src/gtk/window.ui:403
+#: src/gtk/albumheader.ui:140 src/gtk/albumheader.ui:156
+#: src/gtk/playlistheader.ui:132 src/gtk/window.ui:429
 msgid "_Add to queue"
 msgstr "Zur _Warteschlange hinzufügen"
 
-#: src/gtk/albumheader.ui:142 src/gtk/albumheader.ui:158
-#: src/gtk/playlistheader.ui:136 src/gtk/window.ui:407
+#: src/gtk/albumheader.ui:144 src/gtk/albumheader.ui:160
+#: src/gtk/playlistheader.ui:136 src/gtk/window.ui:433
 msgid "_Add to queue (play next)"
 msgstr "Zur _Warteschlange hinzufügen (als Nächstes)"
 
@@ -140,8 +142,8 @@ msgstr "Beenden"
 
 #. Translators: Title
 #: src/gtk/nextcloud_login_dialog.ui:16
-msgid "Nextgroove Login"
-msgstr "Nextgroove-Anmeldung"
+msgid "ActionGrooveNC Login"
+msgstr "ActionGrooveNC-Anmeldung"
 
 #. Translators: Description
 #: src/gtk/nextcloud_login_dialog.ui:31
@@ -149,8 +151,8 @@ msgid ""
 "Press Continue to provide your Nextcloud server address and login via a web "
 "browser"
 msgstr ""
-"Klicke auf „Weiter“, um deine Nextcloud-Serveradresse anzugeben und dich über "
-"den Webbrowser anzumelden"
+"Klicke auf „Weiter“, um deine Nextcloud-Serveradresse anzugeben und dich "
+"über den Webbrowser anzumelden"
 
 #. Translators: Button
 #: src/gtk/nextcloud_login_dialog.ui:36 src/gtk/nextcloud_login_dialog.ui:93
@@ -159,7 +161,7 @@ msgid "Continue"
 msgstr "Weiter"
 
 #. Translators: Button tooltip
-#: src/gtk/nextcloud_login_dialog.ui:38 src/gtk/window.ui:80
+#: src/gtk/nextcloud_login_dialog.ui:38 src/gtk/window.ui:121
 msgid "Continue to URL Entry"
 msgstr "Weiter zur URL-Eingabe"
 
@@ -176,11 +178,11 @@ msgid ""
 "be setup, and that keyring unlocked. Most desktop environments will provide "
 "this for you. Restart the app to try again."
 msgstr ""
-"Auf den Secret Service zum Speichern der Anmeldedaten konnte nicht zugegriffen "
-"werden. Stelle sicher, dass ein Anbieter wie gnome-keyring vorhanden ist. Ein "
-"Standard-Schlüsselbund muss eingerichtet und entsperrt sein. Die meisten "
-"Desktop-Umgebungen stellen dies bereit. Starte die App neu, um es erneut zu "
-"versuchen."
+"Auf den Secret Service zum Speichern der Anmeldedaten konnte nicht "
+"zugegriffen werden. Stelle sicher, dass ein Anbieter wie gnome-keyring "
+"vorhanden ist. Ein Standard-Schlüsselbund muss eingerichtet und entsperrt "
+"sein. Die meisten Desktop-Umgebungen stellen dies bereit. Starte die App "
+"neu, um es erneut zu versuchen."
 
 #. Translators: Description
 #: src/gtk/nextcloud_login_dialog.ui:80
@@ -209,8 +211,8 @@ msgstr "Synchronisierung abschließen"
 
 #. Translators: Title
 #: src/gtk/play_stats_dialog.ui:16
-msgid "NextGroove Wrapped"
-msgstr "NextGroove Wrapped"
+msgid "ActionGrooveNC Wrapped"
+msgstr "ActionGrooveNC Wrapped"
 
 #. Translators: Description
 #: src/gtk/play_stats_dialog.ui:31
@@ -273,78 +275,84 @@ msgstr ""
 msgid "Close"
 msgstr "Schließen"
 
-#: src/gtk/window.ui:37
+#: src/gtk/window.ui:35 src/gtk/window.ui:182 src/gtk/window.ui:258
+msgid "Albums"
+msgstr "Alben"
+
+#: src/gtk/window.ui:40
+#, fuzzy
+msgid "Artist"
+msgstr "Künstler"
+
+#: src/gtk/window.ui:45 src/gtk/window.ui:326
+msgid "Playlists"
+msgstr "Playlists"
+
+#: src/gtk/window.ui:54
+msgid "Back"
+msgstr ""
+
+#: src/gtk/window.ui:60
+#, fuzzy
+msgid "Search"
+msgstr "Alben durchsuchen"
+
+#: src/gtk/window.ui:68
 msgid "Queue"
 msgstr "Warteschlange"
 
-#: src/gtk/window.ui:44
+#: src/gtk/window.ui:75
 msgid "Main Menu"
 msgstr "Hauptmenü"
 
 #. Translators: Button
-#: src/gtk/window.ui:78
+#: src/gtk/window.ui:119
 msgid "Login"
 msgstr "Anmelden"
 
 #. Translators: Button
-#: src/gtk/window.ui:94
+#: src/gtk/window.ui:135
 msgid "Retry"
 msgstr "Erneut versuchen"
 
 #. Translators: Button tooltip
-#: src/gtk/window.ui:96
+#: src/gtk/window.ui:137
 msgid "Retry refreshing library"
 msgstr "Bibliothek erneut laden"
 
-#: src/gtk/window.ui:141 src/gtk/window.ui:241
-msgid "Albums"
-msgstr "Alben"
-
-#: src/gtk/window.ui:147
-msgid "Search albums"
-msgstr "Alben durchsuchen"
-
-#: src/gtk/window.ui:171
+#: src/gtk/window.ui:203
 msgid "Album Details"
 msgstr "Albumdetails"
 
-#: src/gtk/window.ui:212
+#: src/gtk/window.ui:238
 msgid "Artists"
 msgstr "Künstler"
 
-#: src/gtk/window.ui:218
-msgid "Search artists"
-msgstr "Künstler durchsuchen"
-
-#: src/gtk/window.ui:269
+#: src/gtk/window.ui:287
 msgid "Content"
 msgstr "Inhalt"
 
-#: src/gtk/window.ui:307
-msgid "Playlists"
-msgstr "Playlists"
-
-#: src/gtk/window.ui:321
+#: src/gtk/window.ui:340
 msgid "Playlist Details"
 msgstr "Playlist-Details"
 
-#: src/gtk/window.ui:373
+#: src/gtk/window.ui:399
 msgid "_Preferences"
 msgstr "_Einstellungen"
 
-#: src/gtk/window.ui:377
+#: src/gtk/window.ui:403
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastenkürzel"
 
-#: src/gtk/window.ui:381
-msgid "_About NextGroove"
-msgstr "_Über NextGroove"
+#: src/gtk/window.ui:407
+msgid "_About ActionGrooveNC"
+msgstr "_Über ActionGrooveNC"
 
-#: src/gtk/window.ui:387
-msgid "_NextGroove Wrapped"
-msgstr "_NextGroove Wrapped"
+#: src/gtk/window.ui:413
+msgid "_ActionGrooveNC Wrapped"
+msgstr "_ActionGrooveNC Wrapped"
 
-#: src/gtk/window.ui:399
+#: src/gtk/window.ui:425
 msgid "_View details"
 msgstr "_Details anzeigen"
 
@@ -376,3 +384,6 @@ msgstr "Schließe die Authentifizierung in deinem Browser ab"
 #: src/widgets/nextcloud_login_dialog.py:188
 msgid "Failed to start login. Wrong address?"
 msgstr "Anmeldung konnte nicht gestartet werden. Falsche Adresse?"
+
+#~ msgid "Search artists"
+#~ msgstr "Künstler durchsuchen"

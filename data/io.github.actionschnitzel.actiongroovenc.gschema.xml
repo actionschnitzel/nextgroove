@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="nextgroove">
-	<schema id="net.rosebirch.nextgroove" path="/net/rosebirch/nextgroove/">
+<schemalist gettext-domain="actiongroovenc">
+	<schema id="io.github.actionschnitzel.actiongroovenc" path="/io/github/actionschnitzel/actiongroovenc/">
     <key name="server" type="s">
       <default>""</default>
     </key>

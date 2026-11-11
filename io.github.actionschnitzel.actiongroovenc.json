@@ -1,9 +1,9 @@
 {
-    "id" : "net.rosebirch.nextgroove",
+    "id" : "io.github.actionschnitzel.actiongroovenc",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "49",
     "sdk" : "org.gnome.Sdk",
-    "command" : "nextgroove",
+    "command" : "actiongroovenc",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -15,7 +15,7 @@
     "modules" : [
         "python3-requests.json",
         {
-            "name" : "nextgroove",
+            "name" : "actiongroovenc",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [

@@ -38,11 +38,11 @@ from .login_request_result import LoginRequestResult
 
 class NextcloudMusicClient(GObject.Object):
 
-    TMP_DIR = "/tmp/net.rosebirch.nextgroove/"
-    AGENT_HEADERS = {"User-Agent": "Nextgroove/0.5.1"}
+    TMP_DIR = "/tmp/io.github.actionschnitzel.actiongroovenc/"
+    AGENT_HEADERS = {"User-Agent": "ActionGrooveNC/0.5.1"}
     LOGIN_ENDPOINT = "index.php/login/v2"
     SECRET_SCHEMA = Secret.Schema.new(
-        "net.rosebirch.NextGroove",
+        "io.github.actionschnitzel.ActionGrooveNC",
         Secret.SchemaFlags.NONE,
         {"service": Secret.SchemaAttributeType.STRING},
     )
@@ -96,7 +96,7 @@ class NextcloudMusicClient(GObject.Object):
 
         success = False
         try:
-            item_id = "net.rosebirch.NextGroove: {}".format(user)
+            item_id = "io.github.actionschnitzel.ActionGrooveNC: {}".format(user)
             success = Secret.password_store_sync(
                 self.SECRET_SCHEMA,
                 self.SECRET_ATTRIBUTES,
@@ -117,7 +117,7 @@ class NextcloudMusicClient(GObject.Object):
         user = self.__settings.get_string("user")
         success = False
         try:
-            item_id = "net.rosebirch.NextGroove: {}".format(user)
+            item_id = "io.github.actionschnitzel.ActionGrooveNC: {}".format(user)
             success = Secret.password_store_sync(
                 self.SECRET_SCHEMA,
                 self.SECRET_ATTRIBUTES,
@@ -351,7 +351,7 @@ class NextcloudMusicClient(GObject.Object):
 
     def get_playlist_cover(self, playlist_id):
         # TODO I guess remove these, they aren't coming back
-        return f"/tmp/net.rosebirch.nextgroove/cover_playlist_{playlist_id}"
+        return f"/tmp/io.github.actionschnitzel.actiongroovenc/cover_playlist_{playlist_id}"
 
     def playlist_cover_downloaded(self, requesting_widget, task, baz):
         playlist_id = task.get_task_data()

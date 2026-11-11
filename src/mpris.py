@@ -144,7 +144,7 @@ class MPRIS(Server):
 
     __MPRIS_IFACE = "org.mpris.MediaPlayer2"
     __MPRIS_PLAYER_IFACE = "org.mpris.MediaPlayer2.Player"
-    __MPRIS_NEXTGROOVE = "org.mpris.MediaPlayer2.net.rosebirch.nextgroove"
+    __MPRIS_ACTIONGROOVENC = "org.mpris.MediaPlayer2.io.github.actionschnitzel.actiongroovenc"
     __MPRIS_PATH = "/org/mpris/MediaPlayer2"
 
     def __init__(self, app):
@@ -166,7 +166,7 @@ class MPRIS(Server):
 
         self.__bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         Gio.bus_own_name_on_connection(
-            self.__bus, self.__MPRIS_NEXTGROOVE, Gio.BusNameOwnerFlags.NONE, None, None
+            self.__bus, self.__MPRIS_ACTIONGROOVENC, Gio.BusNameOwnerFlags.NONE, None, None
         )
         Server.__init__(self, self.__bus, self.__MPRIS_PATH)
 
@@ -230,9 +230,9 @@ class MPRIS(Server):
         ]:
             return GLib.Variant("as", [])
         elif property_name == "Identity":
-            return GLib.Variant("s", "NextGroove")
+            return GLib.Variant("s", "ActionGrooveNC")
         elif property_name == "DesktopEntry":
-            return GLib.Variant("s", "net.rosebirch.nextgroove")
+            return GLib.Variant("s", "io.github.actionschnitzel.actiongroovenc")
         elif property_name == "PlaybackStatus":
             return GLib.Variant("s", self._get_status())
         elif property_name == "Metadata":

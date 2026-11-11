@@ -13,7 +13,7 @@
             <property name="title-widget">
               <object class="AdwWindowTitle">
                 <!-- Translators: Title -->
-                <property name="title" translatable="yes">NextGroove Wrapped</property>
+                <property name="title" translatable="yes">ActionGrooveNC Wrapped</property>
               </object>
             </property>
           </object>

@@ -25,7 +25,7 @@ import logging
 import os
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/settings.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/settings.ui")
 class NextcloudmusicSettingsWindow(Adw.PreferencesDialog):
     __gtype_name__ = "NextcloudmusicSettingsWindow"
 

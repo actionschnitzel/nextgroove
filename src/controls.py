@@ -29,7 +29,7 @@ from .client import NextcloudMusicClient
 from html import escape
 
 
-@Gtk.Template(resource_path="/net/rosebirch/nextgroove/gtk/controls.ui")
+@Gtk.Template(resource_path="/io/github/actionschnitzel/actiongroovenc/gtk/controls.ui")
 class Controls(Gtk.Box):
     __gtype_name__ = "Controls"
 
