@@ -1,4 +1,4 @@
-actiongroovenc (0.6-1) unstable; urgency=medium
+actiongroovenc (0.6) unstable; urgency=medium
 
   * Rebrand to ActionGrooveNC: new app ID, paths and icons.
   * Albums are sorted alphabetically.

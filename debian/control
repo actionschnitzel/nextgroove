@@ -24,6 +24,8 @@ Depends: gir1.2-adw-1,
          python3-gi,
          python3-requests,
          ${misc:Depends}
+Replaces: nextgroove
+Conflicts: nextgroove
 Description: GNOME client for Nextcloud Music
  ActionGrooveNC is a GNOME based client for Nextcloud Music. It allows browsing
  albums, artists and playlists, managing a play queue and controlling
