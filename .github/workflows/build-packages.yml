@@ -13,7 +13,7 @@ jobs:
     name: Build Debian package
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install build dependencies
         run: |
@@ -38,7 +38,7 @@ jobs:
           find .. -maxdepth 1 -type f -name '*.deb' -exec cp {} dist/debian/ \;
           test -n "$(find dist/debian -maxdepth 1 -type f -name '*.deb' -print -quit)"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: debian-package
           path: dist/debian/*.deb
@@ -50,7 +50,7 @@ jobs:
     container:
       image: archlinux:base-devel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install build dependencies
         run: |
@@ -91,7 +91,7 @@ jobs:
             'cd "$1" && makepkg --noconfirm --cleanbuild --clean' sh \
             "$GITHUB_WORKSPACE/.ci/arch"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: arch-package
           path: .ci/arch/*.pkg.tar.zst
