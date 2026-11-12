@@ -196,13 +196,6 @@ class NextcloudMusicClient(GObject.Object):
         return None
 
     def update_collection(self):
-        # Clear existing collections
-        self.albums.remove_all()
-        self.albums_before_sorting.remove_all()
-        self._album_urls_by_id = {}
-        self.artist_name_by_id = {}
-        self.album_name_by_id = {}
-        self.playlists.remove_all()
         try:
             response = self._collection()
             if response.status_code != 200:
@@ -210,6 +203,12 @@ class NextcloudMusicClient(GObject.Object):
                 # Send errors back for toast on welcome page
                 return f"Error: got HTTP status code {response.status_code} when checking collection"
             self.collection = json.loads(response.text)
+            # DE (2026-11-12): Replace cached data only after success and recreate the reusable sort store.
+            self.albums.remove_all()
+            self.albums_before_sorting = Gio.ListStore()
+            self._album_urls_by_id = {}
+            self.artist_name_by_id = {}
+            self.album_name_by_id = {}
             self.update_albums()
             return self.collection
         except requests.exceptions.RequestException as e:
@@ -244,7 +243,6 @@ class NextcloudMusicClient(GObject.Object):
         ):
             self.albums.append(album)
         logging.info(f"Sorted albums and we have {len(self.albums)} albums")
-        self.albums_before_sorting = None
 
     def download_cover(self, save_file, cover_url, url_is_absolute=False):
         if os.path.exists(NextcloudMusicClient.get_cover_from_album_id(save_file)):

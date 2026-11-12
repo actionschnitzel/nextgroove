@@ -274,10 +274,18 @@ msgid "Search"
 msgstr ""
 
 #: src/gtk/window.ui:68
+msgid "Refresh"
+msgstr ""
+
+#: src/gtk/window.ui:71
+msgid "Search Nextcloud for new music"
+msgstr ""
+
+#: src/gtk/window.ui:77
 msgid "Queue"
 msgstr ""
 
-#: src/gtk/window.ui:75
+#: src/gtk/window.ui:84
 msgid "Main Menu"
 msgstr ""
 

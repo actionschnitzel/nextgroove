@@ -1,3 +1,10 @@
+actiongroovenc (0.6-1) unstable; urgency=medium
+
+  * DE (2026-11-12): Add a button to refresh the Nextcloud music library and playlists.
+  * Preserve the current library when a refresh fails and prevent duplicate artists on reload.
+
+ -- Actionschnitzel <actionschnitzel@guideos.de>  Thu, 12 Nov 2026 18:59:25 +0100
+
 actiongroovenc (0.6) unstable; urgency=medium
 
   * Rebrand to ActionGrooveNC: new app ID, paths and icons.
