@@ -47,8 +47,6 @@ class NextcloudMusicClient(GObject.Object):
     )
     SECRET_ATTRIBUTES = {"service": "nextcloud"}
 
-
-
     collection = None
     albums = None
     albums_before_sorting = None
