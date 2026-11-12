@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: actiongroovenc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 09:12+0100\n"
+"POT-Creation-Date: 2026-11-12 22:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,17 +104,17 @@ msgid "Play shuffled"
 msgstr ""
 
 #: src/gtk/albumheader.ui:136 src/gtk/albumheader.ui:152
-#: src/gtk/playlistheader.ui:128 src/gtk/window.ui:421
+#: src/gtk/playlistheader.ui:128 src/gtk/window.ui:410
 msgid "_Play"
 msgstr ""
 
 #: src/gtk/albumheader.ui:140 src/gtk/albumheader.ui:156
-#: src/gtk/playlistheader.ui:132 src/gtk/window.ui:429
+#: src/gtk/playlistheader.ui:132 src/gtk/window.ui:418
 msgid "_Add to queue"
 msgstr ""
 
 #: src/gtk/albumheader.ui:144 src/gtk/albumheader.ui:160
-#: src/gtk/playlistheader.ui:136 src/gtk/window.ui:433
+#: src/gtk/playlistheader.ui:136 src/gtk/window.ui:422
 msgid "_Add to queue (play next)"
 msgstr ""
 
@@ -139,30 +139,30 @@ msgid "ActionGrooveNC Login"
 msgstr ""
 
 #. Translators: Description
-#: src/gtk/nextcloud_login_dialog.ui:31
+#: src/gtk/nextcloud_login_dialog.ui:34
 msgid ""
 "Press Continue to provide your Nextcloud server address and login via a web "
 "browser"
 msgstr ""
 
 #. Translators: Button
-#: src/gtk/nextcloud_login_dialog.ui:36 src/gtk/nextcloud_login_dialog.ui:93
+#: src/gtk/nextcloud_login_dialog.ui:39 src/gtk/nextcloud_login_dialog.ui:99
 #: src/gtk/play_stats_dialog.ui:39
 msgid "Continue"
 msgstr ""
 
 #. Translators: Button tooltip
-#: src/gtk/nextcloud_login_dialog.ui:38 src/gtk/window.ui:121
+#: src/gtk/nextcloud_login_dialog.ui:41 src/gtk/window.ui:134
 msgid "Continue to URL Entry"
 msgstr ""
 
 #. Translators: Title
-#: src/gtk/nextcloud_login_dialog.ui:56
+#: src/gtk/nextcloud_login_dialog.ui:62
 msgid "Secret Service Inaccessible"
 msgstr ""
 
 #. Translators: Description
-#: src/gtk/nextcloud_login_dialog.ui:58
+#: src/gtk/nextcloud_login_dialog.ui:64
 msgid ""
 "The Secret Service could not be accessed for storing authentication details. "
 "Ensure you have a provider such as gnome-keyring. A default keyring needs to "
@@ -171,27 +171,27 @@ msgid ""
 msgstr ""
 
 #. Translators: Description
-#: src/gtk/nextcloud_login_dialog.ui:80
+#: src/gtk/nextcloud_login_dialog.ui:86
 msgid "Server URL"
 msgstr ""
 
 #. Translators: Button tooltip
-#: src/gtk/nextcloud_login_dialog.ui:95
+#: src/gtk/nextcloud_login_dialog.ui:101
 msgid "Start Login"
 msgstr ""
 
 #. Translators: Title
-#: src/gtk/nextcloud_login_dialog.ui:130
+#: src/gtk/nextcloud_login_dialog.ui:142
 msgid "Connection Established"
 msgstr ""
 
 #. Translators: Button
-#: src/gtk/nextcloud_login_dialog.ui:145 src/gtk/play_stats_dialog.ui:88
+#: src/gtk/nextcloud_login_dialog.ui:157 src/gtk/play_stats_dialog.ui:88
 msgid "Done"
 msgstr ""
 
 #. Translators: Button tooltip
-#: src/gtk/nextcloud_login_dialog.ui:147
+#: src/gtk/nextcloud_login_dialog.ui:159
 msgid "Complete Sync Setup"
 msgstr ""
 
@@ -253,7 +253,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/gtk/window.ui:35 src/gtk/window.ui:182 src/gtk/window.ui:258
+#: src/gtk/window.ui:35 src/gtk/window.ui:195 src/gtk/window.ui:271
 msgid "Albums"
 msgstr ""
 
@@ -261,7 +261,7 @@ msgstr ""
 msgid "Artist"
 msgstr ""
 
-#: src/gtk/window.ui:45 src/gtk/window.ui:326
+#: src/gtk/window.ui:45 src/gtk/window.ui:322
 msgid "Playlists"
 msgstr ""
 
@@ -277,71 +277,71 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: src/gtk/window.ui:71
+#: src/gtk/window.ui:70
 msgid "Search Nextcloud for new music"
 msgstr ""
 
-#: src/gtk/window.ui:77
+#: src/gtk/window.ui:78
 msgid "Queue"
 msgstr ""
 
-#: src/gtk/window.ui:84
+#: src/gtk/window.ui:85
 msgid "Main Menu"
 msgstr ""
 
 #. Translators: Button
-#: src/gtk/window.ui:119
+#: src/gtk/window.ui:132
 msgid "Login"
 msgstr ""
 
 #. Translators: Button
-#: src/gtk/window.ui:135
+#: src/gtk/window.ui:148
 msgid "Retry"
 msgstr ""
 
 #. Translators: Button tooltip
-#: src/gtk/window.ui:137
+#: src/gtk/window.ui:150
 msgid "Retry refreshing library"
 msgstr ""
 
-#: src/gtk/window.ui:203
+#: src/gtk/window.ui:216
 msgid "Album Details"
 msgstr ""
 
-#: src/gtk/window.ui:238
+#: src/gtk/window.ui:251
 msgid "Artists"
 msgstr ""
 
-#: src/gtk/window.ui:287
+#: src/gtk/window.ui:290
 msgid "Content"
 msgstr ""
 
-#: src/gtk/window.ui:340
+#: src/gtk/window.ui:336
 msgid "Playlist Details"
 msgstr ""
 
-#: src/gtk/window.ui:399
+#: src/gtk/window.ui:388
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:403
+#: src/gtk/window.ui:392
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:407
+#: src/gtk/window.ui:396
 msgid "_About ActionGrooveNC"
 msgstr ""
 
-#: src/gtk/window.ui:413
+#: src/gtk/window.ui:402
 msgid "_ActionGrooveNC Wrapped"
 msgstr ""
 
-#: src/gtk/window.ui:425
+#: src/gtk/window.ui:414
 msgid "_View details"
 msgstr ""
 
 #. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
-#: src/main.py:118
+#: src/main.py:101
 msgid "translator-credits"
 msgstr ""
 
