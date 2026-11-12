@@ -1,0 +1,98 @@
+name: Build packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debian:
+    name: Build Debian package
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            appstream \
+            build-essential \
+            debhelper \
+            desktop-file-utils \
+            dpkg-dev \
+            gettext \
+            libglib2.0-dev \
+            libglib2.0-dev-bin \
+            libxml2-utils \
+            meson \
+            pkg-config
+
+      - name: Build Debian package
+        run: |
+          dpkg-buildpackage -us -uc -b
+          mkdir -p dist/debian
+          find .. -maxdepth 1 -type f -name '*.deb' -exec cp {} dist/debian/ \;
+          test -n "$(find dist/debian -maxdepth 1 -type f -name '*.deb' -print -quit)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debian-package
+          path: dist/debian/*.deb
+          if-no-files-found: error
+
+  arch:
+    name: Build Arch Linux package
+    runs-on: ubuntu-24.04
+    container:
+      image: archlinux:base-devel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          pacman -Syu --noconfirm --needed \
+            appstream \
+            base-devel \
+            desktop-file-utils \
+            gettext \
+            glib2 \
+            gtk4 \
+            libadwaita \
+            libsecret \
+            meson \
+            ninja \
+            python \
+            python-gobject \
+            python-requests
+
+      - name: Build Arch package
+        run: |
+          mkdir -p "$RUNNER_TEMP/arch-source/actiongroovenc"
+          tar --exclude=.git --exclude='*/.git' -C "$GITHUB_WORKSPACE" -cf - . \
+            | tar -C "$RUNNER_TEMP/arch-source/actiongroovenc" -xf -
+
+          mkdir -p "$GITHUB_WORKSPACE/.ci/arch"
+          tar -C "$RUNNER_TEMP/arch-source" \
+            -czf "$GITHUB_WORKSPACE/.ci/arch/actiongroovenc.tar.gz" actiongroovenc
+          cp PKGBUILD "$GITHUB_WORKSPACE/.ci/arch/PKGBUILD"
+
+          pkgname="$(sed -n 's/^pkgname=//p' PKGBUILD)"
+          sed -i \
+            "s|^source=.*|source=(\"${pkgname}.tar.gz::file://$GITHUB_WORKSPACE/.ci/arch/${pkgname}.tar.gz\")|" \
+            "$GITHUB_WORKSPACE/.ci/arch/PKGBUILD"
+
+          useradd --create-home builder
+          chown -R builder:builder "$GITHUB_WORKSPACE/.ci/arch"
+          runuser -u builder -- sh -c \
+            'cd "$1" && makepkg --noconfirm --cleanbuild --clean' sh \
+            "$GITHUB_WORKSPACE/.ci/arch"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: arch-package
+          path: .ci/arch/*.pkg.tar.zst
+          if-no-files-found: error
