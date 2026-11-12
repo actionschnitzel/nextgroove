@@ -12,6 +12,8 @@ jobs:
   debian:
     name: Build Debian package
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
 
@@ -44,9 +46,18 @@ jobs:
           path: dist/debian/*.deb
           if-no-files-found: error
 
+      - name: Attach to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" dist/debian/*.deb --clobber
+
   arch:
     name: Build Arch Linux package
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     container:
       image: archlinux:base-devel
     steps:
@@ -59,6 +70,7 @@ jobs:
             base-devel \
             desktop-file-utils \
             gettext \
+            github-cli \
             glib2 \
             gtk4 \
             libadwaita \
@@ -96,3 +108,10 @@ jobs:
           name: arch-package
           path: .ci/arch/*.pkg.tar.zst
           if-no-files-found: error
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" .ci/arch/*.pkg.tar.zst --clobber
