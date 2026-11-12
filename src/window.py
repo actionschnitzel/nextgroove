@@ -107,6 +107,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     breaker2 = Gtk.Template.Child()
     fake_stack = Gtk.Template.Child()
     main_search = Gtk.Template.Child()
+    # DE (2026-11-12): Reference the refresh control declared in the window template.
+    refresh_button = Gtk.Template.Child()
 
     # Data objects
     _settings = None
@@ -287,6 +289,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.fake_stack.props.visible = False
 
         if isinstance(collection, str) and collection.startswith("Error"):
+            if self.__logged_in:
+                # DE (2026-11-12): Report refresh failures without discarding the current library.
+                self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
+                self.refresh_button.set_sensitive(True)
+                return
             # We encountered an error, and we've been handed the error not the collection
             self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
             self.__logged_in = False
@@ -296,6 +303,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             self.welcome_status_page.set_description("Error retrieving library, check connection and retry, or login again.")
 
             return
+        # DE (2026-11-12): Preserve the active tab and rebuild artists without duplicates.
+        was_logged_in = self.__logged_in
         self.__logged_in = True
 
         # Hide welcome view
@@ -303,10 +312,13 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
         self.artist_stack.props.visible = True
-        self.stack.props.visible_child_name = "albums"
-
+        self.refresh_button.set_visible(True)
+        self.refresh_button.set_sensitive(True)
+        if not was_logged_in:
+            self.stack.props.visible_child_name = "albums"
 
         self._songs.clear()
+        self._artists.remove_all()
 
         for artist in sorted(collection, key=self.get_artist_name):
             artist_string = artist["name"]
@@ -861,6 +873,15 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self._client.collection_async(self.update_collection)
         playlist_callback = self.update_playlists
         self._client.playlist_async(playlist_callback)
+
+    @Gtk.Template.Callback()
+    def _do_refresh(self, widget):
+        if not self._client or not self.__logged_in:
+            return
+        # DE (2026-11-12): Refresh both Nextcloud collections asynchronously and block duplicate clicks.
+        self.refresh_button.set_sensitive(False)
+        self._client.collection_async(self.update_collection)
+        self._client.playlist_async(self.update_playlists)
 
     def _do_logout(self):
         # FIXME can we clear password remotely?
