@@ -16,7 +16,7 @@ Rules-Requires-Root: no
 
 Package: actiongroovenc
 Architecture: all
-Depends: gir1.2-adw-1,
+Depends: gir1.2-adw-1 (>= 1.7),
          gir1.2-glib-2.0,
          gir1.2-gtk-4.0,
          gir1.2-secret-1,
