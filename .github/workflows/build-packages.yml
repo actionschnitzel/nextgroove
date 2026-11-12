@@ -50,6 +50,7 @@ jobs:
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           TAG: ${{ github.event.release.tag_name }}
         run: gh release upload "$TAG" dist/debian/*.deb --clobber
 
@@ -114,5 +115,6 @@ jobs:
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           TAG: ${{ github.event.release.tag_name }}
         run: gh release upload "$TAG" .ci/arch/*.pkg.tar.zst --clobber
