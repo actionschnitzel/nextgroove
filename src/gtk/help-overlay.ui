@@ -9,6 +9,13 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="title" translatable="yes" context="shortcut window">General</property>
+            <!-- DE (2026-11-14): Document the refresh shortcut in the shortcuts window. -->
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Refresh</property>
+                <property name="action-name">win.refresh</property>
+              </object>
+            </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Show Shortcuts</property>

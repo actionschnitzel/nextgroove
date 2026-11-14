@@ -1,5 +1,7 @@
 actiongroovenc (0.6.1) unstable; urgency=medium
 
+  * DE (2026-11-14): Move refresh to the first main menu entry, remove its
+    header button, and add the Ctrl+F5 shortcut to the shortcuts window.
   * DE (2026-11-12): Add a button to refresh the Nextcloud music library and playlists.
   * Preserve the current library when a refresh fails and prevent duplicate artists on reload.
   * Require libadwaita 1.7 or newer.
