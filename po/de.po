@@ -298,13 +298,15 @@ msgid "Search"
 msgstr "Alben durchsuchen"
 
 # DE (2026-11-12): German labels for the new library refresh control.
-#: src/gtk/window.ui:68
+# DE (2026-11-14): Reuse the label for the main menu and translate the shortcut.
+#: src/gtk/window.ui
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: src/gtk/window.ui:71
-msgid "Search Nextcloud for new music"
-msgstr "Nextcloud nach neuer Musik durchsuchen"
+#: src/gtk/help-overlay.ui
+msgctxt "shortcut window"
+msgid "Refresh"
+msgstr "Aktualisieren"
 
 #: src/gtk/window.ui:77
 msgid "Queue"

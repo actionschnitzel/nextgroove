@@ -61,16 +61,6 @@
                 <property name="width-chars">24</property>
               </object>
             </child>
-            <!-- DE (2026-11-12): Place library refresh between search and the tab selector. -->
-            <child type="start">
-              <object class="GtkButton" id="refresh_button">
-                <property name="visible">false</property>
-                <property name="label" translatable="yes">Refresh</property>
-                <property name="icon-name">view-refresh-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Search Nextcloud for new music</property>
-                <signal name="clicked" handler="_do_refresh"/>
-              </object>
-            </child>
             <child type="end">
               <object class="GtkToggleButton" id="queue_toggle">
                 <property name="active">True</property>
@@ -384,6 +374,11 @@
   </template>
   <menu id="primary_menu">
     <section>
+      <!-- DE (2026-11-14): Put library refresh first in the main menu. -->
+      <item>
+        <attribute name="label" translatable="yes">Refresh</attribute>
+        <attribute name="action">win.refresh</attribute>
+      </item>
       <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>
         <attribute name="action">app.preferences</attribute>

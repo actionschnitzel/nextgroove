@@ -273,12 +273,14 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/gtk/window.ui:68
+# DE (2026-11-14): Refresh is available in the main menu and shortcuts window.
+#: src/gtk/window.ui
 msgid "Refresh"
 msgstr ""
 
-#: src/gtk/window.ui:70
-msgid "Search Nextcloud for new music"
+#: src/gtk/help-overlay.ui
+msgctxt "shortcut window"
+msgid "Refresh"
 msgstr ""
 
 #: src/gtk/window.ui:78

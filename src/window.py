@@ -107,8 +107,6 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
     breaker2 = Gtk.Template.Child()
     fake_stack = Gtk.Template.Child()
     main_search = Gtk.Template.Child()
-    # DE (2026-11-12): Reference the refresh control declared in the window template.
-    refresh_button = Gtk.Template.Child()
 
     # Data objects
     _settings = None
@@ -126,6 +124,12 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self._apply_background_css()
         self.application = kwargs['application']
+        # DE (2026-11-14): Share one disabled-until-ready action between menu and shortcut.
+        self.refresh_action = Gio.SimpleAction.new("refresh", None)
+        self.refresh_action.set_enabled(False)
+        self.refresh_action.connect("activate", self._do_refresh)
+        self.add_action(self.refresh_action)
+        self.application.set_accels_for_action("win.refresh", ["<Primary>F5"])
         self._settings = Gio.Settings.new("io.github.actionschnitzel.actiongroovenc")
         self._queue = Gio.ListStore()
         self._songs = Gtk.ListStore(str, str, str, QueueItem)
@@ -292,7 +296,7 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
             if self.__logged_in:
                 # DE (2026-11-12): Report refresh failures without discarding the current library.
                 self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
-                self.refresh_button.set_sensitive(True)
+                self.refresh_action.set_enabled(True)
                 return
             # We encountered an error, and we've been handed the error not the collection
             self.status_toast.add_toast(Adw.Toast(title=escape(collection)))
@@ -312,8 +316,8 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         self.album_stack.props.visible = True
         self.playlist_stack.props.visible = True
         self.artist_stack.props.visible = True
-        self.refresh_button.set_visible(True)
-        self.refresh_button.set_sensitive(True)
+        # DE (2026-11-14): Enable refresh only once the library is ready.
+        self.refresh_action.set_enabled(True)
         if not was_logged_in:
             self.stack.props.visible_child_name = "albums"
 
@@ -874,12 +878,11 @@ class NextcloudmusicWindow(Adw.ApplicationWindow):
         playlist_callback = self.update_playlists
         self._client.playlist_async(playlist_callback)
 
-    @Gtk.Template.Callback()
-    def _do_refresh(self, widget):
+    def _do_refresh(self, action, parameter):
         if not self._client or not self.__logged_in:
             return
-        # DE (2026-11-12): Refresh both Nextcloud collections asynchronously and block duplicate clicks.
-        self.refresh_button.set_sensitive(False)
+        # DE (2026-11-14): Block repeated menu and shortcut activation while refreshing.
+        self.refresh_action.set_enabled(False)
         self._client.collection_async(self.update_collection)
         self._client.playlist_async(self.update_playlists)
 
